@@ -141,6 +141,6 @@ describe("mock repository wiring", () => {
     const schedulerPosts = await mockSchedulerRepository.listPosts();
     expect(schedulerPosts.length).toBe(SCHEDULED_POSTS.length);
     expect((await mockDashboardRepository.listSuggestions()).length).toBeGreaterThan(0);
-    expect(mockSettingsRepository.listApiKeys().length).toBeGreaterThan(0);
+    expect((await mockSettingsRepository.listApiKeys()).length).toBeGreaterThan(0);
   });
 });

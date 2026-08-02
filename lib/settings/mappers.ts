@@ -28,10 +28,6 @@ const CHANNEL_ID_TO_TYPE_CODE: Record<NotificationChannelId, string> = {
   product: "system",
 };
 
-const PREFERENCE_CATALOG = new Map(
-  NOTIFICATION_PREFERENCES.map((preference) => [preference.id, preference]),
-);
-
 export type ProfileState = ProfileDefaults & {
   readonly id: string;
   readonly version: number;

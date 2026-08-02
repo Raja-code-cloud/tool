@@ -57,7 +57,6 @@ export function SuggestionsDrawer({
                 <Alert
                   variant={CATEGORY_VARIANT[suggestion.category]}
                   title={suggestion.title}
-                  description={suggestion.description}
                   action={
                     suggestion.action ? (
                       <SecondaryButton type="button" size="compact">
@@ -65,7 +64,9 @@ export function SuggestionsDrawer({
                       </SecondaryButton>
                     ) : undefined
                   }
-                />
+                >
+                  {suggestion.description}
+                </Alert>
                 <Badge variant="neutral" className="mt-2">
                   {CATEGORY_LABELS[suggestion.category]}
                 </Badge>

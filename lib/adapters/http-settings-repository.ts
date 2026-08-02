@@ -3,7 +3,6 @@ import type {
   ProfileEnvelope,
   ProvidersEnvelope,
   UpdateNotificationPreferencesRequestDto,
-  UpdateUserProfileRequestDto,
 } from "@/lib/api/settings-types";
 import type { ApiClient } from "@/lib/api/client";
 import type { PagedSuccessEnvelope } from "@/lib/api/asset-types";
