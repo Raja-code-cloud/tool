@@ -6,28 +6,7 @@ Update this document during RC validation and before each production release.
 
 ## Release blockers
 
-### HEALTH-001: Probe path mismatch between application and deployment infrastructure
-
-**Status:** Open — blocks ACA/Docker health verification until resolved
-
-**Description:** The FastAPI application registers liveness and readiness at `/live` and `/ready` (see `backend/src/cloud_content_hub/api/routers/v1/health.py`). Deployment infrastructure references `/health/live` and `/health/ready` in:
-
-- `infra/container-apps/bicep/main.bicep` (ACA probes)
-- `docker/docker-compose.yml` (API healthcheck)
-- `docker/Dockerfile` (HEALTHCHECK instruction)
-- `deployment/scripts/verify-health.sh`
-- `.github/workflows/backend-ci.yml` (Docker build smoke)
-
-**Impact:** Container health checks and ACA readiness probes return 404. Deployments may fail or mark healthy containers unhealthy depending on probe configuration.
-
-**Workaround:** None for automated deploy pipelines without path alignment.
-
-**Resolution options (application or infrastructure team):**
-
-1. Add route aliases `/health/live` and `/health/ready` in the health router, or
-2. Update all deployment references to `/live` and `/ready`
-
-**Verification:** `pytest tests/deployment/test_probe_alignment.py -m deployment -v`
+None.
 
 ---
 
@@ -51,7 +30,17 @@ Automated schema downgrade is not supported. Rollback requires application revis
 
 | ID | Summary | Resolved in | Date |
 | -- | ------- | ----------- | ---- |
-| —  | —       | —           | —    |
+| HEALTH-001 | Probe path mismatch between application and deployment infrastructure | Application route aliases and infra alignment | 2026-08-02 |
+
+### HEALTH-001 (resolved): Probe path mismatch
+
+**Resolution:** The application now exposes canonical routes `GET /health/live` and
+`GET /health/ready`. Legacy aliases `GET /live` and `GET /ready` remain available with
+identical responses (excluded from OpenAPI). Deployment infrastructure (ACA Bicep,
+Docker Compose, Dockerfile HEALTHCHECK, `verify-health.sh`, CI smoke) targets the
+canonical paths.
+
+**Verification:** `pytest tests/deployment/test_probe_alignment.py -m deployment -v`
 
 ---
 

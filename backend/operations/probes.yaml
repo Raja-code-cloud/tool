@@ -6,7 +6,7 @@ api:
   port: 8000
   probes:
     liveness:
-      path: /live
+      path: /health/live
       method: GET
       success_codes: [200]
       timeout_seconds: 3
@@ -14,7 +14,7 @@ api:
       failure_threshold: 3
       description: Process is alive; no dependency checks.
     readiness:
-      path: /ready
+      path: /health/ready
       method: GET
       success_codes: [200]
       timeout_seconds: 5
@@ -22,7 +22,7 @@ api:
       failure_threshold: 3
       description: PostgreSQL and Redis must respond.
     startup:
-      path: /ready
+      path: /health/ready
       method: GET
       success_codes: [200]
       timeout_seconds: 5

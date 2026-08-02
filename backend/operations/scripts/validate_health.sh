@@ -20,7 +20,9 @@ check() {
 }
 
 check "/health" "informational"
-check "/live" "liveness"
-check "/ready" "readiness"
+check "/health/live" "liveness"
+check "/health/ready" "readiness"
+check "/live" "liveness (legacy alias)"
+check "/ready" "readiness (legacy alias)"
 
 echo "All health probes passed."

@@ -16,12 +16,12 @@ def _read_yaml(path: Path) -> object:
 
 
 def test_health_liveness_returns_200(client: TestClient) -> None:
-    response = client.get("/live")
+    response = client.get("/health/live")
     assert response.status_code == 200
 
 
 def test_health_readiness_returns_200_or_503(client: TestClient) -> None:
-    response = client.get("/ready")
+    response = client.get("/health/ready")
     assert response.status_code in {200, 503}
 
 
@@ -34,8 +34,8 @@ def test_probe_config_documents_implemented_routes() -> None:
     probes = _read_yaml(REPO_ROOT / "operations" / "probes.yaml")
     assert isinstance(probes, dict)
     api_probes = probes["api"]["probes"]
-    assert api_probes["liveness"]["path"] == "/live"
-    assert api_probes["readiness"]["path"] == "/ready"
+    assert api_probes["liveness"]["path"] == "/health/live"
+    assert api_probes["readiness"]["path"] == "/health/ready"
 
 
 def test_alert_rules_valid() -> None:

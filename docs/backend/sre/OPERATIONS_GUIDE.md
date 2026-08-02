@@ -6,7 +6,7 @@ Day-to-day operational procedures for Cloud Content Hub AI backend.
 
 | Unit | Identifier | Scaling | Health |
 | ---- | ---------- | ------- | ------ |
-| API | `ca-cch-api-<env>` | HTTP concurrency | `/live`, `/ready` |
+| API | `ca-cch-api-<env>` | HTTP concurrency | `/health/live`, `/health/ready` |
 | Worker | `ca-cch-worker-<env>` | CPU utilization | Celery inspect + exec probe |
 | Beat | `ca-cch-beat-<env>` | Fixed 1 replica | Schedule file + inspect |
 | Migrate | `caj-cch-migrate-<env>` | Manual job | N/A |
@@ -23,15 +23,19 @@ Day-to-day operational procedures for Cloud Content Hub AI backend.
 
 Probe definitions: `backend/operations/probes.yaml`.
 
-### Probe path alignment
+### Probe paths
 
-The application implements `/live` and `/ready`. Docker Compose and ACA Bicep may
-reference `/health/live` and `/health/ready`. Before production:
+Canonical probe routes:
 
-1. Update infra probe paths to match implemented routes, **or**
-2. Add route aliases in the API layer (operational patch).
+| Probe | Path | Notes |
+| ----- | ---- | ----- |
+| Liveness | `GET /health/live` | Process alive; no dependency checks |
+| Readiness | `GET /health/ready` | PostgreSQL + Redis must respond |
+| Summary | `GET /health` | Version metadata |
 
-Misaligned probes cause false unhealthy status and failed deployments.
+Legacy compatibility aliases `GET /live` and `GET /ready` remain available and return
+identical responses. They are excluded from OpenAPI. New integrations must use the
+canonical `/health/*` paths.
 
 ## Monitoring stack
 

@@ -56,7 +56,13 @@ class RequestContextMiddleware:
 
         try:
             await self.app(scope, receive, send_with_headers)
-            if request.url.path not in {"/health", "/live", "/ready"}:
+            if request.url.path not in {
+                "/health",
+                "/health/live",
+                "/health/ready",
+                "/live",
+                "/ready",
+            }:
                 get_logger().info(
                     "http.request.completed",
                     message="HTTP request completed",

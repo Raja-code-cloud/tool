@@ -66,7 +66,9 @@ Probes target implemented application routes:
 | Liveness  | `/health/live`  | Process alive                |
 | Readiness | `/health/ready` | PostgreSQL + Redis available |
 
-These differ from some API documentation paths (`/live`, `/ready`). Deployment infrastructure follows the implemented routes in `backend/src/cloud_content_hub/api/v1/health.py`.
+These are the canonical routes. Legacy aliases `/live` and `/ready` remain available
+for backwards compatibility and return identical responses (excluded from OpenAPI).
+See `backend/src/cloud_content_hub/api/routers/v1/health.py`.
 
 ## Secrets
 

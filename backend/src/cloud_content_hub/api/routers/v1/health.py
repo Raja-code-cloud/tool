@@ -30,15 +30,13 @@ async def get_health(request: Request) -> JSONResponse:
     )
 
 
-@router.get("/live", operation_id="getLiveness")
-async def get_liveness() -> JSONResponse:
+async def _liveness_response() -> JSONResponse:
     return JSONResponse(
         success(data=ProbeDto(status="live"), message="Service is live.").model_dump(by_alias=True)
     )
 
 
-@router.get("/ready", operation_id="getReadiness")
-async def get_readiness(request: Request) -> JSONResponse:
+async def _readiness_response(request: Request) -> JSONResponse:
     container = cast(Container, request.app.state.container)
     checks: dict[str, str] = {}
 
@@ -69,3 +67,27 @@ async def get_readiness(request: Request) -> JSONResponse:
             by_alias=True
         )
     )
+
+
+@router.get("/health/live", operation_id="getLiveness")
+async def get_liveness() -> JSONResponse:
+    return await _liveness_response()
+
+
+@router.get("/health/ready", operation_id="getReadiness")
+async def get_readiness(request: Request) -> JSONResponse:
+    return await _readiness_response(request)
+
+
+router.add_api_route(
+    "/live",
+    get_liveness,
+    methods=["GET"],
+    include_in_schema=False,
+)
+router.add_api_route(
+    "/ready",
+    get_readiness,
+    methods=["GET"],
+    include_in_schema=False,
+)

@@ -38,15 +38,15 @@ See `backend/monitoring/prometheus/prometheus.yml` for target definitions.
 
 | Probe | Path | Purpose |
 | ----- | ---- | ------- |
-| Liveness | `/live` | Process alive |
-| Readiness | `/ready` | PostgreSQL + Redis |
+| Liveness | `/health/live` | Process alive |
+| Readiness | `/health/ready` | PostgreSQL + Redis |
 | Informational | `/health` | Version metadata |
 | Admin aggregate | `/api/v1/admin/system` | Full dependency health (auth required) |
 
-Probe definitions: `backend/operations/probes.yaml`.
+Legacy aliases `/live` and `/ready` remain available for backwards compatibility and
+return identical responses. They are excluded from OpenAPI.
 
-**Note:** Deployment infra may reference `/health/live` and `/health/ready`. The
-implemented routes are `/live` and `/ready`. Align probe paths before production deploy.
+Probe definitions: `backend/operations/probes.yaml`.
 
 ## Logging and tracing
 

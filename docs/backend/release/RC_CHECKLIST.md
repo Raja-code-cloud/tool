@@ -32,16 +32,18 @@ Use this checklist before promoting a backend build from QA to Release Candidate
 
 Verify implemented routes respond before ACA traffic cutover:
 
-| Probe     | Implemented route | Expected |
-| --------- | ----------------- | -------- |
-| Liveness  | `GET /live`       | 200      |
-| Readiness | `GET /ready`      | 200 when PostgreSQL and Redis reachable |
-| Summary   | `GET /health`     | 200      |
+| Probe     | Canonical route        | Expected |
+| --------- | ---------------------- | -------- |
+| Liveness  | `GET /health/live`     | 200      |
+| Readiness | `GET /health/ready`    | 200 when PostgreSQL and Redis reachable |
+| Summary   | `GET /health`          | 200      |
+
+Legacy aliases `GET /live` and `GET /ready` remain available and return identical responses.
 
 - [ ] Liveness returns 200 without dependency checks
 - [ ] Readiness returns 200 with database and redis checks ok
 - [ ] Readiness returns 503 when a required dependency is unavailable
-- [ ] **Probe path alignment:** ACA Bicep, Docker HEALTHCHECK, and `verify-health.sh` must target the same paths as the application. See `KNOWN_ISSUES.md` if paths diverge.
+- [ ] ACA Bicep, Docker HEALTHCHECK, and `verify-health.sh` target `/health/live` and `/health/ready`
 
 ## Database migrations
 

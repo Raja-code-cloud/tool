@@ -64,6 +64,8 @@ def test_implemented_probe_routes_documented_in_health_module() -> None:
 
     source = HEALTH_ROUTER_SOURCE.read_text(encoding="utf-8")
 
-    assert '@router.get("/live"' in source
-    assert '@router.get("/ready"' in source
+    assert '@router.get("/health/live"' in source
+    assert '@router.get("/health/ready"' in source
+    assert '"/live"' in source
+    assert '"/ready"' in source
     assert '@router.get("/health"' in source

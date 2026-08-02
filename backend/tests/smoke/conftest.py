@@ -13,7 +13,10 @@ import httpx
 import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
-from import_utils import load_module_from_file, try_import_root_router  # type: ignore[import-not-found]
+from import_utils import (  # type: ignore[import-not-found]
+    load_module_from_file,
+    try_import_root_router,
+)
 
 from cloud_content_hub.api.dependencies import HandlerRegistry
 from cloud_content_hub.api.errors import install_exception_handlers

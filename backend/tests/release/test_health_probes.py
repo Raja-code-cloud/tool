@@ -20,8 +20,10 @@ _health_module = load_module_from_file(
 )
 health_router = _health_module.router
 
-IMPLEMENTED_LIVENESS_PATH = "/live"
-IMPLEMENTED_READINESS_PATH = "/ready"
+CANONICAL_LIVENESS_PATH = "/health/live"
+CANONICAL_READINESS_PATH = "/health/ready"
+LEGACY_LIVENESS_PATH = "/live"
+LEGACY_READINESS_PATH = "/ready"
 IMPLEMENTED_SUMMARY_PATH = "/health"
 
 
@@ -54,7 +56,7 @@ async def test_liveness_does_not_require_dependencies(
     health_client: tuple[AsyncClient, MagicMock],
 ) -> None:
     client, _container = health_client
-    response = await client.get(IMPLEMENTED_LIVENESS_PATH)
+    response = await client.get(CANONICAL_LIVENESS_PATH)
     assert response.status_code == 200
     body = response.json()
     assert body["success"] is True
@@ -66,7 +68,7 @@ async def test_readiness_returns_ok_when_dependencies_available(
     health_client: tuple[AsyncClient, MagicMock],
 ) -> None:
     client, _container = health_client
-    response = await client.get(IMPLEMENTED_READINESS_PATH)
+    response = await client.get(CANONICAL_READINESS_PATH)
     assert response.status_code == 200
     body = response.json()
     assert body["success"] is True
@@ -79,7 +81,7 @@ async def test_readiness_returns_unavailable_when_database_fails(
 ) -> None:
     client, container = health_client
     container.database_engine.connect = MagicMock(side_effect=OSError("connection refused"))
-    response = await client.get(IMPLEMENTED_READINESS_PATH)
+    response = await client.get(CANONICAL_READINESS_PATH)
     assert response.status_code == 503
     body = response.json()
     assert body["success"] is False
@@ -98,8 +100,30 @@ async def test_health_summary_returns_version(
     assert body["data"]["version"] == "1.0.0-rc"
 
 
+@pytest.mark.asyncio
+async def test_legacy_liveness_alias_matches_canonical(
+    health_client: tuple[AsyncClient, MagicMock],
+) -> None:
+    client, _container = health_client
+    canonical = await client.get(CANONICAL_LIVENESS_PATH)
+    legacy = await client.get(LEGACY_LIVENESS_PATH)
+    assert canonical.status_code == legacy.status_code == 200
+    assert canonical.json() == legacy.json()
+
+
+@pytest.mark.asyncio
+async def test_legacy_readiness_alias_matches_canonical(
+    health_client: tuple[AsyncClient, MagicMock],
+) -> None:
+    client, _container = health_client
+    canonical = await client.get(CANONICAL_READINESS_PATH)
+    legacy = await client.get(LEGACY_READINESS_PATH)
+    assert canonical.status_code == legacy.status_code == 200
+    assert canonical.json() == legacy.json()
+
+
 def test_implemented_probe_paths_are_documented() -> None:
     """Release docs and deployment infra must align with these paths."""
-    assert IMPLEMENTED_LIVENESS_PATH == "/live"
-    assert IMPLEMENTED_READINESS_PATH == "/ready"
+    assert CANONICAL_LIVENESS_PATH == "/health/live"
+    assert CANONICAL_READINESS_PATH == "/health/ready"
     assert IMPLEMENTED_SUMMARY_PATH == "/health"
