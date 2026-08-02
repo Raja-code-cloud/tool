@@ -78,6 +78,56 @@ class ResolvedScheduleTime:
     fold: int | None
 
 
+@dataclass(frozen=True, slots=True)
+class ScheduleListRecord:
+    """Schedule read model enriched with publication metadata for calendar views."""
+
+    schedule: ScheduleRecord
+    publication_id: UUID
+    publication_title: str
+    publication_status: str
+    platform_code: str
+    approval_state: str
+    queue_order: int
+
+
+@dataclass(frozen=True, slots=True)
+class ScheduleListCriteria:
+    """Filters for listing schedules."""
+
+    workspace_id: UUID
+    cursor: str | None
+    limit: int
+    states: frozenset[str]
+    priorities: frozenset[str]
+    publication_target_id: UUID | None
+    scheduled_after: datetime | None
+    scheduled_before: datetime | None
+    sort: str
+
+
+@dataclass(frozen=True, slots=True)
+class ScheduleListPage:
+    """Cursor-paged schedule list."""
+
+    items: tuple[ScheduleListRecord, ...]
+    next_cursor: str | None
+    has_more: bool
+
+
+@dataclass(frozen=True, slots=True)
+class ScheduleUpdate:
+    """Input for updating a publication schedule."""
+
+    requested_local_at: datetime | None = None
+    time_zone: str | None = None
+    fold: int | None = None
+    ambiguity_policy: AmbiguityPolicy | None = None
+    priority: SchedulePriority | None = None
+    state: ScheduleState | None = None
+    scheduled_for: datetime | None = None
+
+
 class IScheduleRepository(Protocol):
     """Repository port for publication schedules."""
 
@@ -112,3 +162,17 @@ class IScheduleRepository(Protocol):
         publication_target_id: UUID,
     ) -> bool:
         """Return whether the publication target is approved and dispatchable."""
+
+    async def list_schedules(self, criteria: ScheduleListCriteria) -> ScheduleListPage:
+        """List schedules with optional calendar filters."""
+
+    async def update(
+        self,
+        *,
+        workspace_id: UUID,
+        schedule_id: UUID,
+        expected_version: int,
+        update: ScheduleUpdate,
+        updated_by: UUID,
+    ) -> ScheduleRecord:
+        """Update a schedule before dispatch."""

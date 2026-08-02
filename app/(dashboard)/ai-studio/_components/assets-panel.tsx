@@ -7,12 +7,22 @@ import { Card, CardHeader } from "@/components/cards";
 import { KeyValueList } from "@/components/common";
 import { StatusBadge } from "@/components/feedback";
 import { Badge } from "@/components/ui";
-import { aiStudioService } from "@/lib/services";
+import type { AiStudioProject } from "@/lib/domain/ai-studio";
 import { thumbnailGradient } from "@/lib/utils/content-display";
 import { formatNumber } from "@/lib/utils/formatting";
 
-export function AssetsPanel(): React.JSX.Element {
-  const project = aiStudioService.getProject();
+export type AssetsPanelProps = {
+  project: AiStudioProject | null;
+};
+
+export function AssetsPanel({ project }: AssetsPanelProps): React.JSX.Element {
+  if (!project) {
+    return (
+      <Card className="flex h-full flex-col overflow-hidden p-4">
+        <p className="text-muted-foreground text-sm">Loading source content…</p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="flex h-full flex-col overflow-hidden p-0">

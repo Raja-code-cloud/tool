@@ -83,3 +83,18 @@ def validate_cancellation(schedule: ScheduleRecord) -> None:
             detail="Schedule cannot be cancelled from its current state.",
             parameters={"state": schedule.state.value},
         )
+
+
+def validate_update(schedule: ScheduleRecord) -> None:
+    """Validate that a schedule can be updated."""
+
+    if schedule.state in {
+        ScheduleState.DISPATCHED,
+        ScheduleState.COMPLETED,
+        ScheduleState.CANCELLED,
+        ScheduleState.FAILED,
+    }:
+        raise StateTransitionError(
+            detail="Schedule cannot be updated from its current state.",
+            parameters={"state": schedule.state.value},
+        )

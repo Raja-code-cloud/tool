@@ -1,17 +1,14 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useToast } from "@/hooks/use-toast";
+import { mapAiStudioError } from "@/lib/adapters/ai-studio-errors";
+import type { AiStudioProject } from "@/lib/domain/ai-studio";
+import type { GenerationScope } from "@/lib/domain/ai-studio-generation";
 import type { PlatformId } from "@/lib/domain/platform";
 import { aiStudioService } from "@/lib/services";
-import {
-  applyExpand,
-  applyImprove,
-  applyShorten,
-  applyToneTransform,
-  delay,
-} from "@/lib/utils/ai-studio";
+import { delay } from "@/lib/utils/ai-studio";
 
 import {
   createInitialPlatformStates,
@@ -45,6 +42,21 @@ function createVersion(
   };
 }
 
+function transformToScope(
+  transform: "improve" | "expand" | "shorten" | AiStudioSettings["tone"],
+): { scope: GenerationScope; userPrompt?: string } {
+  if (transform === "improve") {
+    return { scope: "whole", userPrompt: "Improve clarity, engagement, and readability." };
+  }
+  if (transform === "expand") {
+    return { scope: "whole", userPrompt: "Expand with more detail while staying on topic." };
+  }
+  if (transform === "shorten") {
+    return { scope: "whole", userPrompt: "Shorten while preserving the core message." };
+  }
+  return { scope: "tone" };
+}
+
 export function useAiStudioState() {
   const { toast } = useToast();
   const [activePlatform, setActivePlatform] = useState<PlatformId>("linkedin");
@@ -58,6 +70,15 @@ export function useAiStudioState() {
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>("workspace");
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const [typingContent, setTypingContent] = useState("");
+  const [project, setProject] = useState<AiStudioProject | null>(null);
+  const [suggestions, setSuggestions] = useState<readonly import("@/lib/domain/ai-studio").AiSuggestion[]>(
+    [],
+  );
+  const [providers, setProviders] = useState<
+    readonly import("@/lib/domain/ai-studio-generation").AiStudioProviderOption[]
+  >([]);
+  const [contentVersion, setContentVersion] = useState(1);
+  const generationAbortRef = useRef<AbortController | null>(null);
 
   const current = platforms[activePlatform];
 
@@ -65,6 +86,35 @@ export function useAiStudioState() {
     loadingPhase === "generating" || loadingPhase === "regenerating"
       ? typingContent
       : current.content;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const [loadedProject, loadedSuggestions, loadedProviders] = await Promise.all([
+          aiStudioService.getProject(),
+          aiStudioService.listSuggestions(),
+          aiStudioService.listProviders(),
+        ]);
+        if (cancelled) return;
+        setProject(loadedProject);
+        setSuggestions(loadedSuggestions);
+        setProviders(loadedProviders);
+        if (!settings.modelId && loadedProviders[0]?.modelId) {
+          setSettings((prev) => ({ ...prev, modelId: loadedProviders[0]?.modelId ?? null }));
+        }
+      } catch (error) {
+        if (cancelled) return;
+        const mapped = mapAiStudioError(error);
+        toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [toast]);
 
   const patchPlatform = useCallback(
     (platform: PlatformId, patch: Partial<PlatformWorkspaceState>) => {
@@ -119,39 +169,80 @@ export function useAiStudioState() {
     [],
   );
 
-  const simulateTyping = useCallback(async (fullText: string) => {
+  const simulateTyping = useCallback(async (fullText: string, signal?: AbortSignal) => {
     setTypingContent("");
     const chunkSize = Math.max(8, Math.floor(fullText.length / 24));
     for (let index = 0; index < fullText.length; index += chunkSize) {
+      if (signal?.aborted) return;
       setTypingContent(fullText.slice(0, index + chunkSize));
       await delay(40);
     }
-    setTypingContent(fullText);
+    if (!signal?.aborted) {
+      setTypingContent(fullText);
+    }
   }, []);
 
   const runGeneration = useCallback(
-    async (platform: PlatformId, mode: "generate" | "regenerate") => {
-      const mock = aiStudioService.getPlatformContent(platform);
+    async (
+      platform: PlatformId,
+      mode: "generate" | "regenerate",
+      options?: { scope?: GenerationScope; userPrompt?: string },
+    ) => {
+      generationAbortRef.current?.abort();
+      const controller = new AbortController();
+      generationAbortRef.current = controller;
+
       setLoadingPhase("thinking");
-      await delay(900);
+      await delay(400);
+
+      if (controller.signal.aborted) return;
+
       setLoadingPhase(mode === "generate" ? "generating" : "regenerating");
 
-      let content = applyToneTransform(mock.content, settings.tone);
-      if (settings.length === "short") content = applyShorten(content, 0.55);
-      if (settings.length === "long") content = applyExpand(content);
+      try {
+        const request = {
+          platform,
+          tone: settings.tone,
+          length: settings.length,
+          audience: settings.audience,
+          generateHashtags: settings.generateHashtags,
+          generateCta: settings.generateCta,
+          modelId: settings.modelId,
+          scope: options?.scope,
+          userPrompt: options?.userPrompt,
+          signal: controller.signal,
+        };
 
-      pushUndo(platform, platforms[platform].content);
-      await simulateTyping(content);
+        const result =
+          mode === "regenerate"
+            ? await aiStudioService.regenerate(request)
+            : await aiStudioService.generate(request);
 
-      const hashtags = settings.generateHashtags ? mock.hashtags : [];
-      const cta = settings.generateCta ? mock.cta : "";
-      addVersion(platform, content, hashtags, cta, "ai");
-      setLoadingPhase("idle");
-      setTypingContent("");
-      toast({
-        title: mode === "generate" ? "Content generated" : "Content regenerated",
-        description: `${platform} variant is ready to review.`,
-      });
+        pushUndo(platform, platforms[platform].content);
+        await simulateTyping(result.content, controller.signal);
+
+        if (controller.signal.aborted) return;
+
+        addVersion(platform, result.content, result.hashtags, result.cta, "ai");
+        setContentVersion(result.contentVersion);
+        setLoadingPhase("idle");
+        setTypingContent("");
+        toast({
+          title: mode === "generate" ? "Content generated" : "Content regenerated",
+          description: `${platform} variant is ready to review.`,
+        });
+      } catch (error) {
+        setLoadingPhase("idle");
+        setTypingContent("");
+        const mapped = mapAiStudioError(error);
+        if (mapped.title !== "Generation cancelled") {
+          toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+        }
+      } finally {
+        if (generationAbortRef.current === controller) {
+          generationAbortRef.current = null;
+        }
+      }
     },
     [addVersion, platforms, pushUndo, settings, simulateTyping, toast],
   );
@@ -172,20 +263,72 @@ export function useAiStudioState() {
         toast({ title: "Nothing to transform", description: "Generate content first." });
         return;
       }
+
+      const mapped = transformToScope(transform);
+      const nextTone =
+        mapped.scope === "tone" ? (transform as AiStudioSettings["tone"]) : settings.tone;
+
+      if (mapped.scope === "tone") {
+        setSettings((prev) => ({ ...prev, tone: nextTone }));
+      }
+
+      generationAbortRef.current?.abort();
+      const controller = new AbortController();
+      generationAbortRef.current = controller;
+
       setLoadingPhase("regenerating");
-      await delay(600);
-      let next = state.content;
-      if (transform === "improve") next = applyImprove(next);
-      else if (transform === "expand") next = applyExpand(next);
-      else if (transform === "shorten") next = applyShorten(next);
-      else next = applyToneTransform(next, transform);
-      pushUndo(activePlatform, state.content);
-      addVersion(activePlatform, next, state.hashtags, state.cta, "transform");
-      setLoadingPhase("idle");
-      toast({ title: "Content updated", description: "A new version was saved to history." });
+      try {
+        const result = await aiStudioService.regenerate({
+          platform: activePlatform,
+          tone: nextTone,
+          length: settings.length,
+          audience: settings.audience,
+          generateHashtags: settings.generateHashtags,
+          generateCta: settings.generateCta,
+          modelId: settings.modelId,
+          scope: mapped.scope,
+          userPrompt: mapped.userPrompt,
+          signal: controller.signal,
+        });
+
+        pushUndo(activePlatform, state.content);
+        await simulateTyping(result.content, controller.signal);
+        if (controller.signal.aborted) return;
+
+        addVersion(activePlatform, result.content, result.hashtags, result.cta, "transform");
+        setContentVersion(result.contentVersion);
+        toast({ title: "Content updated", description: "A new version was saved to history." });
+      } catch (error) {
+        const mapped = mapAiStudioError(error);
+        if (mapped.title !== "Generation cancelled") {
+          toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+        }
+      } finally {
+        setLoadingPhase("idle");
+        setTypingContent("");
+        if (generationAbortRef.current === controller) {
+          generationAbortRef.current = null;
+        }
+      }
     },
-    [activePlatform, addVersion, platforms, pushUndo, toast],
+    [
+      activePlatform,
+      addVersion,
+      platforms,
+      pushUndo,
+      settings,
+      simulateTyping,
+      toast,
+    ],
   );
+
+  const cancelGeneration = useCallback(() => {
+    generationAbortRef.current?.abort();
+    aiStudioService.cancelGeneration();
+    setLoadingPhase("idle");
+    setTypingContent("");
+    toast({ title: "Generation cancelled", description: "You can adjust settings and try again." });
+  }, [toast]);
 
   const updateContent = useCallback(
     (content: string) => {
@@ -250,12 +393,34 @@ export function useAiStudioState() {
   }, [activePlatform, patchPlatform, toast]);
 
   const saveDraft = useCallback(async () => {
+    if (!project) {
+      toast({ title: "Nothing to save", description: "Project metadata is still loading." });
+      return;
+    }
+
     setLoadingPhase("saving");
-    await delay(500);
-    setLastSavedAt(new Date().toISOString());
-    setLoadingPhase("idle");
-    toast({ title: "Draft saved", description: "Your AI Studio progress is saved locally." });
-  }, [toast]);
+    try {
+      const result = await aiStudioService.saveDraft({
+        contentId: project.id,
+        contentVersion,
+        title: project.name,
+        bodyText: current.content,
+        metadata: {
+          platform: activePlatform,
+          hashtags: current.hashtags,
+          callToAction: current.cta,
+        },
+      });
+      setContentVersion(result.contentVersion);
+      setLastSavedAt(result.savedAt);
+      toast({ title: "Draft saved", description: "Your AI Studio progress is saved to the backend." });
+    } catch (error) {
+      const mapped = mapAiStudioError(error);
+      toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+    } finally {
+      setLoadingPhase("idle");
+    }
+  }, [activePlatform, contentVersion, current.content, current.cta, current.hashtags, project, toast]);
 
   const restoreVersion = useCallback(
     (versionId: string) => {
@@ -291,6 +456,9 @@ export function useAiStudioState() {
     platforms,
     current,
     displayContent,
+    project,
+    suggestions,
+    providers,
     settings,
     setSettings,
     loadingPhase,
@@ -308,6 +476,7 @@ export function useAiStudioState() {
     generate,
     regenerate,
     transformContent,
+    cancelGeneration,
     updateContent,
     undo,
     redo,

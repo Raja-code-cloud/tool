@@ -42,3 +42,14 @@ class ScheduleDto(ResourceBaseDto):
     scheduled_for: datetime
     state: ScheduleStateDto
     priority: SchedulePriorityDto
+
+
+class ScheduleCalendarDto(ScheduleDto):
+    """Schedule projection enriched with publication metadata for calendar views."""
+
+    publication_id: UUID
+    publication_title: str
+    publication_status: str
+    platform_code: str
+    approval_state: str
+    queue_order: int

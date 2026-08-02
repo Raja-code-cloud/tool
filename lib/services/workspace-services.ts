@@ -69,9 +69,15 @@ export function createSocialAccountService(repository: SocialAccountRepository) 
 
 export function createAiStudioService(repository: AiStudioRepository) {
   return {
-    getPlatformContent: (platform: PlatformId) => repository.getPlatformContent(platform),
-    getProject: () => repository.getProject(),
-    listSuggestions: () => repository.listSuggestions(),
+    getProject: () => Promise.resolve(repository.getProject()),
+    listSuggestions: () => Promise.resolve(repository.listSuggestions()),
+    listProviders: () => repository.listProviders(),
+    generate: (request: Parameters<AiStudioRepository["generate"]>[0]) => repository.generate(request),
+    regenerate: (request: Parameters<AiStudioRepository["regenerate"]>[0]) =>
+      repository.regenerate(request),
+    saveDraft: (request: Parameters<AiStudioRepository["saveDraft"]>[0]) =>
+      repository.saveDraft(request),
+    cancelGeneration: () => repository.cancelGeneration(),
   };
 }
 

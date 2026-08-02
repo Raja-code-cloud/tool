@@ -39,22 +39,21 @@ import {
   SOCIAL_ACCOUNTS,
 } from "@/constants/social-accounts";
 import { CURRENT_USER, UNREAD_NOTIFICATION_COUNT, WORKSPACE } from "@/constants/workspace";
-import type { PlatformId } from "@/lib/domain/platform";
 import type {
   AiStudioRepository,
   AnalyticsRepository,
   ContentRepository,
   DashboardRepository,
-  GeneratedPlatformContent,
   SchedulerRepository,
   SettingsRepository,
   SocialAccountRepository,
   WorkspaceRepository,
 } from "@/lib/domain/repositories";
+import { applyExpand, applyShorten, applyToneTransform } from "@/lib/utils/ai-studio";
 
-export const mockContentRepository: ContentRepository = {
-  list: () => CONTENT_LIBRARY_ITEMS,
-};
+export const mockContentRepository: ContentRepository = createMockContentRepository(
+  CONTENT_LIBRARY_ITEMS,
+);
 
 export const mockSchedulerRepository: SchedulerRepository = {
   listPosts: () => SCHEDULED_POSTS,
@@ -67,11 +66,48 @@ export const mockSocialAccountRepository: SocialAccountRepository = {
 };
 
 export const mockAiStudioRepository: AiStudioRepository = {
-  getPlatformContent(platform: PlatformId): GeneratedPlatformContent {
-    return MOCK_PLATFORM_CONTENT[platform];
-  },
   getProject: () => AI_STUDIO_PROJECT,
   listSuggestions: () => AI_SUGGESTIONS,
+
+  async listProviders() {
+    return [
+      {
+        id: "mock-model",
+        code: "mock",
+        name: "Mock provider",
+        status: "enabled",
+        modelId: "mock-model",
+      },
+    ];
+  },
+
+  async generate(request) {
+    const mock = MOCK_PLATFORM_CONTENT[request.platform];
+    let content = applyToneTransform(mock.content, request.tone);
+    if (request.length === "short") content = applyShorten(content, 0.55);
+    if (request.length === "long") content = applyExpand(content);
+
+    return {
+      content,
+      hashtags: request.generateHashtags ? mock.hashtags : [],
+      cta: request.generateCta ? mock.cta : "",
+      operationId: `mock-op-${Date.now()}`,
+      contentId: AI_STUDIO_PROJECT.id,
+      contentVersion: 1,
+    };
+  },
+
+  async regenerate(request) {
+    return mockAiStudioRepository.generate(request);
+  },
+
+  async saveDraft() {
+    return { savedAt: new Date().toISOString(), contentVersion: 1 };
+  },
+
+  cancelGeneration(): void {
+    // Mock mode relies on AbortSignal in the caller.
+  },
 };
 
 export const mockDashboardRepository: DashboardRepository = {

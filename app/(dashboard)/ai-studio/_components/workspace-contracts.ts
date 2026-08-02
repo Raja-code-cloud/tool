@@ -1,3 +1,4 @@
+import type { AiStudioProviderOption } from "@/lib/domain/ai-studio-generation";
 import type { PlatformId } from "@/lib/domain/platform";
 
 import type { AiStudioSettings, LoadingPhase, PlatformWorkspaceState } from "./types";
@@ -7,6 +8,7 @@ export type WorkspaceData = {
   current: PlatformWorkspaceState;
   displayContent: string;
   settings: AiStudioSettings;
+  providers: readonly AiStudioProviderOption[];
   loadingPhase: LoadingPhase;
   isLoading: boolean;
 };
@@ -29,6 +31,7 @@ export type WorkspaceActions = {
   onContentChange: (content: string) => void;
   onGenerate: () => void;
   onRegenerate: () => void;
+  onCancelGeneration: () => void;
   onTransform: (action: "improve" | "expand" | "shorten" | AiStudioSettings["tone"]) => void;
   onApprove: () => void;
   onReject: () => void;

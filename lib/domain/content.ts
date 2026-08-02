@@ -4,6 +4,7 @@ export type PublishingStatus = "not_started" | "queued" | "live" | "failed";
 
 export type ContentItem = {
   readonly id: string;
+  readonly version: number;
   readonly title: string;
   readonly type: ContentType;
   readonly status: ContentStatus;
@@ -16,6 +17,8 @@ export type ContentItem = {
   readonly updatedAt: string;
   readonly isFavorite: boolean;
   readonly thumbnailHue: number;
+  readonly downloadUrl?: string | null;
+  readonly assetId?: string;
 };
 
 export type SidebarFilterId =

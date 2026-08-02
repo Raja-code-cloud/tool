@@ -3,6 +3,9 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   NEXT_PUBLIC_API_BASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_WORKSPACE_ID: z.string().uuid().optional(),
+  NEXT_PUBLIC_AI_MODEL_ID: z.string().uuid().optional(),
+  NEXT_PUBLIC_AI_CONTENT_ID: z.string().uuid().optional(),
   NEXT_PUBLIC_APP_ENV: z.enum(["development", "staging", "production"]).default("development"),
 });
 
@@ -23,6 +26,9 @@ function parseEnv(source: Record<string, string | undefined>): AppEnv {
 export const env = parseEnv({
   NODE_ENV: process.env.NODE_ENV,
   NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  NEXT_PUBLIC_WORKSPACE_ID: process.env.NEXT_PUBLIC_WORKSPACE_ID,
+  NEXT_PUBLIC_AI_MODEL_ID: process.env.NEXT_PUBLIC_AI_MODEL_ID,
+  NEXT_PUBLIC_AI_CONTENT_ID: process.env.NEXT_PUBLIC_AI_CONTENT_ID,
   NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
 });
 

@@ -93,6 +93,12 @@ def wire_handlers(container: Container) -> HandlerRegistry:
     from cloud_content_hub.application.scheduler.handlers.get_schedule_handler import (
         GetScheduleHandler,
     )
+    from cloud_content_hub.application.scheduler.handlers.list_schedules_handler import (
+        ListSchedulesHandler,
+    )
+    from cloud_content_hub.application.scheduler.handlers.update_schedule_handler import (
+        UpdateScheduleHandler,
+    )
 
     repositories = container.repositories
     events = container.events.publishers
@@ -193,6 +199,15 @@ def wire_handlers(container: Container) -> HandlerRegistry:
         "get_schedule": GetScheduleHandler(
             unit_of_work_factory=repositories.unit_of_work_factory,
             schedule_repository_factory=repositories.schedule_repository_factory,
+        ),
+        "list_schedules": ListSchedulesHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            schedule_repository_factory=repositories.schedule_repository_factory,
+        ),
+        "update_schedule": UpdateScheduleHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            schedule_repository_factory=repositories.schedule_repository_factory,
+            schedule_time_resolver=container.schedule_time_resolver,
         ),
         "cancel_schedule": CancelScheduleHandler(
             unit_of_work_factory=repositories.unit_of_work_factory,

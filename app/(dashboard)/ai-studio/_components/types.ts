@@ -29,6 +29,7 @@ export type AiStudioSettings = {
   tone: AiTone;
   length: AiLength;
   audience: AiAudience;
+  modelId: string | null;
   generateHashtags: boolean;
   generateCta: boolean;
   generateSeo: boolean;
@@ -42,6 +43,7 @@ export const DEFAULT_AI_SETTINGS: AiStudioSettings = {
   tone: "professional",
   length: "medium",
   audience: "architects",
+  modelId: null,
   generateHashtags: true,
   generateCta: true,
   generateSeo: true,

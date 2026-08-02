@@ -1,5 +1,12 @@
 import type { AiStudioProject, AiSuggestion } from "@/lib/domain/ai-studio";
 import type {
+  AiStudioGenerationRequest,
+  AiStudioGenerationResult,
+  AiStudioProviderOption,
+  AiStudioSaveDraftRequest,
+  AiStudioSaveDraftResult,
+} from "@/lib/domain/ai-studio-generation";
+import type {
   AiUsagePoint,
   AnalyticsBaseSummary,
   AnalyticsInsight,
@@ -13,7 +20,7 @@ import type {
   ReachByPlatform,
   TrendPoint,
 } from "@/lib/domain/analytics";
-import type { ContentItem } from "@/lib/domain/content";
+import type { ContentItem, ContentStatus, ContentType } from "@/lib/domain/content";
 import type {
   ActivityItem,
   AgendaEntry,
@@ -22,7 +29,6 @@ import type {
   PlatformHealth,
   RecentContentRow,
 } from "@/lib/domain/dashboard";
-import type { PlatformId } from "@/lib/domain/platform";
 import type { ScheduledPost, SchedulerNotification } from "@/lib/domain/scheduler";
 import type {
   AiProvider,
@@ -49,8 +55,46 @@ export type GeneratedPlatformContent = {
   readonly cta: string;
 };
 
+export interface AiStudioRepository {
+  getProject(): AiStudioProject | Promise<AiStudioProject>;
+  listSuggestions(): readonly AiSuggestion[] | Promise<readonly AiSuggestion[]>;
+  listProviders(): Promise<readonly AiStudioProviderOption[]>;
+  generate(request: AiStudioGenerationRequest): Promise<AiStudioGenerationResult>;
+  regenerate(request: AiStudioGenerationRequest): Promise<AiStudioGenerationResult>;
+  saveDraft(request: AiStudioSaveDraftRequest): Promise<AiStudioSaveDraftResult>;
+  cancelGeneration(): void;
+}
+
+export type ContentListParams = {
+  readonly cursor?: string;
+  readonly limit?: number;
+  readonly assetTypes?: readonly ContentType[];
+  readonly lifecycleStatuses?: readonly ("draft" | "active" | "archived")[];
+  readonly sort?: string;
+  readonly query?: string;
+  readonly projectId?: string;
+};
+
+export type ContentListResult = {
+  readonly items: readonly ContentItem[];
+  readonly nextCursor: string | null;
+  readonly hasMore: boolean;
+};
+
+export type ContentUpdateInput = {
+  readonly title: string;
+  readonly summary?: string | null;
+  readonly bodyText?: string | null;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+  readonly lifecycleStatus?: ContentStatus;
+};
+
 export interface ContentRepository {
-  list(): readonly ContentItem[];
+  list(params?: ContentListParams): Promise<ContentListResult>;
+  getById(id: string): Promise<ContentItem>;
+  delete(id: string, version: number): Promise<void>;
+  archive(id: string, version: number): Promise<ContentItem>;
+  update(id: string, version: number, input: ContentUpdateInput): Promise<ContentItem>;
 }
 
 export interface SchedulerRepository {
@@ -61,12 +105,6 @@ export interface SchedulerRepository {
 export interface SocialAccountRepository {
   listAccounts(): readonly SocialAccount[];
   listActivity(): readonly ActivityEvent[];
-}
-
-export interface AiStudioRepository {
-  getPlatformContent(platform: PlatformId): GeneratedPlatformContent;
-  getProject(): AiStudioProject;
-  listSuggestions(): readonly AiSuggestion[];
 }
 
 export interface DashboardRepository {

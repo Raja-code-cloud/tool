@@ -12,6 +12,7 @@ export type {
 export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   {
     id: "cl-1",
+    version: 1,
     title: "Azure Networking Deep Dive",
     type: "article",
     status: "published",
@@ -28,6 +29,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-2",
+    version: 1,
     title: "Terraform Best Practices",
     type: "article",
     status: "scheduled",
@@ -44,6 +46,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-3",
+    version: 1,
     title: "Cloud Run Architecture",
     type: "video",
     status: "published",
@@ -60,6 +63,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-4",
+    version: 1,
     title: "Kubernetes Security",
     type: "video",
     status: "draft",
@@ -75,6 +79,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-5",
+    version: 1,
     title: "Cloud SQL HA",
     type: "poster",
     status: "published",
@@ -91,6 +96,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-6",
+    version: 1,
     title: "IAM Best Practices",
     type: "article",
     status: "draft",
@@ -107,6 +113,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-7",
+    version: 1,
     title: "Spring Launch Hero Poster",
     type: "poster",
     status: "scheduled",
@@ -122,6 +129,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-8",
+    version: 1,
     title: "Product Demo Thumbnail Set",
     type: "thumbnail",
     status: "published",
@@ -137,6 +145,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-9",
+    version: 1,
     title: "Q3 Newsletter Intro",
     type: "article",
     status: "archived",
@@ -153,6 +162,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-10",
+    version: 1,
     title: "Zero Trust Overview Reel",
     type: "video",
     status: "scheduled",
@@ -168,6 +178,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-11",
+    version: 1,
     title: "Webinar Registration Poster",
     type: "poster",
     status: "draft",
@@ -183,6 +194,7 @@ export const CONTENT_LIBRARY_ITEMS: readonly ContentItem[] = [
   },
   {
     id: "cl-12",
+    version: 1,
     title: "Cost Optimisation Cheat Sheet",
     type: "thumbnail",
     status: "published",

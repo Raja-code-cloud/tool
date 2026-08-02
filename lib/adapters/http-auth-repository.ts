@@ -6,11 +6,13 @@ import type {
 import type { ApiClient } from "@/lib/api/client";
 import { mapAuthProviderDto, mapSessionDto } from "@/lib/auth/mappers";
 import { setAccessToken } from "@/lib/auth/token-store";
+import { resolveWorkspaceId } from "@/lib/auth/workspace-store";
 import type { AuthProvider, AuthSession, AuthTokens, LoginCredentials } from "@/lib/domain/auth";
 import type { AuthRepository } from "@/lib/domain/repositories";
 
 function unwrapSession(envelope: SuccessEnvelope<SessionDto>): AuthSession {
   const session = mapSessionDto(envelope.data);
+  resolveWorkspaceId(session.workspaceIds);
   if (session.access) {
     setAccessToken(session.access.accessToken, session.access.expiresIn);
   }
@@ -85,7 +87,9 @@ export function createHttpAuthRepository(client: ApiClient): AuthRepository {
 
     async getCurrentSession(): Promise<AuthSession> {
       const response = await client.get<SuccessEnvelope<SessionDto>>("/api/v1/auth/me");
-      return mapSessionDto(response.data.data);
+      const session = mapSessionDto(response.data.data);
+      resolveWorkspaceId(session.workspaceIds);
+      return session;
     },
   };
 }

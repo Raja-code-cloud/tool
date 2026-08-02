@@ -1,5 +1,7 @@
 import { ApiError } from "@/lib/api/errors";
+import { mapStatusToError, mapTransportError } from "@/lib/api/error-mapping";
 import type { ApiRequestConfig, ApiResponse } from "@/lib/api/types";
+import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { getAccessToken, getCsrfToken } from "@/lib/auth/token-store";
 
 export interface ApiClient {
@@ -8,6 +10,11 @@ export interface ApiClient {
   post<T>(
     path: string,
     body?: unknown,
+    config?: Omit<ApiRequestConfig, "method" | "body">,
+  ): Promise<ApiResponse<T>>;
+  postForm<T>(
+    path: string,
+    formData: FormData,
     config?: Omit<ApiRequestConfig, "method" | "body">,
   ): Promise<ApiResponse<T>>;
   put<T>(
@@ -31,6 +38,7 @@ export type ApiClientOptions = {
   readonly defaultHeaders?: Readonly<Record<string, string>>;
   readonly fetchFn?: typeof fetch;
   readonly getAccessToken?: () => string | null;
+  readonly getWorkspaceId?: () => string | null;
   readonly onUnauthorized?: () => Promise<boolean>;
 };
 
@@ -38,15 +46,6 @@ function buildUrl(baseUrl: string, path: string): string {
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${normalizedBase}${normalizedPath}`;
-}
-
-function mapStatusToError(status: number, body: unknown): ApiError {
-  if (status === 401) return new ApiError("Unauthorized", "unauthorized", status, body);
-  if (status === 403) return new ApiError("Forbidden", "forbidden", status, body);
-  if (status === 404) return new ApiError("Not found", "not_found", status, body);
-  if (status === 422) return new ApiError("Validation failed", "validation_error", status, body);
-  if (status >= 500) return new ApiError("Server error", "server_error", status, body);
-  return new ApiError("Request failed", "unknown", status, body);
 }
 
 function buildAuthHeaders(
@@ -59,6 +58,11 @@ function buildAuthHeaders(
   const token = tokenAccessor();
   if (token && !headers.Authorization) {
     headers.Authorization = `Bearer ${token}`;
+  }
+  const workspaceAccessor = options.getWorkspaceId ?? getActiveWorkspaceId;
+  const workspaceId = workspaceAccessor();
+  if (workspaceId && !headers["X-Workspace-ID"]) {
+    headers["X-Workspace-ID"] = workspaceId;
   }
   if (credentials === "include") {
     const csrf = getCsrfToken();
@@ -85,26 +89,23 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
       credentials: credentials ?? "same-origin",
       headers: {
         Accept: "application/json",
-        ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...(body !== undefined && !(body instanceof FormData)
+          ? { "Content-Type": "application/json" }
+          : {}),
         ...options.defaultHeaders,
         ...authHeaders,
       },
       ...(signal !== undefined ? { signal } : {}),
     };
     if (body !== undefined) {
-      init.body = JSON.stringify(body);
+      init.body = body instanceof FormData ? body : JSON.stringify(body);
     }
 
     let response: Response;
     try {
       response = await fetchFn(buildUrl(options.baseUrl, path), init);
     } catch (error) {
-      throw new ApiError(
-        error instanceof Error ? error.message : "Network request failed",
-        "network_error",
-        0,
-        error,
-      );
+      throw mapTransportError(error);
     }
 
     const contentType = response.headers.get("content-type") ?? "";
@@ -139,6 +140,8 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     request,
     get: (path, config) => request(path, { ...config, method: "GET" }),
     post: (path, body, config) => request(path, { ...config, method: "POST", body }),
+    postForm: (path, formData, config) =>
+      request(path, { ...config, method: "POST", body: formData }),
     put: (path, body, config) => request(path, { ...config, method: "PUT", body }),
     patch: (path, body, config) => request(path, { ...config, method: "PATCH", body }),
     delete: (path, config) => request(path, { ...config, method: "DELETE" }),
@@ -158,6 +161,7 @@ export function createDisabledApiClient(): ApiClient {
     request: disabled,
     get: disabled,
     post: disabled,
+    postForm: disabled,
     put: disabled,
     patch: disabled,
     delete: disabled,

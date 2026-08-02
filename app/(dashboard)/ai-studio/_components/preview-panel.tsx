@@ -5,9 +5,8 @@ import { Eye } from "lucide-react";
 
 import { Card, CardHeader } from "@/components/cards";
 import { Avatar, Badge } from "@/components/ui";
+import type { AiStudioProject } from "@/lib/domain/ai-studio";
 import type { PlatformId } from "@/lib/domain/platform";
-import { MOTION_DURATION, MOTION_EASING } from "@/lib/motion";
-import { aiStudioService } from "@/lib/services";
 import { splitThreadTweets } from "@/lib/utils/ai-studio";
 import { thumbnailGradient } from "@/lib/utils/content-display";
 
@@ -16,6 +15,7 @@ import { AllPlatformLimits } from "./character-limit-bar";
 import type { PlatformWorkspaceState } from "./types";
 
 export type PreviewPanelProps = {
+  project: AiStudioProject | null;
   platform: PlatformId;
   current: PlatformWorkspaceState;
   displayContent: string;
@@ -23,12 +23,12 @@ export type PreviewPanelProps = {
 };
 
 export function PreviewPanel({
+  project,
   platform,
   current,
   displayContent,
   platformCounts,
 }: PreviewPanelProps): React.JSX.Element {
-  const project = aiStudioService.getProject();
   const hasPreview = current.isGenerated && displayContent.length > 0;
 
   return (
@@ -62,8 +62,8 @@ export function PreviewPanel({
                 content={displayContent}
                 hashtags={current.hashtags}
                 cta={current.cta}
-                projectName={project.name}
-                thumbnailHue={project.thumbnailHue}
+                projectName={project?.name ?? "Untitled"}
+                thumbnailHue={project?.thumbnailHue ?? 210}
               />
             </motion.div>
           )}
@@ -210,6 +210,4 @@ function PlatformPreview({
         </article>
       );
     default:
-      return <p className="text-muted-foreground text-sm">{content}</p>;
-  }
-}
+      return <p className="text-muted-foreground text-sm

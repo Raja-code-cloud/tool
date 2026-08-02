@@ -4,11 +4,15 @@ from __future__ import annotations
 
 from cloud_content_hub.application.scheduler.dto.responses import (
     AmbiguityPolicyDto,
+    ScheduleCalendarDto,
     ScheduleDto,
     SchedulePriorityDto,
     ScheduleStateDto,
 )
-from cloud_content_hub.application.scheduler.interfaces.schedule_repository import ScheduleRecord
+from cloud_content_hub.application.scheduler.interfaces.schedule_repository import (
+    ScheduleListRecord,
+    ScheduleRecord,
+)
 
 
 class ScheduleMapper:
@@ -29,4 +33,17 @@ class ScheduleMapper:
             scheduled_for=record.scheduled_for,
             state=ScheduleStateDto(record.state.value),
             priority=SchedulePriorityDto(record.priority.value),
+        )
+
+    @staticmethod
+    def to_calendar_dto(record: ScheduleListRecord) -> ScheduleCalendarDto:
+        schedule = ScheduleMapper.to_dto(record.schedule)
+        return ScheduleCalendarDto(
+            **schedule.model_dump(),
+            publication_id=record.publication_id,
+            publication_title=record.publication_title,
+            publication_status=record.publication_status,
+            platform_code=record.platform_code,
+            approval_state=record.approval_state,
+            queue_order=record.queue_order,
         )
