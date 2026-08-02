@@ -1,0 +1,56 @@
+# syntax=docker/dockerfile:1.7
+
+FROM python:3.13-slim-bookworm AS builder
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /build
+
+COPY backend/pyproject.toml ./
+COPY backend/src ./src
+
+RUN python -m pip install --upgrade pip build \
+    && python -m build --wheel --outdir /wheels
+
+FROM python:3.13-slim-bookworm AS runtime
+
+ARG APP_UID=10001
+ARG APP_GID=10001
+ARG VCS_REF=unknown
+ARG BUILD_DATE=unknown
+
+LABEL org.opencontainers.image.title="Cloud Content Hub Worker" \
+      org.opencontainers.image.description="Cloud Content Hub Celery runtime" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.created="${BUILD_DATE}"
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PATH="/home/cch/.local/bin:${PATH}" \
+    CELERY_CONCURRENCY=2
+
+RUN groupadd --gid "${APP_GID}" cch \
+    && useradd --uid "${APP_UID}" --gid cch --create-home --shell /usr/sbin/nologin cch
+
+WORKDIR /app
+
+COPY --from=builder /wheels /wheels
+RUN python -m pip install /wheels/*.whl \
+    && rm -rf /wheels
+
+USER cch
+
+CMD ["sh", "-c", "exec celery --app cloud_content_hub.workers.runtime:celery_app worker --loglevel \"${CCH_LOG_LEVEL:-INFO}\" --concurrency \"$CELERY_CONCURRENCY\""]
+
+FROM runtime AS dev
+
+USER root
+COPY backend/pyproject.toml ./
+COPY backend/src ./src
+RUN python -m pip install --no-cache-dir --editable ".[dev]"
+USER cch
+
+CMD ["sh", "-c", "exec celery --app cloud_content_hub.workers.runtime:celery_app worker --loglevel DEBUG --concurrency \"$CELERY_CONCURRENCY\""]

@@ -1,0 +1,82 @@
+name: cloud-content-hub-prod
+
+x-production-environment: &production-environment
+  CCH_ENVIRONMENT: production
+  CCH_SERVICE_VERSION: ${IMAGE_TAG:?IMAGE_TAG is required}
+  CCH_LOG_LEVEL: ${CCH_LOG_LEVEL:-INFO}
+  CCH_DATABASE_URL: ${CCH_DATABASE_URL:?CCH_DATABASE_URL is required}
+  CCH_REDIS_URL: ${CCH_REDIS_URL:?CCH_REDIS_URL is required}
+  CCH_HTTP_ALLOWED_ORIGINS: ${CCH_HTTP_ALLOWED_ORIGINS:?CCH_HTTP_ALLOWED_ORIGINS is required}
+  CCH_OPENAPI_ENABLED: ${CCH_OPENAPI_ENABLED:-false}
+  CCH_AZURE_STORAGE_ACCOUNT_URL: ${CCH_AZURE_STORAGE_ACCOUNT_URL:?CCH_AZURE_STORAGE_ACCOUNT_URL is required}
+
+x-hardened-service: &hardened-service
+  restart: always
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp:size=64m,mode=1777
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  environment: *production-environment
+  networks:
+    - backend
+
+services:
+  api:
+    <<: *hardened-service
+    image: ${REGISTRY:?REGISTRY is required}/cloud-content-hub-api@${API_IMAGE_DIGEST:?API_IMAGE_DIGEST is required}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen("http://127.0.0.1:8000/health/ready", timeout=3)
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  worker:
+    <<: *hardened-service
+    image: ${REGISTRY:?REGISTRY is required}/cloud-content-hub-worker@${WORKER_IMAGE_DIGEST:?WORKER_IMAGE_DIGEST is required}
+    stop_grace_period: 90s
+
+  beat:
+    <<: *hardened-service
+    image: ${REGISTRY:?REGISTRY is required}/cloud-content-hub-worker@${WORKER_IMAGE_DIGEST:?WORKER_IMAGE_DIGEST is required}
+    command:
+      - celery
+      - --app
+      - cloud_content_hub.workers.runtime:celery_app
+      - beat
+      - --loglevel
+      - ${CCH_LOG_LEVEL:-INFO}
+      - --schedule
+      - /tmp/celerybeat-schedule
+
+  migrate:
+    image: ${REGISTRY:?REGISTRY is required}/cloud-content-hub-api@${API_IMAGE_DIGEST:?API_IMAGE_DIGEST is required}
+    profiles: ["tools"]
+    working_dir: /app
+    environment:
+      <<: *production-environment
+      CCH_DATABASE_URL: ${CCH_MIGRATION_DATABASE_URL:?CCH_MIGRATION_DATABASE_URL is required}
+    command: ["alembic", "upgrade", "head"]
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

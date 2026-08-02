@@ -1,0 +1,74 @@
+services:
+  test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: test
+    image: cloud-content-hub-test:${IMAGE_TAG:-local}
+    environment:
+      CCH_ENVIRONMENT: test
+      CCH_DATABASE_URL: postgresql+asyncpg://cch_test:cch-test-only@postgres-test:5432/cloud_content_hub_test
+      CCH_REDIS_URL: redis://redis-test:6379/0
+      CCH_HTTP_ALLOWED_ORIGINS: '["http://test.local"]'
+      CCH_AZURE_STORAGE_ACCOUNT_URL: http://azurite:10000/devstoreaccount1
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNoGFZBMnBqzyS4vIPcY6K5YkZ1s3B4vV8=;BlobEndpoint=http://azurite:10000/devstoreaccount1;
+    command:
+      - pytest
+      - --cov=cloud_content_hub
+      - --cov-branch
+      - --cov-report=term-missing
+      - --cov-report=xml:/reports/coverage.xml
+      - --junitxml=/reports/junit.xml
+    volumes:
+      - ../backend/test-results:/reports
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+      azurite:
+        condition: service_started
+    networks:
+      - test
+    security_opt:
+      - no-new-privileges:true
+
+  postgres-test:
+    image: postgres:17.2-bookworm
+    environment:
+      POSTGRES_DB: cloud_content_hub_test
+      POSTGRES_USER: cch_test
+      POSTGRES_PASSWORD: cch-test-only
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cch_test -d cloud_content_hub_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    networks:
+      - test
+
+  redis-test:
+    image: redis:7.4.2-bookworm
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    networks:
+      - test
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.33.0
+    command: ["azurite-blob", "--blobHost", "0.0.0.0", "--location", "/data"]
+    tmpfs:
+      - /data
+    networks:
+      - test
+
+networks:
+  test:
+    driver: bridge
