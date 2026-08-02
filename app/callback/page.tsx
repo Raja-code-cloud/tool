@@ -35,7 +35,6 @@ function CallbackHandler(): React.JSX.Element {
         toast({
           title: "Sign in failed",
           description: "Missing OAuth callback parameters.",
-          variant: "destructive",
         });
         router.replace(ROUTES.login);
         return;
@@ -46,7 +45,6 @@ function CallbackHandler(): React.JSX.Element {
         toast({
           title: "Sign in failed",
           description: "OAuth state mismatch.",
-          variant: "destructive",
         });
         router.replace(ROUTES.login);
         return;
@@ -72,7 +70,6 @@ function CallbackHandler(): React.JSX.Element {
         toast({
           title: "Sign in failed",
           description: error instanceof Error ? error.message : "Unable to complete sign in.",
-          variant: "destructive",
         });
         router.replace(ROUTES.login);
       }

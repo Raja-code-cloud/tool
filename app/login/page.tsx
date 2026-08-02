@@ -55,7 +55,6 @@ function LoginForm(): React.JSX.Element {
         toast({
           title: "Sign in failed",
           description: error instanceof Error ? error.message : "Unable to sign in.",
-          variant: "destructive",
         });
       } finally {
         setIsSubmitting(false);
@@ -94,7 +93,6 @@ function LoginForm(): React.JSX.Element {
         toast({
           title: "Sign in failed",
           description: error instanceof Error ? error.message : "Unable to start sign in.",
-          variant: "destructive",
         });
       } finally {
         setIsSubmitting(false);

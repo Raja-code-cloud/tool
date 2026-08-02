@@ -4,7 +4,6 @@ export function hasPermission(
   permissions: readonly string[],
   required: string,
 ): boolean {
-  const requiredParts = required.split(":");
   return permissions.some((permission) => {
     if (permission === "*" || permission === required) return true;
     if (permission.endsWith(":*")) {
