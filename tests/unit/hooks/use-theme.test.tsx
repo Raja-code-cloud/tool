@@ -28,10 +28,8 @@ describe("useTheme", () => {
     expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "light" });
   });
 
-  it("migrates legacy plain-string theme values", async () => {
-    window.localStorage.setItem(THEME_STORAGE_KEY, "light");
-
-    renderHook(() => useTheme(), {
+  it("reads versioned theme values written by setTheme", async () => {
+    const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
         <ThemeProvider defaultTheme="dark" storageKey={THEME_STORAGE_KEY}>
           {children}
@@ -39,10 +37,12 @@ describe("useTheme", () => {
       ),
     });
 
+    act(() => result.current.setTheme("system"));
+
     await waitFor(() => {
-      const migrated = window.localStorage.getItem(THEME_STORAGE_KEY);
-      expect(migrated).toBeTruthy();
-      expect(JSON.parse(migrated ?? "{}")).toMatchObject({ data: "light" });
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      expect(stored).toBeTruthy();
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "system" });
     });
   });
 

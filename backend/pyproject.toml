@@ -41,9 +41,14 @@ dev = [
   "mypy>=1.14",
   "pytest>=8.3",
   "pytest-asyncio>=0.25",
+  "pytest-benchmark>=5.1",
   "pytest-cov>=6.0",
   "ruff>=0.9",
   "types-psutil>=6.1",
+]
+perf = [
+  "locust>=2.32",
+  "pytest-benchmark>=5.1",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -80,4 +85,16 @@ markers = [
   "migration: validates database migrations",
   "slow: long-running test",
   "external: calls an external service",
+  "performance: measures latency and throughput",
+  "benchmark: pytest-benchmark micro-benchmark",
+  "load: load-test scenario (Locust/k6 or simulated concurrency)",
+  "stress: stress-test scenario targeting saturation limits",
 ]
+filterwarnings = [
+  "ignore::pytest_benchmark.logger.PytestBenchmarkWarning",
+]
+
+[tool.pytest-benchmark]
+min_rounds = 5
+warmup = true
+disable_gc = true

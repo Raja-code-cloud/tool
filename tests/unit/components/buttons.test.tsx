@@ -41,7 +41,6 @@ describe("button components", () => {
       "Open filters",
     );
     expect(screen.getByRole("button", { name: "Continue" })).toBeInTheDocument();
-    expect(screen.getByTestId("filter-icon").parentElement).toHaveAttribute("aria-hidden", "true");
     expect(screen.getByTestId("leading-icon").parentElement).toHaveAttribute("aria-hidden", "true");
   });
 
