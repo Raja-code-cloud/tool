@@ -3,9 +3,9 @@ import { Inter } from "next/font/google";
 
 import { SkipLink } from "@/components/layout";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { WORKSPACE } from "@/constants/workspace";
 import { AuthProvider } from "@/hooks/use-auth";
 import { AppToastProvider } from "@/hooks/use-toast";
-import { WORKSPACE } from "@/constants/workspace";
 
 import "@/styles/globals.css";
 

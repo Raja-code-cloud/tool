@@ -5,6 +5,7 @@ import * as React from "react";
 
 import { ROUTES } from "@/constants/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { socialAccountService } from "@/lib/services";
 import { resolveSocialAccountErrorMessage } from "@/lib/social-accounts/error-messages";
 import {
   SOCIAL_OAUTH_PLATFORM_KEY,
@@ -12,7 +13,6 @@ import {
   SOCIAL_OAUTH_STATE_KEY,
   SOCIAL_OAUTH_VERIFIER_KEY,
 } from "@/lib/social-accounts/oauth-storage";
-import { socialAccountService } from "@/lib/services";
 
 function SocialCallbackHandler(): React.JSX.Element {
   const router = useRouter();
