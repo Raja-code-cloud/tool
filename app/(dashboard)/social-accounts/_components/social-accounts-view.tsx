@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 
 import { LiveRegion, Skeleton } from "@/components/feedback";
 import { PageContainer, PageHeader, Stack } from "@/components/layout";
-import { useToast } from "@/hooks/use-toast";
 import { MOTION_DURATION, MOTION_EASING } from "@/lib/motion";
 
 import { AccountDetailsDrawer, ActivityTimeline } from "./account-details-drawer";
@@ -19,15 +18,10 @@ const ConnectAccountDialog = dynamic(() =>
 );
 
 export function SocialAccountsView(): React.JSX.Element {
-  const { toast } = useToast();
   const state = useSocialAccountsState();
 
   const handleRefreshAccount = (id: string): void => {
-    const account = state.accounts.find((item) => item.id === id);
-    toast({
-      title: "Account refreshed",
-      description: `${account?.accountName ?? "Account"} sync completed.`,
-    });
+    void state.reconnectAccount(id);
   };
 
   return (
@@ -48,7 +42,7 @@ export function SocialAccountsView(): React.JSX.Element {
           isRefreshing={state.isRefreshing}
         />
 
-        {state.isRefreshing ? (
+        {state.isLoading || state.isRefreshing ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
             {Array.from({ length: 5 }, (_, index) => (
               <Skeleton key={index} className="h-28 rounded-xl" />
@@ -64,7 +58,16 @@ export function SocialAccountsView(): React.JSX.Element {
           </motion.div>
         )}
 
-        {state.overview.connected === 0 && state.filter === "all" && !state.search.trim() ? (
+        {state.loadError ? (
+          <div
+            className="bg-destructive/10 text-destructive rounded-xl border border-destructive/20 p-4 text-sm"
+            role="alert"
+          >
+            {state.loadError}
+          </div>
+        ) : null}
+
+        {!state.isLoading && state.overview.connected === 0 && state.filter === "all" && !state.search.trim() ? (
           <SocialAccountsEmptyState onConnect={() => state.setConnectOpen(true)} />
         ) : state.showEmpty ? (
           <div

@@ -62,12 +62,14 @@ export function mapDashboardStats(input: DashboardSummaryInput): readonly Dashbo
     scheduledFromAnalytics ?? 0,
   );
 
-  const partial =
+  const partialCounts =
     input.totalContent.partial ||
     input.draftContent.partial ||
     input.publishedContent.partial ||
     input.scheduledContent.partial ||
     input.failedContent.partial;
+
+  void partialCounts;
 
   const todayCount = input.todayScheduledCount ?? 0;
 

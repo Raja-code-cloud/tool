@@ -49,8 +49,6 @@ import type {
   ContentRepository,
   DashboardRepository,
   SettingsRepository,
-  SocialAccountRepository,
-  SocialAccountUpdateInput,
   WorkspaceRepository,
 } from "@/lib/domain/repositories";
 import { applyExpand, applyShorten, applyToneTransform } from "@/lib/utils/ai-studio";
@@ -115,7 +113,10 @@ export const mockAiStudioRepository: AiStudioRepository = {
 
 export const mockDashboardRepository: DashboardRepository = {
   async getStats() {
-    return DASHBOARD_STATS.map(({ icon: _icon, ...stat }) => stat);
+    return DASHBOARD_STATS.map(({ icon, ...stat }) => {
+      void icon;
+      return stat;
+    });
   },
   async listSuggestions() {
     return DASHBOARD_SUGGESTIONS;

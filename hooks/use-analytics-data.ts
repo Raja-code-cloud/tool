@@ -172,11 +172,11 @@ export function useAnalyticsData(
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [filters, tableControls, refreshKey]);
+  }, [filters, tableControls]);
 
   useEffect(() => {
     void load();
-  }, [load]);
+  }, [load, refreshKey]);
 
   const dateRangeOptions = useMemo(
     () =>

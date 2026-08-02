@@ -3,13 +3,7 @@ import type { PlatformId } from "@/lib/domain/platform";
 import type { GeneratedPlatformContent } from "@/lib/domain/repositories";
 
 export type GenerationScope =
-  | "whole"
-  | "selection"
-  | "headline"
-  | "cta"
-  | "hashtags"
-  | "tone"
-  | "platform_variant";
+  "whole" | "selection" | "headline" | "cta" | "hashtags" | "tone" | "platform_variant";
 
 export type AiStudioProviderOption = {
   readonly id: string;

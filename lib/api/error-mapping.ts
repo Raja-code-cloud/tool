@@ -17,6 +17,9 @@ export function mapStatusToError(status: number, body: unknown): ApiError {
   const message = extractProblemMessage(body);
   const problemCode = extractProblemCode(body);
 
+  if (status === 400) {
+    return new ApiError(message ?? "Bad request", "bad_request", status, body, problemCode);
+  }
   if (status === 401) {
     return new ApiError(message ?? "Unauthorized", "unauthorized", status, body);
   }

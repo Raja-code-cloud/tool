@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import type { AnalyticsDashboardDto, PlatformAnalyticsDto, PostAnalyticsDto } from "@/lib/api/analytics-types";
 import {
   buildPublishingTrend,
   mapDashboardSummary,
   mapPlatformEngagement,
   mapPostAnalyticsDto,
 } from "@/lib/analytics/mappers";
+import type {
+  AnalyticsDashboardDto,
+  PlatformAnalyticsDto,
+  PostAnalyticsDto,
+} from "@/lib/api/analytics-types";
 
 describe("analytics mappers", () => {
   it("maps dashboard metrics into summary cards", () => {

@@ -1,3 +1,4 @@
+import { ANALYTICS_DATE_RANGES, ANALYTICS_PLATFORMS } from "@/constants/analytics";
 import type { HttpAnalyticsRepository } from "@/lib/adapters/http-analytics-repository";
 import { resolveAnalyticsPeriod } from "@/lib/analytics/date-range";
 import {
@@ -13,7 +14,6 @@ import {
   mapPlatformReach,
   mapPostAnalyticsDto,
 } from "@/lib/analytics/mappers";
-import { ANALYTICS_DATE_RANGES, ANALYTICS_PLATFORMS } from "@/constants/analytics";
 import type {
   AiUsagePoint,
   AnalyticsInsight,
@@ -146,9 +146,7 @@ export function createAnalyticsApiService(repository: HttpAnalyticsRepository) {
           : platforms.filter((platform) => platform.platformCode === filters.platform);
 
       const defaultPlatform =
-        filters.platform === "all"
-          ? ("linkedin" as PlatformId)
-          : filters.platform;
+        filters.platform === "all" ? ("linkedin" as PlatformId) : filters.platform;
 
       const posts = postsPage.items.map((item) => mapPostAnalyticsDto(item, defaultPlatform));
       const filteredPosts = filterPostsBySearch(

@@ -77,18 +77,12 @@ export function createSchedulerService(repository: SchedulerRepository) {
       input: import("@/lib/domain/repositories").UpdateScheduleInput,
     ) => repository.updateSchedule(id, version, input),
     cancelSchedule: (id: string, version: number) => repository.cancelSchedule(id, version),
-    dispatchPublication: (
-      publicationId: string,
-      version: number,
-      targetIds?: readonly string[],
-    ) => repository.dispatchPublication(publicationId, version, targetIds),
+    dispatchPublication: (publicationId: string, version: number, targetIds?: readonly string[]) =>
+      repository.dispatchPublication(publicationId, version, targetIds),
     cancelPublication: (publicationId: string, version: number) =>
       repository.cancelPublication(publicationId, version),
-    retryPublication: (
-      publicationId: string,
-      version: number,
-      targetIds?: readonly string[],
-    ) => repository.retryPublication(publicationId, version, targetIds),
+    retryPublication: (publicationId: string, version: number, targetIds?: readonly string[]) =>
+      repository.retryPublication(publicationId, version, targetIds),
   };
 }
 
@@ -103,11 +97,8 @@ export function createSocialAccountService(repository: SocialAccountRepository) 
       repository.connectAccount(input),
     disconnectAccount: (accountId: string) => repository.disconnectAccount(accountId),
     refreshAccount: (accountId: string) => repository.refreshAccount(accountId),
-    updateAccount: (
-      accountId: string,
-      version: number,
-      input: SocialAccountUpdateInput,
-    ) => repository.updateAccount(accountId, version, input),
+    updateAccount: (accountId: string, version: number, input: SocialAccountUpdateInput) =>
+      repository.updateAccount(accountId, version, input),
     listPublicationHistory: (socialAccountId?: string) =>
       repository.listPublicationHistory(socialAccountId),
   };
@@ -118,7 +109,8 @@ export function createAiStudioService(repository: AiStudioRepository) {
     getProject: () => Promise.resolve(repository.getProject()),
     listSuggestions: () => Promise.resolve(repository.listSuggestions()),
     listProviders: () => repository.listProviders(),
-    generate: (request: Parameters<AiStudioRepository["generate"]>[0]) => repository.generate(request),
+    generate: (request: Parameters<AiStudioRepository["generate"]>[0]) =>
+      repository.generate(request),
     regenerate: (request: Parameters<AiStudioRepository["regenerate"]>[0]) =>
       repository.regenerate(request),
     saveDraft: (request: Parameters<AiStudioRepository["saveDraft"]>[0]) =>
@@ -277,7 +269,10 @@ export function createAnalyticsService(repository: AnalyticsRepository) {
 export function createSettingsService(repository: SettingsRepository) {
   return {
     getProfile: () => Promise.resolve(repository.getProfile()),
-    updateProfile: (input: import("@/lib/domain/repositories").ProfileUpdateInput, version: number) => {
+    updateProfile: (
+      input: import("@/lib/domain/repositories").ProfileUpdateInput,
+      version: number,
+    ) => {
       if (!repository.updateProfile) {
         return Promise.reject(new Error("Profile updates are not supported in mock mode."));
       }

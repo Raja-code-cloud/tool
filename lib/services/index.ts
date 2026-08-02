@@ -1,12 +1,16 @@
-import { createHttpSocialAccountRepository } from "@/lib/adapters/http-social-account-repository";
+import { INITIAL_NOTIFICATIONS, SCHEDULED_POSTS } from "@/constants/scheduler";
 import { createHttpAiStudioRepository } from "@/lib/adapters/http-ai-studio-repository";
-import { createHttpDashboardRepository } from "@/lib/adapters/http-dashboard-repository";
-import { createHttpSettingsRepository } from "@/lib/adapters/http-settings-repository";
-import { createHttpWorkspaceRepository } from "@/lib/adapters/http-workspace-repository";
 import { createHttpAnalyticsRepository } from "@/lib/adapters/http-analytics-repository";
 import { createHttpAuthRepository } from "@/lib/adapters/http-auth-repository";
 import { createHttpContentRepository } from "@/lib/adapters/http-content-repository";
-import { createHttpSchedulerRepository, createMockSchedulerRepository } from "@/lib/adapters/http-scheduler-repository";
+import { createHttpDashboardRepository } from "@/lib/adapters/http-dashboard-repository";
+import {
+  createHttpSchedulerRepository,
+  createMockSchedulerRepository,
+} from "@/lib/adapters/http-scheduler-repository";
+import { createHttpSettingsRepository } from "@/lib/adapters/http-settings-repository";
+import { createHttpSocialAccountRepository } from "@/lib/adapters/http-social-account-repository";
+import { createHttpWorkspaceRepository } from "@/lib/adapters/http-workspace-repository";
 import { createMockAuthRepository } from "@/lib/adapters/mock-auth-repository";
 import {
   mockAiStudioRepository,
@@ -17,14 +21,13 @@ import {
   mockSocialAccountRepository,
   mockWorkspaceRepository,
 } from "@/lib/adapters/mock-repositories";
-import { INITIAL_NOTIFICATIONS, SCHEDULED_POSTS } from "@/constants/scheduler";
 import { createApiClient, createDisabledApiClient } from "@/lib/api";
-import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { getAccessToken } from "@/lib/auth/token-store";
+import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { env } from "@/lib/config/env";
 import { createAnalyticsApiService } from "@/lib/services/analytics-api-service";
-import { createDashboardApiService } from "@/lib/services/dashboard-api-service";
 import { createAuthService, type AuthService } from "@/lib/services/auth-service";
+import { createDashboardApiService } from "@/lib/services/dashboard-api-service";
 import { createUploadRepository, createUploadService } from "@/lib/services/upload-service";
 import {
   createAiStudioService,
@@ -64,8 +67,7 @@ export const apiClient = isBackendAuthEnabled
   ? createApiClient({
       baseUrl: env.NEXT_PUBLIC_API_BASE_URL!,
       getAccessToken,
-      getWorkspaceId: () =>
-        getActiveWorkspaceId() ?? env.NEXT_PUBLIC_WORKSPACE_ID ?? null,
+      getWorkspaceId: () => getActiveWorkspaceId() ?? env.NEXT_PUBLIC_WORKSPACE_ID ?? null,
       onUnauthorized: handleUnauthorized,
     })
   : createDisabledApiClient();

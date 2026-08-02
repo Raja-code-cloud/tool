@@ -28,7 +28,11 @@ import {
 describe("workspace services", () => {
   it("returns content library data from the content repository", async () => {
     const repository: ContentRepository = {
-      list: async () => ({ items: CONTENT_LIBRARY_ITEMS.slice(0, 2), nextCursor: null, hasMore: false }),
+      list: async () => ({
+        items: CONTENT_LIBRARY_ITEMS.slice(0, 2),
+        nextCursor: null,
+        hasMore: false,
+      }),
       getById: async (id) => CONTENT_LIBRARY_ITEMS.find((item) => item.id === id)!,
       delete: async () => undefined,
       archive: async (id, version) => ({
@@ -53,10 +57,10 @@ describe("workspace services", () => {
     expect(service.listNotifications().length).toBeGreaterThan(0);
   });
 
-  it("returns social account data", () => {
+  it("returns social account data", async () => {
     const service = createSocialAccountService(mockSocialAccountRepository);
-    expect(service.listAccounts().length).toBeGreaterThan(SOCIAL_ACCOUNTS.length - 1);
-    expect(service.listActivity().length).toBeGreaterThan(0);
+    expect((await service.listAccounts()).length).toBeGreaterThan(SOCIAL_ACCOUNTS.length - 1);
+    expect((await service.listActivity()).length).toBeGreaterThan(0);
   });
 
   it("returns ai studio project and suggestions", async () => {

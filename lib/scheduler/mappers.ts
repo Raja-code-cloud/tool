@@ -30,9 +30,7 @@ function mapPlatformCode(code: string): PlatformId {
   return PLATFORM_CODES[normalized] ?? "linkedin";
 }
 
-function mapApprovalState(
-  value: string,
-): "approved" | "pending" | "rejected" {
+function mapApprovalState(value: string): "approved" | "pending" | "rejected" {
   if (value === "approved") return "approved";
   if (value === "rejected") return "rejected";
   return "pending";
@@ -108,5 +106,13 @@ export function toUtcRangeStart(date: Date): string {
 }
 
 export function toUtcRangeEnd(date: Date): string {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).toISOString();
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    23,
+    59,
+    59,
+    999,
+  ).toISOString();
 }

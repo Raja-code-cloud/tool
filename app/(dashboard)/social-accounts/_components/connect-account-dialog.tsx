@@ -20,7 +20,7 @@ export function ConnectAccountDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         title="Connect account"
-        description="Choose a platform to connect. OAuth flow is simulated with mock data."
+        description="Choose a platform to connect. You will be redirected to authorize access."
       >
         <ul className="grid gap-2">
           {SUPPORTED_PLATFORMS.map((platform) => (

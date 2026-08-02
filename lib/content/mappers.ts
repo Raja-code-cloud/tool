@@ -68,7 +68,9 @@ function derivePublishingStatus(media: AssetDto["media"]): PublishingStatus {
   }
 }
 
-function extractPlatforms(metadata: Readonly<Record<string, unknown>> | undefined): readonly string[] {
+function extractPlatforms(
+  metadata: Readonly<Record<string, unknown>> | undefined,
+): readonly string[] {
   if (!metadata) return [];
   const platforms = metadata.platforms;
   if (Array.isArray(platforms)) {

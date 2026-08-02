@@ -20,6 +20,13 @@ import type {
   ReachByPlatform,
   TrendPoint,
 } from "@/lib/domain/analytics";
+import type {
+  AuthorizationFlow,
+  AuthProvider,
+  AuthSession,
+  AuthTokens,
+  LoginCredentials,
+} from "@/lib/domain/auth";
 import type { ContentItem, ContentStatus, ContentType } from "@/lib/domain/content";
 import type {
   ActivityItem,
@@ -43,13 +50,6 @@ import type {
 } from "@/lib/domain/settings";
 import type { ActivityEvent, SocialAccount } from "@/lib/domain/social-account";
 import type { WorkspaceInfo, WorkspaceUser } from "@/lib/domain/workspace";
-import type {
-  AuthProvider,
-  AuthSession,
-  AuthTokens,
-  AuthorizationFlow,
-  LoginCredentials,
-} from "@/lib/domain/auth";
 
 export type GeneratedPlatformContent = {
   readonly content: string;
@@ -170,7 +170,10 @@ export interface SocialAccountRepository {
     }[]
   >;
   listActivity(): Promise<readonly ActivityEvent[]>;
-  beginAuthorization(platformCode: string, redirectUri: string): Promise<SocialAccountAuthorizationFlow>;
+  beginAuthorization(
+    platformCode: string,
+    redirectUri: string,
+  ): Promise<SocialAccountAuthorizationFlow>;
   connectAccount(input: {
     readonly platformCode: string;
     readonly authorizationCode: string;
@@ -185,9 +188,9 @@ export interface SocialAccountRepository {
     version: number,
     input: SocialAccountUpdateInput,
   ): Promise<SocialAccount>;
-  listPublicationHistory(socialAccountId?: string): Promise<
-    readonly import("@/lib/api/social-account-types").PublicationHistoryItemDto[]
-  >;
+  listPublicationHistory(
+    socialAccountId?: string,
+  ): Promise<readonly import("@/lib/api/social-account-types").PublicationHistoryItemDto[]>;
 }
 
 export interface DashboardRepository {
@@ -232,14 +235,10 @@ export type ProfileState = ProfileDefaults & {
 
 export interface SettingsRepository {
   getProfile(): ProfileState | Promise<ProfileState>;
-  updateProfile?(
-    input: ProfileUpdateInput,
-    version: number,
-  ): ProfileState | Promise<ProfileState>;
+  updateProfile?(input: ProfileUpdateInput, version: number): ProfileState | Promise<ProfileState>;
   uploadAvatar?(file: File, version: number): ProfileState | Promise<ProfileState>;
   listNotificationPreferences():
-    | readonly NotificationPreference[]
-    | Promise<readonly NotificationPreference[]>;
+    readonly NotificationPreference[] | Promise<readonly NotificationPreference[]>;
   updateNotificationPreferences?(
     preferences: Readonly<Record<NotificationChannelId, { email: boolean; inApp: boolean }>>,
   ): readonly NotificationPreference[] | Promise<readonly NotificationPreference[]>;
