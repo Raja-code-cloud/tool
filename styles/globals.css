@@ -1,0 +1,165 @@
+@import "tailwindcss";
+/* Supplies the enter/exit utilities (animate-in, fade-in, slide-in-*) that the
+   dialog, dropdown, and toast primitives already reference. */
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --breakpoint-tablet: 48rem;
+  --breakpoint-desktop: 64rem;
+  --breakpoint-wide: 90rem;
+  --font-sans: var(--font-inter), "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.32);
+  --shadow-dialog: 0 16px 48px rgb(0 0 0 / 0.42);
+  --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.16), 0 4px 12px rgb(0 0 0 / 0.12);
+  --spacing-page-mobile: 1rem;
+  --spacing-page-tablet: 1.5rem;
+  --spacing-page-desktop: 2rem;
+  --spacing-sidebar: 15rem;
+  --spacing-sidebar-collapsed: 4rem;
+  --spacing-header: 3.5rem;
+  --spacing-content: 90rem;
+  --spacing-reading: 55rem;
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-medium: 200ms;
+}
+
+:root {
+  color-scheme: light;
+  --background: #f7f8fa; --foreground: #111827; --card: #ffffff; --card-foreground: #111827;
+  --popover: #ffffff; --popover-foreground: #111827; --primary: #2563eb; --primary-foreground: #ffffff;
+  --secondary: #eef1f5; --secondary-foreground: #111827; --muted: #eef1f5; --muted-foreground: #526174;
+  --accent: #dbeafe; --accent-foreground: #172554; --destructive: #c2414b; --destructive-foreground: #ffffff;
+  --success: #17864f; --warning: #9a6700; --info: #1677a8; --border: #e2e6ec; --input: #cbd2dc; --ring: #2563eb;
+  --chart-1: #2563eb; --chart-2: #7c3aed; --chart-3: #0f8a72; --chart-4: #b66a00; --chart-5: #c2414b; --chart-6: #1677a8;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #090b0f; --foreground: #f4f7fb; --card: #11151c; --card-foreground: #f4f7fb;
+  --popover: #171c24; --popover-foreground: #f4f7fb; --primary: #6ea8fe; --primary-foreground: #090b0f;
+  --secondary: #171c24; --secondary-foreground: #f4f7fb; --muted: #202733; --muted-foreground: #aab4c3;
+  --accent: #172a46; --accent-foreground: #f4f7fb; --destructive: #f07178; --destructive-foreground: #090b0f;
+  --success: #49c884; --warning: #e6b450; --info: #69b7e8; --border: #252c37; --input: #364152; --ring: #6ea8fe;
+  --chart-1: #6ea8fe; --chart-2: #a78bfa; --chart-3: #49c884; --chart-4: #e6b450; --chart-5: #f07178; --chart-6: #69b7e8;
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  html { background: var(--background); -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100dvh;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv11", "ss01";
+  }
+  button, a, input, select, textarea { touch-action: manipulation; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  ::selection { background: color-mix(in oklab, var(--primary) 28%, transparent); }
+
+  /* Headings sit tighter than body copy and avoid orphaned words. */
+  h1, h2, h3, h4 { letter-spacing: -0.011em; text-wrap: balance; }
+  p { text-wrap: pretty; }
+}
+
+@utility text-display { font-size: 2rem; line-height: 2.5rem; font-weight: 650; letter-spacing: -0.02em; }
+@utility text-heading-1 { font-size: 1.5rem; line-height: 2rem; font-weight: 650; letter-spacing: -0.016em; }
+@utility text-heading-2 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.012em; }
+@utility text-heading-3 { font-size: 1rem; line-height: 1.5rem; font-weight: 600; }
+@utility text-body { font-size: 0.875rem; line-height: 1.375rem; font-weight: 400; }
+@utility text-small { font-size: 0.75rem; line-height: 1.125rem; font-weight: 400; }
+@utility text-label { font-size: 0.75rem; line-height: 1rem; font-weight: 600; }
+@utility text-data { font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.25rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* Section eyebrow used above grouped settings and dashboard panels. */
+@utility text-eyebrow {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* Standard page gutters, driven by the spacing tokens above. */
+@utility page-gutter {
+  padding-inline: var(--spacing-page-mobile);
+  @media (width >= 48rem) { padding-inline: var(--spacing-page-tablet); }
+  @media (width >= 64rem) { padding-inline: var(--spacing-page-desktop); }
+}
+
+/* Route enter animation, replayed by remounting the wrapper on navigation. */
+@utility page-enter {
+  animation: page-enter var(--duration-medium) var(--ease-emphasized) both;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Lifts a card on pointer hover only; ignored for touch and reduced motion. */
+@utility hover-raise {
+  transition: transform var(--duration-medium) var(--ease-emphasized), box-shadow var(--duration-medium) var(--ease-emphasized), background-color var(--duration-fast) linear, border-color var(--duration-fast) linear;
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-raised);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hover-raise:hover { transform: none; }
+}
