@@ -65,9 +65,7 @@ function buildGenerationRequest(
   };
 }
 
-function transformToScope(
-  transform: "improve" | "expand" | "shorten" | AiStudioSettings["tone"],
-): {
+function transformToScope(transform: "improve" | "expand" | "shorten" | AiStudioSettings["tone"]): {
   scope: GenerationScope;
   userPrompt?: string;
 } {
@@ -298,11 +296,15 @@ export function useAiStudioState() {
       setLoadingPhase("regenerating");
       try {
         const result = await aiStudioService.regenerate(
-          buildGenerationRequest(activePlatform, { ...settings, tone: nextTone }, {
-            scope: mapped.scope,
-            ...(mapped.userPrompt ? { userPrompt: mapped.userPrompt } : {}),
-            signal: controller.signal,
-          }),
+          buildGenerationRequest(
+            activePlatform,
+            { ...settings, tone: nextTone },
+            {
+              scope: mapped.scope,
+              ...(mapped.userPrompt ? { userPrompt: mapped.userPrompt } : {}),
+              signal: controller.signal,
+            },
+          ),
         );
 
         pushUndo(activePlatform, state.content);

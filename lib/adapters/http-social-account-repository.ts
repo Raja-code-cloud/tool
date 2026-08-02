@@ -11,6 +11,7 @@ import type {
   UpdateSocialAccountRequestDto,
 } from "@/lib/api/social-account-types";
 import type { ApiClient } from "@/lib/api/client";
+import type { ActivityEvent, SocialAccount } from "@/lib/domain/social-account";
 import type { SocialAccountRepository } from "@/lib/domain/repositories";
 import {
   mapActivityEventDto,
@@ -124,12 +125,13 @@ export function createHttpSocialAccountRepository(client: ApiClient): SocialAcco
     },
 
     async updateAccount(accountId, version, input) {
-      const body: UpdateSocialAccountRequestDto = {
-        publishingEnabled: input.publishingEnabled,
-        defaultSettings: input.defaultSettings
-          ? mapDefaultSettingsUpdate(input.defaultSettings)
-          : undefined,
-      };
+      const body: UpdateSocialAccountRequestDto = {};
+      if (input.publishingEnabled !== undefined) {
+        body.publishingEnabled = input.publishingEnabled;
+      }
+      if (input.defaultSettings) {
+        body.defaultSettings = mapDefaultSettingsUpdate(input.defaultSettings);
+      }
       const response = await client.patch<SingleSuccessEnvelope<SocialAccountDto>>(
         `/api/v1/social-accounts/${accountId}`,
         body,
@@ -153,7 +155,8 @@ export function createMockSocialAccountRepository(
   accounts: readonly import("@/lib/domain/social-account").SocialAccount[],
   activity: readonly import("@/lib/domain/social-account").ActivityEvent[],
 ): SocialAccountRepository {
-  let store = accounts.map((account, index) => ({
+  type StoredAccount = SocialAccount & { readonly version: number };
+  let store: StoredAccount[] = accounts.map((account, index) => ({
     ...account,
     version: account.version ?? index + 1,
   }));

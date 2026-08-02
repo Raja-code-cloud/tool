@@ -3,9 +3,9 @@
 import { RefreshCw } from "lucide-react";
 import * as React from "react";
 
+import { IconButton } from "@/components/buttons";
 import { Alert, LiveRegion, Skeleton } from "@/components/feedback";
 import { PageContainer, Stack } from "@/components/layout";
-import { IconButton } from "@/components/buttons";
 import { useDashboardData } from "@/hooks/use-dashboard-data";
 
 import { AiSuggestionsPanel } from "./ai-suggestions-panel";
@@ -67,7 +67,9 @@ export function DashboardView(): React.JSX.Element {
             action={
               <IconButton
                 label="Refresh dashboard"
-                icon={<RefreshCw className={isRefreshing ? "animate-spin" : ""} aria-hidden="true" />}
+                icon={
+                  <RefreshCw className={isRefreshing ? "animate-spin" : ""} aria-hidden="true" />
+                }
                 onClick={refresh}
               />
             }

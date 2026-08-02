@@ -49,8 +49,7 @@ function buildListParams(
   const sidebarType = SIDEBAR_TYPE_MAP[sidebarFilter];
   const sidebarStatus = SIDEBAR_STATUS_MAP[sidebarFilter];
   const status = sidebarStatus ?? (toolbar.status !== "all" ? toolbar.status : null);
-  const lifecycle =
-    status && status !== "scheduled" ? mapStatusToLifecycle(status) : null;
+  const lifecycle = status && status !== "scheduled" ? mapStatusToLifecycle(status) : null;
 
   return {
     limit: 100,

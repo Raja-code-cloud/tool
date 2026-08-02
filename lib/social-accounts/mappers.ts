@@ -18,6 +18,7 @@ import type {
 
 function mapTokenStatus(status: OAuthTokenStatusDto | null): TokenStatus {
   if (status === null) return "active";
+  if (status === "revoked") return "renew_required";
   return status;
 }
 
@@ -95,12 +96,12 @@ export function mapSocialPlatformDto(dto: SocialPlatformDto): {
 export function mapDefaultSettingsUpdate(
   settings: Partial<SocialAccount["defaultSettings"]>,
 ): import("@/lib/api/social-account-types").DefaultSettingsUpdateDto {
-  return {
-    visibility: settings.visibility,
-    hashtags: settings.hashtags,
-    autoPublish: settings.autoPublish,
-    aiOptimization: settings.aiOptimization,
-    autoSchedule: settings.autoSchedule,
-    urlTracking: settings.urlTracking,
-  };
+  const update: import("@/lib/api/social-account-types").DefaultSettingsUpdateDto = {};
+  if (settings.visibility !== undefined) update.visibility = settings.visibility;
+  if (settings.hashtags !== undefined) update.hashtags = settings.hashtags;
+  if (settings.autoPublish !== undefined) update.autoPublish = settings.autoPublish;
+  if (settings.aiOptimization !== undefined) update.aiOptimization = settings.aiOptimization;
+  if (settings.autoSchedule !== undefined) update.autoSchedule = settings.autoSchedule;
+  if (settings.urlTracking !== undefined) update.urlTracking = settings.urlTracking;
+  return update;
 }
