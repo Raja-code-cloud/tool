@@ -37,11 +37,16 @@ import {
 import { NAV_ROUTES, ROUTES } from "@/constants/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useSidebar } from "@/hooks/use-sidebar";
+import type { WorkspaceInfo } from "@/lib/domain/workspace";
 import { purgeExpiredClientStorage } from "@/lib/security";
 import { workspaceService } from "@/lib/services";
 import { buildBreadcrumbs, isRouteActive } from "@/lib/utils/navigation";
 
-const workspace = workspaceService.getWorkspace();
+const FALLBACK_WORKSPACE: WorkspaceInfo = {
+  name: "Workspace",
+  shortName: "WS",
+  description: "",
+};
 
 const QUICK_ACTIONS = [
   { label: "Upload content", href: ROUTES.upload },
@@ -49,7 +54,13 @@ const QUICK_ACTIONS = [
   { label: "Schedule a post", href: ROUTES.scheduler },
 ] as const;
 
-function WorkspaceBrand({ isCollapsed }: { isCollapsed: boolean }): React.JSX.Element {
+function WorkspaceBrand({
+  isCollapsed,
+  workspace,
+}: {
+  isCollapsed: boolean;
+  workspace: WorkspaceInfo;
+}): React.JSX.Element {
   return (
     <Link
       href={ROUTES.dashboard}
@@ -123,12 +134,37 @@ export function WorkspaceShell({ children }: WorkspaceShellProps): React.JSX.Ele
   const pathname = usePathname();
   const { isCollapsed } = useSidebar();
   const { user, signOut } = useAuth();
-  const unreadNotificationCount = workspaceService.getUnreadNotificationCount();
+  const [workspace, setWorkspace] = React.useState<WorkspaceInfo>(FALLBACK_WORKSPACE);
+  const [unreadNotificationCount, setUnreadNotificationCount] = React.useState(0);
 
-  const currentUser = user ?? workspaceService.getCurrentUser();
+  const currentUser = user ?? { name: "Member", email: "", role: "Member" };
 
   React.useEffect(() => {
     purgeExpiredClientStorage();
+  }, []);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const [loadedWorkspace, unreadCount] = await Promise.all([
+          workspaceService.getWorkspace(),
+          workspaceService.getUnreadNotificationCount(),
+        ]);
+        if (!cancelled) {
+          setWorkspace(loadedWorkspace);
+          setUnreadNotificationCount(unreadCount);
+        }
+      } catch {
+        if (!cancelled) {
+          setWorkspace(FALLBACK_WORKSPACE);
+          setUnreadNotificationCount(0);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSignOut = React.useCallback(() => {
@@ -156,7 +192,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps): React.JSX.Ele
             items={items}
             {...(activeHref ? { currentHref: activeHref } : {})}
             linkComponent={Link}
-            header={<WorkspaceBrand isCollapsed={isCollapsed} />}
+            header={<WorkspaceBrand isCollapsed={isCollapsed} workspace={workspace} />}
             footer={<CollapseToggle />}
           />
         }

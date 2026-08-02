@@ -1,4 +1,7 @@
-import { AlertTriangle, CalendarClock, CheckCircle2, FileStack, FileText } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
+
+import { MetricCard } from "@/components/cards";
+import { DASHBOARD_STAT_ICONS } from "@/constants/dashboard";
 import type { DashboardStatData } from "@/lib/domain/dashboard";
 import { cn } from "@/lib/utils/cn";
 
@@ -14,7 +17,8 @@ export function DashboardStats({ stats }: DashboardStatsProps): React.JSX.Elemen
       </h2>
       <div className="tablet:grid-cols-2 wide:grid-cols-5 grid gap-4">
         {stats.map((stat) => {
-          const Icon = DASHBOARD_STAT_ICONS[stat.id] ?? FileStack;
+          const Icon = DASHBOARD_STAT_ICONS[stat.id];
+          if (!Icon) return null;
           const TrendIcon = stat.trendDirection === "down" ? TrendingDown : TrendingUp;
 
           return (

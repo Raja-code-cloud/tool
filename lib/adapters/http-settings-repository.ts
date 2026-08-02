@@ -69,10 +69,13 @@ export function createHttpSettingsRepository(client: ApiClient): SettingsReposit
       if (!objectKey) {
         throw new Error("Avatar upload did not return an object key.");
       }
-      return createHttpSettingsRepository(client).updateProfile(
+      const response = await client.patch<ProfileEnvelope>(
+        "/api/v1/users/me",
         { avatarObjectKey: objectKey },
-        version,
+        { headers: etag(version) },
       );
+      cachedProfile = mapUserProfileDto(response.data.data);
+      return cachedProfile;
     },
 
     async listNotificationPreferences() {

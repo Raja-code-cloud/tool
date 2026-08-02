@@ -77,11 +77,11 @@ describe("workspace services", () => {
     expect(generated.content).toBeTruthy();
   });
 
-  it("returns dashboard overview datasets", () => {
+  it("returns dashboard overview datasets", async () => {
     const service = createDashboardService(mockDashboardRepository);
-    expect(service.listRecentContent().length).toBeGreaterThan(0);
-    expect(service.getHealthSummary()).toContain("operational");
-    expect(service.getStorage().usedBytes).toBeGreaterThan(0);
+    expect((await service.listRecentContent()).length).toBeGreaterThan(0);
+    expect(await service.getHealthSummary()).toContain("operational");
+    expect((await service.getStorage()).usedBytes).toBeGreaterThan(0);
   });
 
   it("filters analytics by platform and date range", () => {
@@ -136,7 +136,7 @@ describe("mock repository wiring", () => {
     expect(content.items.length).toBe(CONTENT_LIBRARY_ITEMS.length);
     const schedulerPosts = await mockSchedulerRepository.listPosts();
     expect(schedulerPosts.length).toBe(SCHEDULED_POSTS.length);
-    expect(mockDashboardRepository.listSuggestions().length).toBeGreaterThan(0);
+    expect((await mockDashboardRepository.listSuggestions()).length).toBeGreaterThan(0);
     expect(mockSettingsRepository.listApiKeys().length).toBeGreaterThan(0);
   });
 });

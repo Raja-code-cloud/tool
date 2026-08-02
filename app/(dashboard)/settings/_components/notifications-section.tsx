@@ -3,30 +3,42 @@
 import * as React from "react";
 
 import { Button, Checkbox, Label } from "@/components/ui";
+import { NOTIFICATION_PREFERENCES } from "@/constants/settings";
 import { useToast } from "@/hooks/use-toast";
 import type { NotificationChannelId } from "@/lib/domain/settings";
-import { settingsService } from "@/lib/services";
 
 import { SettingsSection } from "./settings-section";
-
-type ChannelState = Record<NotificationChannelId, { email: boolean; inApp: boolean }>;
-
-function buildInitialState(): ChannelState {
-  return settingsService
-    .listNotificationPreferences()
-    .reduce<ChannelState>((accumulator, preference) => {
-      accumulator[preference.id] = { email: preference.email, inApp: preference.inApp };
-      return accumulator;
-    }, {} as ChannelState);
-}
+import { useSettingsState } from "./use-settings-state";
 
 export function NotificationsSection(): React.JSX.Element {
   const { toast } = useToast();
-  const [state, setState] = React.useState<ChannelState>(buildInitialState);
+  const {
+    notificationPreferences,
+    isLoading,
+    isSaving,
+    error,
+    saveNotificationPreferences,
+    setPreference,
+  } = useSettingsState();
 
-  function toggle(id: NotificationChannelId, channel: "email" | "inApp", checked: boolean): void {
-    setState((current) => ({ ...current, [id]: { ...current[id], [channel]: checked } }));
+  async function handleSave(): Promise<void> {
+    const saved = await saveNotificationPreferences();
+    if (saved) {
+      toast({ title: "Notification preferences saved" });
+    } else if (error) {
+      toast({
+        title: "Could not save preferences",
+        description: error,
+        variant: "destructive",
+      });
+    }
   }
+
+  const rows = NOTIFICATION_PREFERENCES.map((catalog) => ({
+    ...catalog,
+    email: notificationPreferences?.[catalog.id]?.email ?? catalog.email,
+    inApp: notificationPreferences?.[catalog.id]?.inApp ?? catalog.inApp,
+  }));
 
   return (
     <SettingsSection
@@ -34,8 +46,8 @@ export function NotificationsSection(): React.JSX.Element {
       title="Notifications"
       description="Choose which events reach you, and where."
       footer={
-        <Button size="compact" onClick={() => toast({ title: "Notification preferences saved" })}>
-          Save preferences
+        <Button size="compact" disabled={isSaving || isLoading} onClick={() => void handleSave()}>
+          {isSaving ? "Saving…" : "Save preferences"}
         </Button>
       }
     >
@@ -65,7 +77,7 @@ export function NotificationsSection(): React.JSX.Element {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {settingsService.listNotificationPreferences().map((preference) => (
+            {rows.map((preference) => (
               <tr key={preference.id}>
                 <th scope="row" className="py-3.5 pr-4 text-left font-normal">
                   <span className="block text-sm font-semibold">{preference.label}</span>
@@ -79,8 +91,11 @@ export function NotificationsSection(): React.JSX.Element {
                   </Label>
                   <Checkbox
                     id={`${preference.id}-email`}
-                    checked={state[preference.id].email}
-                    onCheckedChange={(checked) => toggle(preference.id, "email", checked === true)}
+                    checked={preference.email}
+                    disabled={isLoading}
+                    onCheckedChange={(checked) =>
+                      setPreference(preference.id, "email", checked === true)
+                    }
                     className="mx-auto"
                   />
                 </td>
@@ -90,8 +105,11 @@ export function NotificationsSection(): React.JSX.Element {
                   </Label>
                   <Checkbox
                     id={`${preference.id}-inapp`}
-                    checked={state[preference.id].inApp}
-                    onCheckedChange={(checked) => toggle(preference.id, "inApp", checked === true)}
+                    checked={preference.inApp}
+                    disabled={isLoading}
+                    onCheckedChange={(checked) =>
+                      setPreference(preference.id, "inApp", checked === true)
+                    }
                     className="mx-auto"
                   />
                 </td>
