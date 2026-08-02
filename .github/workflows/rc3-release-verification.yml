@@ -113,20 +113,13 @@ jobs:
             echo ""
             echo "| Step | Exit Code | Status |"
             echo "|------|-----------|--------|"
-            for step in npm_ci verify format_check test test_coverage build audit; do
-              code="${{ steps[format_check].outputs.exit_code }}"
-              case "$step" in
-                npm_ci) code="${{ steps.npm_ci.outputs.exit_code }}" ;;
-                verify) code="${{ steps.verify.outputs.exit_code }}" ;;
-                format_check) code="${{ steps.format_check.outputs.exit_code }}" ;;
-                test) code="${{ steps.test.outputs.exit_code }}" ;;
-                test_coverage) code="${{ steps.test_coverage.outputs.exit_code }}" ;;
-                build) code="${{ steps.build.outputs.exit_code }}" ;;
-                audit) code="${{ steps.audit.outputs.exit_code }}" ;;
-              esac
-              if [ "$code" = "0" ]; then status="PASS"; else status="FAIL"; fi
-              echo "| $step | $code | $status |"
-            done
+            echo "| npm ci | ${{ steps.npm_ci.outputs.exit_code }} | $([ '${{ steps.npm_ci.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
+            echo "| npm run verify | ${{ steps.verify.outputs.exit_code }} | $([ '${{ steps.verify.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
+            echo "| npm run format:check | ${{ steps.format_check.outputs.exit_code }} | $([ '${{ steps.format_check.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
+            echo "| npm run test | ${{ steps.test.outputs.exit_code }} | $([ '${{ steps.test.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
+            echo "| npm run test:coverage | ${{ steps.test_coverage.outputs.exit_code }} | $([ '${{ steps.test_coverage.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
+            echo "| npm run build | ${{ steps.build.outputs.exit_code }} | $([ '${{ steps.build.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
+            echo "| npm audit | ${{ steps.audit.outputs.exit_code }} | $([ '${{ steps.audit.outputs.exit_code }}' = '0' ] && echo PASS || echo FAIL) |"
           } > rc3-verification/gate-summary.md
           cat rc3-verification/gate-summary.md
 
