@@ -1,0 +1,41 @@
+# Developer guide
+
+## Architecture
+
+App Router pages compose feature views; feature hooks coordinate view state and call services; services depend on mock repositories. Shared components stay domain-neutral. Root and dashboard layouts own cross-cutting providers and shell composition.
+
+## Folders
+
+- `app/`: layouts, route pages, metadata, and route boundaries
+- `app/(dashboard)/*/_components/`: route-local feature views, hooks, and components
+- `components/`: exported shared UI by category
+- `hooks/`: shared sidebar, toast, and pagination state
+- `constants/`: stable values and mock feature data
+- `lib/services/`, `lib/adapters/`: use-case and mock data-source boundaries
+- `lib/domain/`: repository contracts and domain types
+- `lib/`: configuration, formatting, class-name, feature, and motion utilities
+- `styles/`: global Tailwind theme and utilities
+
+See [Folder structure](FOLDER_STRUCTURE.md) for route details.
+
+## Shared code
+
+Import from category entry points such as `@/components/layout` and `@/components/ui`. Use `cn` for class composition, formatting utilities for locale-aware output, and shared motion definitions rather than duplicating values.
+
+## Standards
+
+- TypeScript is strict, including exact optional properties, unchecked indexed access, unused checks, and fallthrough checks.
+- Keep imports at module scope and use the `@/*` root alias.
+- Components and types use PascalCase; hooks use `useX`; values/functions use camelCase; constants use descriptive uppercase names.
+- Prefer semantic props and native elements; forward intrinsic props where the shared contract does so.
+- Add `"use client"` only at the smallest browser-dependent boundary.
+- Keep network/storage concerns out of presentational components.
+- Use exhaustive handling for unions/enums.
+
+## Patterns
+
+Compose pages from `PageContainer`, `PageHeader`, cards, and feature-local sections. Use controlled Radix primitives for complex inputs. Put reusable behavior in hooks, domain operations in services, and data-source details in repositories. Treat mock behavior as current implementation—not as an API guarantee.
+
+## Validation
+
+Run `npm run typecheck` and `npm run build`. No test suite is currently present. `npm run lint` exists in `package.json`; validate compatibility before making it a release gate.
