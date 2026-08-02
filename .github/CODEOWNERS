@@ -1,0 +1,8 @@
+# Default repository owner
+* @Raja-code-cloud
+
+# Frontend delivery and dependency automation
+/.github/ @Raja-code-cloud
+/docs/frontend/ @Raja-code-cloud
+/package.json @Raja-code-cloud
+/package-lock.json @Raja-code-cloud

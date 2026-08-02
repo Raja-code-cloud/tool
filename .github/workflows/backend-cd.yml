@@ -1,0 +1,158 @@
+name: Backend CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+          - dr
+      image_tag:
+        description: Immutable image tag (Git SHA or semver)
+        required: true
+        type: string
+      rollback_revision:
+        description: Optional ACA revision name to roll back to
+        required: false
+        type: string
+  push:
+    tags:
+      - backend-v*
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
+env:
+  PYTHON_VERSION: "3.13"
+  REGISTRY: ${{ vars.ACR_LOGIN_SERVER }}
+  IMAGE_API: cloud-content-hub-api
+  IMAGE_WORKER: cloud-content-hub-worker
+
+jobs:
+  resolve-target:
+    name: Resolve deployment target
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.target.outputs.environment }}
+      image_tag: ${{ steps.target.outputs.image_tag }}
+      rollback_revision: ${{ steps.target.outputs.rollback_revision }}
+    steps:
+      - id: target
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ inputs.environment }}" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+            echo "rollback_revision=${{ inputs.rollback_revision }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${GITHUB_REF_NAME#backend-v}" >> "$GITHUB_OUTPUT"
+            echo "rollback_revision=" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-and-push:
+    name: Build and push images
+    needs: resolve-target
+    if: needs.resolve-target.outputs.rollback_revision == ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      api_digest: ${{ steps.push-api.outputs.digest }}
+      worker_digest: ${{ steps.push-worker.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name "${{ vars.ACR_NAME }}"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - id: push-api
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          target: runtime
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_API }}:${{ needs.resolve-target.outputs.image_tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_API }}:${{ needs.resolve-target.outputs.environment }}-latest
+          build-args: |
+            VCS_REF=${{ github.sha }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+
+      - id: push-worker
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.worker
+          target: runtime
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_WORKER }}:${{ needs.resolve-target.outputs.image_tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_WORKER }}:${{ needs.resolve-target.outputs.environment }}-latest
+          build-args: |
+            VCS_REF=${{ github.sha }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+
+      - name: Generate SBOM (API)
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_API }}:${{ needs.resolve-target.outputs.image_tag }}
+          artifact-name: sbom-api-${{ needs.resolve-target.outputs.image_tag }}.spdx.json
+
+      - name: Generate SBOM (Worker)
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_WORKER }}:${{ needs.resolve-target.outputs.image_tag }}
+          artifact-name: sbom-worker-${{ needs.resolve-target.outputs.image_tag }}.spdx.json
+
+  deploy:
+    name: Deploy to Azure Container Apps
+    needs: [resolve-target, build-and-push]
+    if: always() && needs.resolve-target.result == 'success' && (needs.build-and-push.result == 'success' || needs.resolve-target.outputs.rollback_revision != '')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: backend-${{ needs.resolve-target.outputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy or rollback
+        env:
+          ENVIRONMENT: ${{ needs.resolve-target.outputs.environment }}
+          IMAGE_TAG: ${{ needs.resolve-target.outputs.image_tag }}
+          ROLLBACK_REVISION: ${{ needs.resolve-target.outputs.rollback_revision }}
+          API_DIGEST: ${{ needs.build-and-push.outputs.api_digest }}
+          WORKER_DIGEST: ${{ needs.build-and-push.outputs.worker_digest }}
+        run: |
+          chmod +x deployment/scripts/*.sh
+          if [[ -n "$ROLLBACK_REVISION" ]]; then
+            deployment/scripts/rollback.sh "$ENVIRONMENT" "$ROLLBACK_REVISION"
+          else
+            deployment/scripts/deploy.sh "$ENVIRONMENT" "$IMAGE_TAG"
+          fi
+
+      - name: Verify deployment health
+        env:
+          ENVIRONMENT: ${{ needs.resolve-target.outputs.environment }}
+        run: deployment/scripts/verify-health.sh "$ENVIRONMENT"

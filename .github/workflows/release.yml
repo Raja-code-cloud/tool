@@ -1,0 +1,139 @@
+name: Release Frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Semantic version to release (for example, 1.2.3)
+        required: true
+        type: string
+      prerelease:
+        description: Mark this release as a prerelease
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: frontend-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "22.22.1"
+
+jobs:
+  validate:
+    name: Validate release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      release_sha: ${{ steps.release-ref.outputs.sha }}
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Validate semantic version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Version must be valid semantic version text without a v prefix."
+            exit 1
+          fi
+
+      - name: Capture release commit
+        id: release-ref
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Restore dependencies
+        id: dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Restore Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-next-${{ hashFiles('package-lock.json') }}-
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test:run
+
+      - name: Apply release version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: npm version "$VERSION" --no-git-tag-version
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Package release artifact
+        env:
+          VERSION: ${{ inputs.version }}
+        run: tar -czf "cloud-content-hub-frontend-v${VERSION}.tar.gz" .next package.json package-lock.json next.config.ts
+
+      - name: Upload packaged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud-content-hub-frontend-v${{ inputs.version }}
+          path: cloud-content-hub-frontend-v${{ inputs.version }}.tar.gz
+          if-no-files-found: error
+          retention-days: 90
+
+  release:
+    name: Create GitHub release
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download packaged artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cloud-content-hub-frontend-v${{ inputs.version }}
+
+      - name: Create version tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          PRERELEASE: ${{ inputs.prerelease }}
+          RELEASE_SHA: ${{ needs.validate.outputs.release_sha }}
+        run: |
+          prerelease_flag=()
+          if [[ "$PRERELEASE" == "true" ]]; then
+            prerelease_flag+=(--prerelease)
+          fi
+          gh release create "v${VERSION}" \
+            "cloud-content-hub-frontend-v${VERSION}.tar.gz" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$RELEASE_SHA" \
+            --title "Frontend v${VERSION}" \
+            --generate-notes \
+            "${prerelease_flag[@]}"
