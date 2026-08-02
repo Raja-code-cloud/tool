@@ -1,0 +1,16 @@
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      132 B         103 kB
+├ ○ /_not-found                            132 B         103 kB
+├ ○ /ai-studio                           13.7 kB         249 kB
+├ ○ /analytics                           6.11 kB         244 kB
+├ ○ /calendar                              194 B         198 kB
+├ ○ /content-library                       11 kB         249 kB
+├ ○ /dashboard                           3.52 kB         221 kB
+├ ○ /scheduler                           14.2 kB         272 kB
+├ ○ /settings                            9.51 kB         210 kB
+├ ○ /social-accounts                     11.3 kB         249 kB
+└ ○ /upload                              9.51 kB         248 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/1255-cf02c4775860a5ab.js        46 kB
+  ├ chunks/4bd1b696-100b9d70ed4e49c1.js  54.2 kB
+  └ other shared chunks (total)          2.31 kB
