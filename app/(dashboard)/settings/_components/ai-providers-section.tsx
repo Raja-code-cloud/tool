@@ -5,13 +5,11 @@ import * as React from "react";
 
 import { StatusBadge } from "@/components/feedback";
 import { Badge, Button } from "@/components/ui";
-import type { AiProviderStatus } from "@/lib/domain/settings";
+import type { AiProvider, AiProviderStatus } from "@/lib/domain/settings";
 import { settingsService } from "@/lib/services";
 import { formatNumber } from "@/lib/utils/formatting";
 
 import { SettingsSection } from "./settings-section";
-
-const aiProviders = settingsService.listAiProviders();
 
 const STATUS_META: Record<
   AiProviderStatus,
@@ -23,9 +21,15 @@ const STATUS_META: Record<
 };
 
 export function AiProvidersSection(): React.JSX.Element {
-  const [defaultProvider, setDefaultProvider] = React.useState<string>(
-    aiProviders.find((provider) => provider.isDefault)?.id ?? "",
-  );
+  const [aiProviders, setAiProviders] = React.useState<readonly AiProvider[]>([]);
+  const [defaultProvider, setDefaultProvider] = React.useState<string>("");
+
+  React.useEffect(() => {
+    void settingsService.listAiProviders().then((providers) => {
+      setAiProviders(providers);
+      setDefaultProvider(providers.find((provider) => provider.isDefault)?.id ?? "");
+    });
+  }, []);
 
   return (
     <SettingsSection

@@ -98,14 +98,14 @@ describe("workspace services", () => {
     expect(topPosts[0]?.engagementRate).toBeGreaterThanOrEqual(topPosts[1]?.engagementRate ?? 0);
   });
 
-  it("returns settings and workspace metadata", () => {
+  it("returns settings and workspace metadata", async () => {
     const settings = createSettingsService(mockSettingsRepository);
-    expect(settings.getProfileDefaults().fullName).toBeTruthy();
-    expect(settings.listAiProviders().length).toBeGreaterThan(0);
+    expect((await settings.getProfile()).fullName).toBeTruthy();
+    expect((await settings.listAiProviders()).length).toBeGreaterThan(0);
 
     const workspace = createWorkspaceService(mockWorkspaceRepository);
-    expect(workspace.getWorkspace().name).toBeTruthy();
-    expect(workspace.getCurrentUser().email).toContain("@");
+    expect((await workspace.getWorkspace()).name).toBeTruthy();
+    expect((await workspace.getCurrentUser()).email).toContain("@");
   });
 
   it("scales analytics datasets using repository date range factors", () => {

@@ -12,6 +12,7 @@ from cloud_content_hub.api.routers.v1 import (
     notifications,
     publishing,
     scheduler,
+    social_accounts,
     users,
     workspace,
 )
@@ -22,6 +23,7 @@ api_router.include_router(assets.router, prefix="/assets")
 api_router.include_router(content.router, prefix="/content")
 api_router.include_router(publishing.router, prefix="/publish")
 api_router.include_router(scheduler.router, prefix="/schedule")
+api_router.include_router(social_accounts.router, prefix="/social-accounts")
 api_router.include_router(analytics.router, prefix="/analytics")
 api_router.include_router(notifications.router, prefix="/notifications")
 api_router.include_router(administration.router, prefix="/admin")

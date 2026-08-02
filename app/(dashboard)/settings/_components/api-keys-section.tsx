@@ -22,9 +22,11 @@ const SCOPE_VARIANT: Record<ApiKeyScope, "neutral" | "info" | "warning"> = {
 
 export function ApiKeysSection(): React.JSX.Element {
   const { toast } = useToast();
-  const [keys, setKeys] = React.useState<readonly ApiKeyRecord[]>(() =>
-    settingsService.listApiKeys(),
-  );
+  const [keys, setKeys] = React.useState<readonly ApiKeyRecord[]>([]);
+
+  React.useEffect(() => {
+    void settingsService.listApiKeys().then(setKeys);
+  }, []);
 
   const revoke = React.useCallback(
     (id: string, label: string): void => {

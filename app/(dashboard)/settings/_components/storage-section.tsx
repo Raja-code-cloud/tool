@@ -5,19 +5,35 @@ import * as React from "react";
 import { Progress } from "@/components/feedback";
 import { Button, Switch } from "@/components/ui";
 import { RETENTION_OPTIONS, STORAGE_REGIONS } from "@/constants/settings";
+import type { StorageUsage } from "@/lib/domain/settings";
 import { settingsService } from "@/lib/services";
 import { formatBytes, formatPercent } from "@/lib/utils/formatting";
 
 import { SelectField } from "./select-field";
 import { SettingRow, SettingRows, SettingsSection } from "./settings-section";
 
+const EMPTY_STORAGE: StorageUsage = {
+  usedBytes: 0,
+  totalBytes: 1,
+  breakdown: [],
+  region: "unknown",
+};
+
 export function StorageSection(): React.JSX.Element {
-  const storageUsage = settingsService.getStorageUsage();
-  const [region, setRegion] = React.useState<string>(storageUsage.region);
+  const [storageUsage, setStorageUsage] = React.useState<StorageUsage>(EMPTY_STORAGE);
+  const [region, setRegion] = React.useState<string>("unknown");
   const [retention, setRetention] = React.useState<string>("365");
   const [autoArchive, setAutoArchive] = React.useState(true);
 
-  const usedRatio = storageUsage.usedBytes / storageUsage.totalBytes;
+  React.useEffect(() => {
+    void settingsService.getStorageUsage().then((usage) => {
+      setStorageUsage(usage);
+      setRegion(usage.region);
+    });
+  }, []);
+
+  const usedRatio =
+    storageUsage.totalBytes > 0 ? storageUsage.usedBytes / storageUsage.totalBytes : 0;
 
   return (
     <SettingsSection

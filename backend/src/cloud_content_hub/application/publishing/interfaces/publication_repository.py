@@ -76,6 +76,45 @@ class NewPublication:
     created_by: UUID
 
 
+@dataclass(frozen=True, slots=True)
+class PublicationHistoryRecord:
+    """Publication status history read model."""
+
+    id: UUID
+    publication_id: UUID
+    target_id: UUID
+    state_type: str
+    from_state: str | None
+    to_state: str
+    reason_code: str | None
+    occurred_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class PublicationHistoryCriteria:
+    """Filters for listing publication status history."""
+
+    workspace_id: UUID
+    cursor: str | None
+    limit: int
+    occurred_after: datetime | None
+    occurred_before: datetime | None
+    states: frozenset[str]
+    content_id: UUID | None
+    platform_id: UUID | None
+    social_account_id: UUID | None
+    sort: str
+
+
+@dataclass(frozen=True, slots=True)
+class PublicationHistoryPage:
+    """Paged publication history result."""
+
+    items: tuple[PublicationHistoryRecord, ...]
+    next_cursor: str | None
+    has_more: bool
+
+
 class IPublicationRepository(Protocol):
     """Repository port for publications."""
 
@@ -114,3 +153,8 @@ class IPublicationRepository(Protocol):
         social_account_ids: frozenset[UUID],
     ) -> bool:
         """Return whether all social accounts are healthy and enabled."""
+
+    async def list_publication_history(
+        self, criteria: PublicationHistoryCriteria
+    ) -> PublicationHistoryPage:
+        """List publication status history for a workspace."""

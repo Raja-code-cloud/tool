@@ -5,24 +5,34 @@ import * as React from "react";
 import { Button, Input, Switch } from "@/components/ui";
 import { APPROVAL_ROLES, TIMEZONES } from "@/constants/settings";
 import { useToast } from "@/hooks/use-toast";
+import type { PublishingDefaults } from "@/lib/domain/settings";
 import { settingsService } from "@/lib/services";
 
 import { SelectField } from "./select-field";
 import { SettingRow, SettingRows, SettingsSection } from "./settings-section";
 
-const publishingDefaults = settingsService.getPublishingDefaults();
-
 export function PublishingSection(): React.JSX.Element {
   const { toast } = useToast();
-  const [timezone, setTimezone] = React.useState<string>(publishingDefaults.defaultTimezone);
+  const [defaults, setDefaults] = React.useState<PublishingDefaults | null>(null);
+  const [timezone, setTimezone] = React.useState<string>("UTC");
   const [approvalRole, setApprovalRole] = React.useState<string>("editor");
-  const [dailyLimit, setDailyLimit] = React.useState<string>(publishingDefaults.dailyLimit);
-  const [autoQueue, setAutoQueue] = React.useState<boolean>(publishingDefaults.autoQueue);
-  const [requireApproval, setRequireApproval] = React.useState<boolean>(
-    publishingDefaults.requireApproval,
-  );
-  const [appendUtm, setAppendUtm] = React.useState<boolean>(publishingDefaults.appendUtm);
-  const [retryFailed, setRetryFailed] = React.useState<boolean>(publishingDefaults.retryFailed);
+  const [dailyLimit, setDailyLimit] = React.useState<string>("25");
+  const [autoQueue, setAutoQueue] = React.useState<boolean>(true);
+  const [requireApproval, setRequireApproval] = React.useState<boolean>(false);
+  const [appendUtm, setAppendUtm] = React.useState<boolean>(true);
+  const [retryFailed, setRetryFailed] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    void settingsService.getPublishingDefaults().then((loaded) => {
+      setDefaults(loaded);
+      setTimezone(loaded.defaultTimezone);
+      setDailyLimit(loaded.dailyLimit);
+      setAutoQueue(loaded.autoQueue);
+      setRequireApproval(loaded.requireApproval);
+      setAppendUtm(loaded.appendUtm);
+      setRetryFailed(loaded.retryFailed);
+    });
+  }, []);
 
   return (
     <SettingsSection
@@ -30,7 +40,17 @@ export function PublishingSection(): React.JSX.Element {
       title="Publishing"
       description="Defaults applied to every scheduled and queued post."
       footer={
-        <Button size="compact" onClick={() => toast({ title: "Publishing defaults saved" })}>
+        <Button
+          size="compact"
+          onClick={() =>
+            toast({
+              title: "Publishing defaults saved",
+              description: defaults
+                ? "Defaults are applied locally until a publishing settings API is available."
+                : undefined,
+            })
+          }
+        >
           Save defaults
         </Button>
       }

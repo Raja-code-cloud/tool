@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { ROUTES } from "@/constants/navigation";
+import { CURRENT_USER } from "@/constants/workspace";
 import { hasPermission } from "@/lib/auth/permissions";
 import { sessionToWorkspaceUser } from "@/lib/auth/mappers";
 import { setActiveWorkspaceId } from "@/lib/auth/workspace-store";
@@ -11,7 +12,6 @@ import { env } from "@/lib/config/env";
 import type { AuthSession } from "@/lib/domain/auth";
 import type { WorkspaceUser } from "@/lib/domain/workspace";
 import { authService, isBackendAuthEnabled } from "@/lib/services";
-import { workspaceService } from "@/lib/services";
 import { clearSensitiveClientStorage } from "@/lib/security";
 
 export type AuthContextValue = {
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
 
   const user = React.useMemo(() => {
     if (session) return sessionToWorkspaceUser(session);
-    if (!isBackendAuthEnabled) return workspaceService.getCurrentUser();
+    if (!isBackendAuthEnabled) return CURRENT_USER;
     return null;
   }, [session]);
 

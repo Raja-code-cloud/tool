@@ -11,6 +11,9 @@ from sqlalchemy.orm import selectinload
 from cloud_content_hub.application.publishing.interfaces.publication_repository import (
     ApprovalState,
     NewPublication,
+    PublicationHistoryCriteria,
+    PublicationHistoryPage,
+    PublicationHistoryRecord,
     PublicationRecord,
     PublicationStatus,
     PublicationTargetRecord,
@@ -28,10 +31,20 @@ from cloud_content_hub.infrastructure.database.enums import (
 from cloud_content_hub.infrastructure.database.models.approval_request import ApprovalRequest
 from cloud_content_hub.infrastructure.database.models.content_version import ContentVersion
 from cloud_content_hub.infrastructure.database.models.publication import Publication
+from cloud_content_hub.infrastructure.database.models.publication_status_history import (
+    PublicationStatusHistory,
+)
 from cloud_content_hub.infrastructure.database.models.publication_target import PublicationTarget
 from cloud_content_hub.infrastructure.database.models.social_account import SocialAccount
 from cloud_content_hub.infrastructure.repositories.sqlalchemy.base import SqlAlchemyRepository
+from cloud_content_hub.infrastructure.repositories.sqlalchemy.cursor_pagination import (
+    apply_keyset_pagination,
+    build_keyset_page,
+    normalize_sort_token,
+)
 from cloud_content_hub.infrastructure.repositories.sqlalchemy.exceptions import EntityNotFound
+
+_HISTORY_SORT_COLUMNS = frozenset({"occurred_at"})
 
 
 class SqlAlchemyPublicationRepository:
@@ -209,6 +222,78 @@ class SqlAlchemyPublicationRepository:
         matched_count = await self._session.scalar(statement)
         return matched_count == len(social_account_ids)
 
+    async def list_publication_history(
+        self, criteria: PublicationHistoryCriteria
+    ) -> PublicationHistoryPage:
+        """List publication status history for a workspace."""
+
+        statement = (
+            select(PublicationStatusHistory, PublicationTarget.publication_id)
+            .join(
+                PublicationTarget,
+                PublicationStatusHistory.publication_target_id == PublicationTarget.id,
+            )
+            .join(
+                Publication,
+                PublicationTarget.publication_id == Publication.id,
+            )
+            .where(
+                PublicationStatusHistory.workspace_id == criteria.workspace_id,
+                PublicationTarget.workspace_id == criteria.workspace_id,
+                PublicationTarget.deleted_at.is_(None),
+                Publication.deleted_at.is_(None),
+            )
+        )
+
+        if criteria.occurred_after is not None:
+            statement = statement.where(
+                PublicationStatusHistory.occurred_at >= criteria.occurred_after
+            )
+        if criteria.occurred_before is not None:
+            statement = statement.where(
+                PublicationStatusHistory.occurred_at <= criteria.occurred_before
+            )
+        if criteria.states:
+            statement = statement.where(PublicationStatusHistory.to_state.in_(criteria.states))
+        if criteria.content_id is not None:
+            statement = statement.where(Publication.asset_id == criteria.content_id)
+        if criteria.platform_id is not None:
+            statement = statement.where(PublicationTarget.platform_id == criteria.platform_id)
+        if criteria.social_account_id is not None:
+            statement = statement.where(
+                PublicationTarget.social_account_id == criteria.social_account_id
+            )
+
+        sort_column, sort_direction = normalize_sort_token(
+            criteria.sort,
+            allowed=_HISTORY_SORT_COLUMNS,
+            default="-occurred_at",
+        )
+        statement = apply_keyset_pagination(
+            statement,
+            model=PublicationStatusHistory,
+            sort_column=sort_column,
+            sort_direction=sort_direction,
+            cursor=criteria.cursor,
+            limit=criteria.limit,
+        )
+        rows = (await self._session.execute(statement)).all()
+        page = build_keyset_page(
+            rows,
+            sort_column=sort_column,
+            sort_direction=sort_direction,
+            limit=criteria.limit,
+        )
+        items = tuple(
+            self._to_history_record(history, publication_id)
+            for history, publication_id in page.items
+        )
+        return PublicationHistoryPage(
+            items=items,
+            next_cursor=page.next_cursor,
+            has_more=page.has_more,
+        )
+
     async def _resolve_approved_request_id(
         self,
         *,
@@ -239,6 +324,22 @@ class SqlAlchemyPublicationRepository:
         )
         accounts = (await self._session.scalars(statement)).all()
         return {account.id: account for account in accounts}
+
+    @staticmethod
+    def _to_history_record(
+        history: PublicationStatusHistory,
+        publication_id: UUID,
+    ) -> PublicationHistoryRecord:
+        return PublicationHistoryRecord(
+            id=history.id,
+            publication_id=publication_id,
+            target_id=history.publication_target_id,
+            state_type=history.state_type,
+            from_state=history.from_state,
+            to_state=history.to_state,
+            reason_code=history.reason_code,
+            occurred_at=history.occurred_at,
+        )
 
     def _to_record(self, publication: Publication) -> PublicationRecord:
         return PublicationRecord(

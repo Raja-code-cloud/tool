@@ -4,7 +4,7 @@ import Link from "next/link";
 import { IconButton, PrimaryButton } from "@/components/buttons";
 import { PageHeader } from "@/components/layout";
 import { ROUTES } from "@/constants/navigation";
-import { workspaceService } from "@/lib/services";
+import { CURRENT_USER } from "@/constants/workspace";
 
 const QUICK_ACTIONS = [
   { id: "upload", label: "Upload", icon: Upload, href: ROUTES.upload },
@@ -30,7 +30,7 @@ export function DashboardHeader({
   onRefresh,
   isRefreshing = false,
 }: DashboardHeaderProps): React.JSX.Element {
-  const currentUser = workspaceService.getCurrentUser();
+  const currentUser = CURRENT_USER;
   const firstName = currentUser.name.split(" ")[0] ?? currentUser.name;
   const greeting = greetingForHour(new Date().getHours());
 

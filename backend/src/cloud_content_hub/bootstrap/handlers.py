@@ -102,6 +102,9 @@ def wire_handlers(container: Container) -> HandlerRegistry:
     from cloud_content_hub.application.publishing.handlers.dispatch_publication_handler import (
         DispatchPublicationHandler,
     )
+    from cloud_content_hub.application.publishing.handlers.list_publication_history_handler import (
+        ListPublicationHistoryHandler,
+    )
     from cloud_content_hub.application.scheduler.handlers.cancel_schedule_handler import (
         CancelScheduleHandler,
     )
@@ -116,6 +119,30 @@ def wire_handlers(container: Container) -> HandlerRegistry:
     )
     from cloud_content_hub.application.scheduler.handlers.update_schedule_handler import (
         UpdateScheduleHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.authorize_social_account_handler import (
+        AuthorizeSocialAccountHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.connect_social_account_handler import (
+        ConnectSocialAccountHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.disconnect_social_account_handler import (
+        DisconnectSocialAccountHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.list_social_account_activity_handler import (
+        ListSocialAccountActivityHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.list_social_accounts_handler import (
+        ListSocialAccountsHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.list_social_platforms_handler import (
+        ListSocialPlatformsHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.refresh_social_account_handler import (
+        RefreshSocialAccountHandler,
+    )
+    from cloud_content_hub.application.social_accounts.handlers.update_social_account_handler import (
+        UpdateSocialAccountHandler,
     )
 
     repositories = container.repositories
@@ -209,6 +236,10 @@ def wire_handlers(container: Container) -> HandlerRegistry:
             unit_of_work_factory=repositories.unit_of_work_factory,
             publication_repository_factory=repositories.publication_repository_factory,
         ),
+        "list_publication_history": ListPublicationHistoryHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            publication_repository_factory=repositories.publication_repository_factory,
+        ),
         "create_schedule": CreateScheduleHandler(
             unit_of_work_factory=repositories.unit_of_work_factory,
             schedule_repository_factory=repositories.schedule_repository_factory,
@@ -230,6 +261,38 @@ def wire_handlers(container: Container) -> HandlerRegistry:
         "cancel_schedule": CancelScheduleHandler(
             unit_of_work_factory=repositories.unit_of_work_factory,
             schedule_repository_factory=repositories.schedule_repository_factory,
+        ),
+        "list_social_accounts": ListSocialAccountsHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "list_social_platforms": ListSocialPlatformsHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "authorize_social_account": AuthorizeSocialAccountHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "connect_social_account": ConnectSocialAccountHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "disconnect_social_account": DisconnectSocialAccountHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "refresh_social_account": RefreshSocialAccountHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "update_social_account": UpdateSocialAccountHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
+        ),
+        "list_social_account_activity": ListSocialAccountActivityHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            social_account_repository_factory=repositories.social_account_repository_factory,
         ),
         "get_analytics_dashboard": GetDashboardHandler(
             unit_of_work_factory=repositories.unit_of_work_factory,

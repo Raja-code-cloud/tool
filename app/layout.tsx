@@ -5,13 +5,13 @@ import { SkipLink } from "@/components/layout";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { AuthProvider } from "@/hooks/use-auth";
 import { AppToastProvider } from "@/hooks/use-toast";
-import { workspaceService } from "@/lib/services";
+import { WORKSPACE } from "@/constants/workspace";
 
 import "@/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
-const workspace = workspaceService.getWorkspace();
+const workspace = WORKSPACE;
 
 export const metadata: Metadata = {
   title: { default: workspace.name, template: `%s · ${workspace.shortName}` },

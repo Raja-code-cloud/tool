@@ -31,6 +31,9 @@ from cloud_content_hub.application.publishing.interfaces.publication_repository 
 from cloud_content_hub.application.scheduler.interfaces.schedule_repository import (
     IScheduleRepository,
 )
+from cloud_content_hub.application.social_accounts.interfaces.social_account_repository import (
+    ISocialAccountRepository,
+)
 from cloud_content_hub.application.shared.interfaces.job_queue import IBackgroundJobRepository
 from cloud_content_hub.application.shared.interfaces.unit_of_work import IUnitOfWork
 from cloud_content_hub.bootstrap.providers import UnwiredDependency
@@ -59,6 +62,9 @@ from cloud_content_hub.infrastructure.repositories.sqlalchemy.publication_reposi
 from cloud_content_hub.infrastructure.repositories.sqlalchemy.schedule_repository import (
     SqlAlchemyScheduleRepository,
 )
+from cloud_content_hub.infrastructure.repositories.sqlalchemy.social_account_repository import (
+    SqlAlchemySocialAccountRepository,
+)
 from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import (
     SqlAlchemyUnitOfWork,
 )
@@ -79,6 +85,7 @@ class RepositoryFactories:
     preference_repository_factory: Callable[[IUnitOfWork], INotificationPreferenceRepository]
     publication_repository_factory: Callable[[IUnitOfWork], IPublicationRepository]
     schedule_repository_factory: Callable[[IUnitOfWork], IScheduleRepository]
+    social_account_repository_factory: Callable[[IUnitOfWork], ISocialAccountRepository]
     job_repository_factory: Callable[[IUnitOfWork], IBackgroundJobRepository]
 
 
@@ -120,6 +127,9 @@ def create_repository_factories(
     def schedule_repository_factory(uow: IUnitOfWork) -> IScheduleRepository:
         return SqlAlchemyScheduleRepository(resolve_session(uow))
 
+    def social_account_repository_factory(uow: IUnitOfWork) -> ISocialAccountRepository:
+        return SqlAlchemySocialAccountRepository(resolve_session(uow))
+
     unwired = UnwiredDependency()
 
     def job_repository_factory(_uow: IUnitOfWork) -> IBackgroundJobRepository:
@@ -137,5 +147,6 @@ def create_repository_factories(
         preference_repository_factory=preference_repository_factory,
         publication_repository_factory=publication_repository_factory,
         schedule_repository_factory=schedule_repository_factory,
+        social_account_repository_factory=social_account_repository_factory,
         job_repository_factory=job_repository_factory,
     )

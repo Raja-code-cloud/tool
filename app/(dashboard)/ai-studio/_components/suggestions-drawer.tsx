@@ -25,10 +25,13 @@ const CATEGORY_VARIANT = {
   grammar: "info",
   seo: "success",
   engagement: "info",
-  readability: "neutral",
+  readability: "info",
   timing: "warning",
   warning: "danger",
-} as const;
+} as const satisfies Record<
+  keyof typeof CATEGORY_LABELS,
+  import("@/components/feedback").AlertVariant
+>;
 
 export function SuggestionsDrawer({
   open,
