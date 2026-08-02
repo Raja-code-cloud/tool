@@ -9,15 +9,15 @@ pytestmark = pytest.mark.smoke
 
 
 @pytest.mark.asyncio
-async def test_health_is_public_without_auth(local_client: AsyncClient) -> None:
-    response = await local_client.get("/health")
+async def test_health_is_public_without_auth(health_client: AsyncClient) -> None:
+    response = await health_client.get("/health")
     assert response.status_code == 200
     assert response.json()["success"] is True
 
 
 @pytest.mark.asyncio
-async def test_liveness_is_public(local_client: AsyncClient) -> None:
-    response = await local_client.get("/live")
+async def test_liveness_is_public(health_client: AsyncClient) -> None:
+    response = await health_client.get("/live")
     assert response.status_code == 200
 
 

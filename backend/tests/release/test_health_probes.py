@@ -9,9 +9,15 @@ from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 
 from cloud_content_hub.api.errors import install_exception_handlers
-from cloud_content_hub.api.routers.v1.health import router as health_router
+from helpers.import_utils import load_module_from_file
 
 pytestmark = pytest.mark.release
+
+_health_module = load_module_from_file(
+    "release_health_router",
+    "api/routers/v1/health.py",
+)
+health_router = _health_module.router
 
 IMPLEMENTED_LIVENESS_PATH = "/live"
 IMPLEMENTED_READINESS_PATH = "/ready"

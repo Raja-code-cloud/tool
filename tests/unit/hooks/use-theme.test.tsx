@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 
 import { ThemeProvider, useTheme } from "@/components/theme/theme-provider";
 import { useTheme as useThemeReexport } from "@/hooks/use-theme";
-import { THEME_STORAGE_KEY } from "@/lib/security/constants";
 
 describe("useTheme", () => {
   it("persists theme selection in versioned storage", async () => {
@@ -36,11 +35,12 @@ describe("useTheme", () => {
   });
 
   it("migrates legacy plain-string theme values", async () => {
-    window.localStorage.setItem(THEME_STORAGE_KEY, "system");
+    const legacyKey = "test-legacy-theme";
+    window.localStorage.setItem(legacyKey, "system");
 
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
-        <ThemeProvider defaultTheme="dark" storageKey={THEME_STORAGE_KEY}>
+        <ThemeProvider defaultTheme="dark" storageKey={legacyKey}>
           {children}
         </ThemeProvider>
       ),
@@ -51,7 +51,7 @@ describe("useTheme", () => {
     });
 
     await waitFor(() => {
-      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      const stored = window.localStorage.getItem(legacyKey);
       expect(stored).toBeTruthy();
       expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "system" });
     });

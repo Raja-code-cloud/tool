@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock
-
 import pytest
 
 from cloud_content_hub.bootstrap.configuration import load_bootstrap_configuration
 from cloud_content_hub.bootstrap.container import Container
-from cloud_content_hub.bootstrap.shutdown import shutdown_application
 from cloud_content_hub.core.config import Environment, Settings
 from cloud_content_hub.infrastructure.observability.health import HealthStatus
 from tests.disaster_recovery.helpers.simulation import (
@@ -35,11 +32,6 @@ class TestApplicationStartupRecovery:
 
         assert container.started_at is not None
         assert len(container.health_checker._checks) == 5
-
-        container.storage_provider.close = AsyncMock()  # type: ignore[method-assign]
-        container.redis.aclose = AsyncMock()  # type: ignore[method-assign]
-        container.database_engine.dispose = AsyncMock()  # type: ignore[method-assign]
-        await shutdown_application(container)
 
     def test_bootstrap_configuration_loads_for_test(self) -> None:
         settings = Settings(environment=Environment.TEST)

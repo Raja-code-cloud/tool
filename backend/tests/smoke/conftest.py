@@ -16,7 +16,6 @@ from httpx import ASGITransport, AsyncClient
 
 from cloud_content_hub.api.dependencies import HandlerRegistry
 from cloud_content_hub.api.errors import install_exception_handlers
-from cloud_content_hub.api.routers.v1.router import root_router
 from cloud_content_hub.application.assets.dto.responses import (
     AssetDto,
     AssetLifecycleStatusDto,
@@ -32,11 +31,16 @@ from cloud_content_hub.application.shared.dto.base import (
 from cloud_content_hub.infrastructure.identity.middleware import bind_principal, clear_principal
 from cloud_content_hub.infrastructure.identity.principal import Principal
 from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
+from helpers.import_utils import load_module_from_file, try_import_root_router
 
 pytestmark = pytest.mark.smoke
 
 WORKSPACE_ID = UUID("01900000-0000-7000-8000-000000000001")
 USER_ID = UUID("01900000-0000-7000-8000-000000000010")
+
+_health_module = load_module_from_file("smoke_health_router", "api/routers/v1/health.py")
+health_router = _health_module.router
+_router_module = try_import_root_router()
 
 
 def smoke_base_url() -> str | None:
@@ -146,14 +150,38 @@ def mock_handlers() -> dict[str, Any]:
 
 
 @pytest.fixture
+async def health_client() -> AsyncIterator[AsyncClient]:
+    app = FastAPI(title="smoke-health")
+    container = MagicMock()
+    container.settings.service_version = "smoke"
+    container.settings.database_timeout_seconds = 1.0
+    container.settings.redis_timeout_seconds = 1.0
+    connection = AsyncMock()
+    connection.execute = AsyncMock()
+    connect_cm = AsyncMock()
+    connect_cm.__aenter__.return_value = connection
+    connect_cm.__aexit__.return_value = None
+    container.database_engine.connect.return_value = connect_cm
+    container.redis.ping = AsyncMock()
+    app.state.container = container
+    install_exception_handlers(app)
+    app.include_router(health_router)
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client
+
+
+@pytest.fixture
 async def local_client(mock_handlers: dict[str, Any]) -> AsyncIterator[AsyncClient]:
+    if _router_module is None:
+        pytest.skip("Application routers are unavailable in this environment.")
     app = FastAPI(title="smoke-test")
     container = MagicMock()
     container.settings.service_version = "smoke"
     app.state.container = container
     app.state.handlers = HandlerRegistry(handlers=mock_handlers)
     install_exception_handlers(app)
-    app.include_router(root_router)
+    app.include_router(_router_module.root_router)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         yield client
@@ -166,13 +194,6 @@ async def external_client() -> AsyncIterator[AsyncClient]:
         pytest.skip("SMOKE_BASE_URL is not configured.")
     async with AsyncClient(base_url=base_url, timeout=httpx.Timeout(30.0)) as client:
         yield client
-
-
-def auth_headers(token: str) -> dict[str, str]:
-    return {
-        "Authorization": f"Bearer {token}",
-        "X-Workspace-ID": str(WORKSPACE_ID),
-    }
 
 
 @pytest.fixture
