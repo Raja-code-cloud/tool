@@ -25,15 +25,16 @@ describe("upload wizard utilities", () => {
         return document.createElement.bind(document)(tagName);
       }
 
-      return {
+      const video = {
         preload: "",
-        onloadedmetadata: null,
-        onerror: null,
-        src: "",
-        set src(value: string) {
+        onloadedmetadata: null as (() => void) | null,
+        onerror: null as ((event: Event) => void) | null,
+        set src(_value: string) {
           this.onerror?.(new Event("error"));
         },
-      } as unknown as HTMLVideoElement;
+      };
+
+      return video as unknown as HTMLVideoElement;
     });
 
     const file = new File(["video"], "clip.mp4", { type: "video/mp4" });
