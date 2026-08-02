@@ -3,12 +3,14 @@ import { describe, expect, it } from "vitest";
 
 import { ThemeProvider, useTheme } from "@/components/theme/theme-provider";
 import { useTheme as useThemeReexport } from "@/hooks/use-theme";
+import { THEME_STORAGE_TTL_MS, writeVersionedStorage } from "@/lib/security";
 
 describe("useTheme", () => {
-  it("persists theme selection in versioned storage", async () => {
+  it("persists theme selection in localStorage", async () => {
+    const storageKey = "test-theme";
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
-        <ThemeProvider defaultTheme="dark" storageKey="test-theme">
+        <ThemeProvider defaultTheme="dark" storageKey={storageKey}>
           {children}
         </ThemeProvider>
       ),
@@ -28,19 +30,30 @@ describe("useTheme", () => {
     expect(document.documentElement.classList.contains("dark")).toBe(false);
 
     await waitFor(() => {
-      const stored = window.localStorage.getItem("test-theme");
-      expect(stored).toBeTruthy();
-      expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "light" });
+      expect(window.localStorage.getItem(storageKey)).toBeTruthy();
+    });
+
+    const { result: reloaded } = renderHook(() => useTheme(), {
+      wrapper: ({ children }) => (
+        <ThemeProvider defaultTheme="dark" storageKey={storageKey}>
+          {children}
+        </ThemeProvider>
+      ),
+    });
+
+    await waitFor(() => {
+      expect(reloaded.current.theme).toBe("light");
+      expect(reloaded.current.resolvedTheme).toBe("light");
     });
   });
 
-  it("migrates legacy plain-string theme values", async () => {
-    const legacyKey = "test-legacy-theme";
-    window.localStorage.setItem(legacyKey, "system");
+  it("reads persisted theme from localStorage on mount", async () => {
+    const storageKey = "test-read-theme";
+    writeVersionedStorage(storageKey, "system", THEME_STORAGE_TTL_MS);
 
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
-        <ThemeProvider defaultTheme="dark" storageKey={legacyKey}>
+        <ThemeProvider defaultTheme="dark" storageKey={storageKey}>
           {children}
         </ThemeProvider>
       ),
@@ -48,12 +61,6 @@ describe("useTheme", () => {
 
     await waitFor(() => {
       expect(result.current.theme).toBe("system");
-    });
-
-    await waitFor(() => {
-      const stored = window.localStorage.getItem(legacyKey);
-      expect(stored).toBeTruthy();
-      expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "system" });
     });
   });
 

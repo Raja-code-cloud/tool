@@ -11,7 +11,7 @@ from types import ModuleType
 def load_module_from_file(module_name: str, relative_path: str) -> ModuleType:
     """Load a Python module directly from a file path under ``src/cloud_content_hub``."""
 
-    src_root = Path(__file__).resolve().parents[2] / "src" / "cloud_content_hub"
+    src_root = Path(__file__).resolve().parents[1] / "src" / "cloud_content_hub"
     file_path = src_root / relative_path
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     if spec is None or spec.loader is None:

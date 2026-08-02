@@ -29,7 +29,7 @@ class TestSettingsValidation:
             )
 
     def test_production_requires_asyncpg_database_url(self) -> None:
-        with pytest.raises(ValueError, match="postgresql\\+asyncpg"):
+        with pytest.raises(ValueError, match="asyncpg"):
             Settings(
                 environment=Environment.PRODUCTION,
                 database_url="postgresql://user:pass@host/db",

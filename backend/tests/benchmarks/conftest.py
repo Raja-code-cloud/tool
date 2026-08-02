@@ -8,17 +8,6 @@ from typing import Any
 import pytest
 from httpx import AsyncClient
 
-from tests.performance.conftest import (  # noqa: F401
-    asset_dto,
-    celery_broker,
-    event_config,
-    operation_dto,
-    perf_headers,
-    principal_token,
-    storage_provider,
-    user_id,
-    workspace_id,
-)
 from tests.performance.helpers.http import create_async_client, create_test_client
 
 pytestmark = pytest.mark.benchmark

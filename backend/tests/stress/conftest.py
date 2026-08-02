@@ -1,9 +1,7 @@
-"""Shared fixtures for stress validation."""
+"""Stress test collection hooks."""
 
 from __future__ import annotations
 
 import pytest
 
-pytest_plugins = ["tests.performance.conftest"]
-
-pytestmark = pytest.mark.stress
+pytestmark = [pytest.mark.stress, pytest.mark.performance]

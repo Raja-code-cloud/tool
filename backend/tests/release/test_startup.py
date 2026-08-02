@@ -30,25 +30,32 @@ class TestDependencyInjection:
 
     def test_container_registers_health_checks(self) -> None:
         container = Container.create(Settings(environment=Environment.TEST))
-        assert len(container.health_checker.checks) >= 5
+        assert len(container.health_checker._checks) >= 5
 
     @pytest.mark.asyncio
-    async def test_graceful_shutdown_releases_resources(self) -> None:
+    async def test_graceful_shutdown_releases_resources(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         settings = Settings(environment=Environment.TEST)
         container = Container.create(
             settings,
             clock=FixedClock(datetime(2026, 1, 1, tzinfo=UTC)),
             uuid_generator=FixedUuidGenerator(UUID("00000000-0000-0000-0000-000000000001")),
         )
-        container.storage_provider.close = AsyncMock()  # type: ignore[method-assign]
-        container.redis.aclose = AsyncMock()  # type: ignore[method-assign]
-        container.database_engine.dispose = AsyncMock()  # type: ignore[method-assign]
+        storage_close = AsyncMock()
+        redis_close = AsyncMock()
+        engine_dispose = AsyncMock()
+
+        monkeypatch.setattr(container.storage_provider, "close", storage_close)
+        monkeypatch.setattr(container.redis, "aclose", redis_close)
+        monkeypatch.setattr(container.database_engine, "dispose", engine_dispose)
 
         await shutdown_application(container)
 
-        container.storage_provider.close.assert_awaited_once()
-        container.redis.aclose.assert_awaited_once()
-        container.database_engine.dispose.assert_awaited_once()
+        storage_close.assert_awaited_once()
+        redis_close.assert_awaited_once()
+        engine_dispose.assert_awaited_once()
 
 
 class TestApplicationFactory:

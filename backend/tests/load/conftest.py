@@ -1,5 +1,7 @@
-"""Shared fixtures for simulated load tests."""
+"""Load test collection hooks."""
 
 from __future__ import annotations
 
-pytest_plugins = ["tests.performance.conftest"]
+import pytest
+
+pytestmark = [pytest.mark.load, pytest.mark.performance]

@@ -22,7 +22,9 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     mockReset: true,
-    pool: "threads",
+    pool: "forks",
+    maxWorkers: process.env.CI ? 2 : 4,
+    fileParallelism: false,
     testTimeout: 30_000,
     hookTimeout: 30_000,
     coverage: {

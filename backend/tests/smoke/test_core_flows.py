@@ -44,7 +44,14 @@ async def test_scheduler_list(local_client: AsyncClient, bind_admin: None) -> No
 
 @pytest.mark.asyncio
 async def test_analytics_dashboard(local_client: AsyncClient, bind_admin: None) -> None:
-    response = await local_client.get("/api/v1/analytics/dashboard", headers=HEADERS)
+    response = await local_client.get(
+        "/api/v1/analytics/dashboard",
+        headers=HEADERS,
+        params={
+            "periodStart": "2026-01-01T00:00:00Z",
+            "periodEnd": "2026-01-31T23:59:59Z",
+        },
+    )
     assert response.status_code == 200
 
 

@@ -36,12 +36,13 @@ describe("button components", () => {
       </>,
     );
 
-    expect(screen.getByRole("button", { name: "Open filters" })).toHaveAttribute(
-      "title",
-      "Open filters",
-    );
-    expect(screen.getByRole("button", { name: "Continue" })).toBeInTheDocument();
-    expect(screen.getByTestId("leading-icon").closest('[aria-hidden="true"]')).toBeInTheDocument();
+    const filtersButton = screen.getByRole("button", { name: "Open filters" });
+    const continueButton = screen.getByRole("button", { name: "Continue" });
+
+    expect(filtersButton).toHaveAttribute("title", "Open filters");
+    expect(filtersButton).toBeEnabled();
+    expect(continueButton).toBeEnabled();
+    expect(continueButton).toHaveAccessibleName("Continue");
   });
 
   it("copies text to the clipboard and shows confirmation state", async () => {

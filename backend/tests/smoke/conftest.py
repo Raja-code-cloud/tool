@@ -13,6 +13,7 @@ import httpx
 import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
+from import_utils import load_module_from_file, try_import_root_router
 
 from cloud_content_hub.api.dependencies import HandlerRegistry
 from cloud_content_hub.api.errors import install_exception_handlers
@@ -31,7 +32,6 @@ from cloud_content_hub.application.shared.dto.base import (
 from cloud_content_hub.infrastructure.identity.middleware import bind_principal, clear_principal
 from cloud_content_hub.infrastructure.identity.principal import Principal
 from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
-from helpers.import_utils import load_module_from_file, try_import_root_router
 
 pytestmark = pytest.mark.smoke
 
