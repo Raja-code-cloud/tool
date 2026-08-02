@@ -46,27 +46,23 @@ function buildListParams(
   sidebarFilter: SidebarFilterId,
   toolbar: ToolbarFilters,
 ): ContentListParams {
-  const params: ContentListParams = {
-    limit: 100,
-    sort: toolbar.sort.includes("updated") ? "-updatedAt" : "-createdAt",
-  };
-
-  if (search.trim().length >= 2 && isBackendAuthEnabled) {
-    params.query = search.trim();
-  }
-
   const sidebarType = SIDEBAR_TYPE_MAP[sidebarFilter];
-  if (sidebarType) params.assetTypes = [sidebarType];
-  else if (toolbar.type !== "all") params.assetTypes = [toolbar.type];
-
   const sidebarStatus = SIDEBAR_STATUS_MAP[sidebarFilter];
   const status = sidebarStatus ?? (toolbar.status !== "all" ? toolbar.status : null);
-  if (status && status !== "scheduled") {
-    const lifecycle = mapStatusToLifecycle(status);
-    if (lifecycle) params.lifecycleStatuses = [lifecycle];
-  }
+  const lifecycle =
+    status && status !== "scheduled" ? mapStatusToLifecycle(status) : null;
 
-  return params;
+  return {
+    limit: 100,
+    sort: toolbar.sort.includes("updated") ? "-updatedAt" : "-createdAt",
+    ...(search.trim().length >= 2 && isBackendAuthEnabled ? { query: search.trim() } : {}),
+    ...(sidebarType
+      ? { assetTypes: [sidebarType] }
+      : toolbar.type !== "all"
+        ? { assetTypes: [toolbar.type] }
+        : {}),
+    ...(lifecycle ? { lifecycleStatuses: [lifecycle] } : {}),
+  };
 }
 
 export function useContentLibraryState() {

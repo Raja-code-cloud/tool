@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { ThemeProvider, type Theme } from "@/components/theme/theme-provider";
+import { AuthProvider } from "@/hooks/use-auth";
 import { SidebarProvider } from "@/hooks/use-sidebar";
 import { AppToastProvider } from "@/hooks/use-toast";
 
@@ -25,7 +26,9 @@ export function TestProviders({
 
   return (
     <ThemeProvider defaultTheme={theme} storageKey="test-theme">
-      <AppToastProvider>{content}</AppToastProvider>
+      <AppToastProvider>
+        <AuthProvider>{content}</AuthProvider>
+      </AppToastProvider>
     </ThemeProvider>
   );
 }

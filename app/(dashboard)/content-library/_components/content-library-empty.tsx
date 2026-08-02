@@ -7,7 +7,6 @@ import { Toolbar } from "@/components/common";
 import { NoContent, NoResults } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants/navigation";
-import type { ContentItem } from "@/lib/domain/content";
 
 export type BulkActionBarProps = {
   selectedCount: number;

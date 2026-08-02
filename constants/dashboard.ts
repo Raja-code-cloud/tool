@@ -1,5 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { AlertTriangle, CalendarClock, CheckCircle2, FileStack, FileText, type LucideIcon } from "lucide-react";
+import {
+  AlertTriangle,
+  CalendarClock,
+  CheckCircle2,
+  FileStack,
+  FileText,
+  type LucideIcon,
+} from "lucide-react";
 
 import type {
   ActivityItem,
