@@ -46,7 +46,7 @@ dev = [
   "pyyaml>=6.0",
   "ruff>=0.9",
   "types-PyYAML>=6.0",
-  "types-psutil>=6.1",
+  "types-psutil>=7.2.2.20260518",
 ]
 perf = [
   "locust>=2.32",
