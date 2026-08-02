@@ -5,7 +5,10 @@ import { Moon, Sun } from "lucide-react";
 import { IconButton } from "@/components/buttons";
 import { useTheme } from "@/components/theme/theme-provider";
 
-export type ThemeToggleProps = Omit<React.ComponentProps<typeof IconButton>, "icon" | "label" | "onClick">;
+export type ThemeToggleProps = Omit<
+  React.ComponentProps<typeof IconButton>,
+  "icon" | "label" | "onClick"
+>;
 
 export function ThemeToggle(props: ThemeToggleProps): React.JSX.Element {
   const { resolvedTheme, setTheme } = useTheme();

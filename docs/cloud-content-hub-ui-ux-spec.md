@@ -1,4 +1,5 @@
 # Cloud Content Hub AI
+
 ## UI/UX Specification
 
 **Product promise:** Create Once. Publish Everywhere.  
@@ -10,6 +11,7 @@
 ## 1. Experience Principles
 
 ### Rationale
+
 Cloud Content Hub AI serves beginners and professional teams. The interface must reduce the apparent complexity of multi-platform publishing without concealing control from expert users.
 
 1. **One clear next action.** Every view has one visually dominant action; secondary actions remain available but quieter.
@@ -22,6 +24,7 @@ Cloud Content Hub AI serves beginners and professional teams. The interface must
 8. **Calm confidence.** Motion and color communicate state; neither is decorative.
 
 ### UX writing
+
 - Use sentence case: “Create content,” not “Create Content.”
 - Use verbs for actions and nouns for destinations.
 - Keep button labels specific: “Schedule 6 posts,” not “Continue.”
@@ -34,9 +37,11 @@ Cloud Content Hub AI serves beginners and professional teams. The interface must
 ## 2. Information Architecture
 
 ### Rationale
+
 Navigation follows the content lifecycle: understand, create, adapt, schedule, measure, and administer. Stable destinations reduce learning cost while global creation remains one click away.
 
 Primary sidebar order:
+
 1. Dashboard
 2. Content Library
 3. Upload Wizard
@@ -48,6 +53,7 @@ Primary sidebar order:
 9. Settings
 
 Rules:
+
 - Keep destination order stable across roles; hide only destinations the user cannot access.
 - Use section separators before Analytics and Settings when space permits.
 - Show badges only for actionable exceptions, such as failed posts or disconnected accounts.
@@ -60,35 +66,38 @@ Rules:
 ## 3. Color System
 
 ### Rationale
+
 Neutral surfaces carry hierarchy while a single cool accent signals interaction. Semantic colors are reserved for meaning, preserving an enterprise tone and improving status recognition.
 
 ### Dark theme tokens
 
-| Token | Value | Use |
-|---|---:|---|
-| `bg-canvas` | `#090B0F` | Application background |
-| `bg-sidebar` | `#0C0F14` | Persistent navigation |
-| `bg-surface-1` | `#11151C` | Cards, panels |
-| `bg-surface-2` | `#171C24` | Raised/interactive surfaces |
-| `bg-surface-3` | `#202733` | Selected and pressed states |
-| `border-subtle` | `#252C37` | Structural separators |
-| `border-strong` | `#364152` | Active boundaries |
-| `text-primary` | `#F4F7FB` | Main content |
-| `text-secondary` | `#AAB4C3` | Supporting content |
-| `text-tertiary` | `#758195` | Metadata and placeholders |
-| `accent` | `#6EA8FE` | Primary action and focus |
-| `accent-hover` | `#8BBAFF` | Hover |
-| `accent-pressed` | `#4C8FEF` | Pressed |
-| `accent-muted` | `#172A46` | Selected backgrounds |
-| `success` | `#49C884` | Completed, healthy |
-| `warning` | `#E6B450` | Attention required |
-| `danger` | `#F07178` | Failure, destructive |
-| `info` | `#69B7E8` | Neutral information |
+| Token            |     Value | Use                         |
+| ---------------- | --------: | --------------------------- |
+| `bg-canvas`      | `#090B0F` | Application background      |
+| `bg-sidebar`     | `#0C0F14` | Persistent navigation       |
+| `bg-surface-1`   | `#11151C` | Cards, panels               |
+| `bg-surface-2`   | `#171C24` | Raised/interactive surfaces |
+| `bg-surface-3`   | `#202733` | Selected and pressed states |
+| `border-subtle`  | `#252C37` | Structural separators       |
+| `border-strong`  | `#364152` | Active boundaries           |
+| `text-primary`   | `#F4F7FB` | Main content                |
+| `text-secondary` | `#AAB4C3` | Supporting content          |
+| `text-tertiary`  | `#758195` | Metadata and placeholders   |
+| `accent`         | `#6EA8FE` | Primary action and focus    |
+| `accent-hover`   | `#8BBAFF` | Hover                       |
+| `accent-pressed` | `#4C8FEF` | Pressed                     |
+| `accent-muted`   | `#172A46` | Selected backgrounds        |
+| `success`        | `#49C884` | Completed, healthy          |
+| `warning`        | `#E6B450` | Attention required          |
+| `danger`         | `#F07178` | Failure, destructive        |
+| `info`           | `#69B7E8` | Neutral information         |
 
 ### Light theme mapping
+
 Use `#F7F8FA` canvas, `#FFFFFF` surfaces, `#E2E6EC` subtle borders, `#111827` primary text, and `#2563EB` accent. Semantic meanings must remain identical.
 
 ### Usage rules
+
 - Target WCAG 2.2 AA: 4.5:1 for normal text and 3:1 for large text and UI boundaries.
 - Never encode state by color alone; pair color with text and, where useful, an icon.
 - Use accent on the primary action, focus ring, active navigation, and selected data only.
@@ -100,24 +109,26 @@ Use `#F7F8FA` canvas, `#FFFFFF` surfaces, `#E2E6EC` subtle borders, `#111827` pr
 ## 4. Typography
 
 ### Rationale
+
 A neutral sans-serif keeps dense operational screens readable. A compact type scale limits visual noise and makes hierarchy depend on size, weight, and spacing together.
 
 **UI family:** Inter, with `Segoe UI`, system-ui, sans-serif fallbacks.  
 **Code/data family:** JetBrains Mono, with `Cascadia Code`, monospace fallbacks.
 
-| Style | Size / line height | Weight | Use |
-|---|---|---:|---|
-| Display | 32 / 40 px | 650 | Welcome or major empty state only |
-| H1 | 24 / 32 px | 650 | Page title |
-| H2 | 20 / 28 px | 600 | Major section |
-| H3 | 16 / 24 px | 600 | Card/panel title |
-| Body | 14 / 22 px | 400 | Default UI copy |
-| Body strong | 14 / 22 px | 600 | Emphasis |
-| Small | 12 / 18 px | 400 | Metadata |
-| Label | 12 / 16 px | 600 | Form labels, compact headers |
-| Data | 13 / 20 px | 500 | Tabular values, counters |
+| Style       | Size / line height | Weight | Use                               |
+| ----------- | ------------------ | -----: | --------------------------------- |
+| Display     | 32 / 40 px         |    650 | Welcome or major empty state only |
+| H1          | 24 / 32 px         |    650 | Page title                        |
+| H2          | 20 / 28 px         |    600 | Major section                     |
+| H3          | 16 / 24 px         |    600 | Card/panel title                  |
+| Body        | 14 / 22 px         |    400 | Default UI copy                   |
+| Body strong | 14 / 22 px         |    600 | Emphasis                          |
+| Small       | 12 / 18 px         |    400 | Metadata                          |
+| Label       | 12 / 16 px         |    600 | Form labels, compact headers      |
+| Data        | 13 / 20 px         |    500 | Tabular values, counters          |
 
 Rules:
+
 - Use no more than three weights per screen.
 - Keep prose lines between 55 and 75 characters.
 - Use tabular numerals for metrics, calendars, counters, and tables.
@@ -129,9 +140,11 @@ Rules:
 ## 5. Spacing, Grid, and Shape
 
 ### Rationale
+
 A four-pixel base supports compact enterprise layouts while preserving consistent rhythm. Larger page gutters create calm; denser spacing stays inside data-heavy components.
 
 ### Spacing scale
+
 `0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80 px`
 
 - Inline icon gap: 8 px.
@@ -142,12 +155,14 @@ A four-pixel base supports compact enterprise layouts while preserving consisten
 - Maximum primary content width: 1440 px; reading/editor columns: 760–880 px.
 
 ### Grid
+
 - Desktop ≥1280 px: 12 columns, 24 px gutters.
 - Tablet 768–1279 px: 8 columns, 20 px gutters.
 - Mobile <768 px: 4 columns, 16 px gutters.
 - Optional right utility panel: 320–380 px; main content must remain at least 640 px before the panel collapses.
 
 ### Radius
+
 - 4 px: badges, compact controls.
 - 6 px: inputs, buttons, menu items.
 - 8 px: cards, popovers.
@@ -155,6 +170,7 @@ A four-pixel base supports compact enterprise layouts while preserving consisten
 - Pill radius only for status chips, segmented controls, and avatars.
 
 ### Borders and elevation
+
 - Prefer 1 px borders and surface contrast to shadows.
 - Popovers: `0 8px 24px rgba(0,0,0,.32)`.
 - Dialogs: `0 16px 48px rgba(0,0,0,.42)`.
@@ -166,6 +182,7 @@ A four-pixel base supports compact enterprise layouts while preserving consisten
 ## 6. Iconography
 
 ### Rationale
+
 Consistent line icons improve recognition without competing with content.
 
 - Use one library only: Lucide or an equivalent 1.75–2 px rounded-stroke set.
@@ -179,6 +196,7 @@ Consistent line icons improve recognition without competing with content.
 ## 7. Application Shell and Navigation
 
 ### Sidebar
+
 - Expanded width: 240 px; collapsed width: 64 px.
 - Fixed desktop sidebar; overlay drawer below 1024 px.
 - Workspace switcher sits at top; account and help controls sit at bottom.
@@ -187,12 +205,14 @@ Consistent line icons improve recognition without competing with content.
 - Keyboard order follows visual order; arrow keys may move within the navigation group.
 
 ### Header
+
 - Height: 56 px; sticky with a subtle bottom border.
 - Contains sidebar trigger, global search/command entry, create action, notifications, help, and profile.
 - Search opens a command palette with recent items, navigation, content, and actions.
 - Mobile header prioritizes menu, page title, create, and overflow.
 
 ### Breadcrumbs
+
 - Use for detail and nested settings pages.
 - Collapse middle items on small screens.
 - Last item is current location and not a link.
@@ -202,9 +222,11 @@ Consistent line icons improve recognition without competing with content.
 ## 8. Page Layout Standard
 
 ### Rationale
+
 Predictable page anatomy lets users scan new areas without relearning controls.
 
 Each page uses:
+
 1. Breadcrumb, when nested.
 2. Header row with H1 and concise description.
 3. One primary action and up to two visible secondary actions; overflow the rest.
@@ -213,6 +235,7 @@ Each page uses:
 6. Optional right utility panel for contextual—not navigational—content.
 
 Behavior:
+
 - Keep primary action top-right on desktop and visible near the title on mobile.
 - Sticky action bars are allowed only for long edit, review, or bulk-selection flows.
 - Filters and results share a clear visual relationship.
@@ -224,6 +247,7 @@ Behavior:
 ## 9. Component System
 
 ### Buttons
+
 - Heights: 32 px compact, 36 px default, 40 px prominent.
 - Variants: primary, secondary, ghost, destructive, icon.
 - Primary: accent fill, dark high-contrast label.
@@ -235,6 +259,7 @@ Behavior:
 - Limit one primary button per action region.
 
 ### Form elements
+
 - Default height: 36 px; touch contexts: 44 px minimum target.
 - Label above control; required indicator appears in text, not color only.
 - Helper or error text sits below and does not replace the label.
@@ -245,6 +270,7 @@ Behavior:
 - Checkboxes are for independent choices; radios for one required choice; switches for immediate binary settings.
 
 ### Search, filters, and sorting
+
 - Search uses descriptive placeholder text such as “Search content by title or tag.”
 - Debounce remote results and show progress without clearing existing results.
 - Active filters appear as removable chips with “Clear all.”
@@ -252,6 +278,7 @@ Behavior:
 - Sorting states are explicit in both label and icon.
 
 ### Cards
+
 - Use cards to group related content, not every section.
 - Default border, surface-1 background, 8 px radius, and 20 px padding.
 - Interactive cards have one primary click target and visible focus.
@@ -259,6 +286,7 @@ Behavior:
 - Never rely on hover to expose the only route to essential actions.
 
 ### Tables
+
 - Header height: 40 px; rows: 44 px compact or 52 px default.
 - Left-align text; right-align numeric data; keep actions rightmost.
 - Sticky header for long tables; freeze the primary identifier when horizontal scrolling is required.
@@ -267,12 +295,14 @@ Behavior:
 - Mobile tables become prioritized lists/cards, not compressed desktop tables.
 
 ### Badges and status
+
 - Variants: neutral, info, success, warning, danger.
 - Use short nouns or past-tense states: Draft, Scheduled, Published, Failed.
 - Include status icon when color distinction may be insufficient.
 - Do not use badges as buttons unless styled and announced as interactive controls.
 
 ### Dialogs and drawers
+
 - Use dialogs for focused decisions; drawers for contextual inspection or editing.
 - Widths: 400 px confirmation, 560–720 px forms; drawers 360–480 px.
 - Trap focus, close with Escape when safe, restore focus to invoker.
@@ -280,27 +310,32 @@ Behavior:
 - Do not nest dialogs.
 
 ### Dropdowns
+
 - Minimum width 180 px; maximum height 360 px before scrolling.
 - Group related commands and separate destructive commands.
 - Support arrows, Home/End, Enter/Space, and Escape.
 
 ### Pagination
+
 - Prefer cursor/infinite loading only for discovery feeds.
 - Use page-based pagination for tables and predictable bulk work.
 - Show range, total, page size, and next/previous; avoid excessive page numbers on mobile.
 
 ### Charts
+
 - Every chart includes title, period, units, accessible summary, and tooltip.
 - Use lines for trends, bars for comparisons, stacked bars for composition, and donut charts only for 2–5 parts.
 - Avoid 3D, dual axes by default, and decorative chart chrome.
 - Provide table or textual equivalents for critical data.
 
 ### Upload zones
+
 - Dashed structural border, upload icon, supported types, maximum size, and browse action.
 - Support drag/drop, click, paste where applicable, progress, pause/retry, replace, and remove.
 - Validate before upload when possible; identify the failed file and recovery action.
 
 ### Avatars
+
 - Sizes: 24, 32, 40 px; use initials fallback with deterministic neutral color.
 - Groups show up to three avatars plus count.
 - Always provide a text name in menus and detailed contexts.
@@ -310,17 +345,20 @@ Behavior:
 ## 10. Feedback and System States
 
 ### Empty states
+
 - Explain what belongs here, why it is useful, and one next action.
 - First-use empty states may include a restrained illustration; filtered empties should show “No matches” with filter-reset action.
 - Permission empties explain who can grant access.
 
 ### Loading states
+
 - Use skeletons for content expected within 1–3 seconds.
 - Use inline spinners for actions and determinate progress for upload/generation/publishing.
 - After 10 seconds, show an explanatory message and safe cancel/background option.
 - Never replace an entire page with a spinner when stable navigation can remain.
 
 ### Errors
+
 - Field: inline beside the source.
 - Section: banner within the affected region.
 - Page: full-state message with retry and support reference.
@@ -328,6 +366,7 @@ Behavior:
 - Preserve user input after failure.
 
 ### Success
+
 - Use inline state changes for local actions and brief toasts for background completion.
 - Confirm external publishing with platform, account, time, and content title.
 - Provide “View post” or “Undo” when technically safe.
@@ -337,9 +376,11 @@ Behavior:
 ## 11. Dashboard
 
 ### Rationale
+
 The dashboard should answer three questions quickly: What needs attention, what should I do next, and how is publishing performing?
 
 Desktop layout:
+
 - Welcome header with contextual greeting, workspace health summary, and “Create content.”
 - Quick actions: Upload, Generate with AI, Schedule, Connect account.
 - Four statistics cards: Published, Scheduled, Engagement, Failed/Needs attention.
@@ -348,6 +389,7 @@ Desktop layout:
 - Bottom modules: Recent Activity, Platform Health, Storage Usage.
 
 Rules:
+
 - Personalize AI suggestions from drafts, performance, missing variants, and calendar gaps; explain “Why this suggestion.”
 - Failed publishing and disconnected accounts outrank promotional suggestions.
 - Let users dismiss suggestions and preserve the choice.
@@ -358,6 +400,7 @@ Rules:
 ## 12. Content Library
 
 ### Rationale
+
 The library supports visual browsing and high-volume operations without creating separate mental models.
 
 - Header: create/upload primary action, search, saved view, filter, sort, grid/list toggle.
@@ -371,6 +414,7 @@ The library supports visual browsing and high-volume operations without creating
 - Support saved views for repeated filter/sort combinations.
 
 Mobile:
+
 - Default to list cards.
 - Open filters in a full-height drawer.
 - Keep search and filter count visible.
@@ -381,16 +425,19 @@ Mobile:
 ## 13. Upload Wizard
 
 ### Rationale
+
 The wizard converts a complex content pipeline into a guided sequence while allowing experienced users to skip irrelevant media steps.
 
 Sequence: **Poster → Article → Video → Thumbnail → AI Generation → Review → Schedule**
 
 Layout:
+
 - Desktop stepper left, active form center, contextual guidance/preview right.
 - Mobile stepper becomes “Step 3 of 7” with a compact progress bar.
 - Sticky footer contains Back, Save and exit, and a specific next action.
 
 Rules:
+
 - Save draft automatically and show “Saved” with timestamp.
 - Allow optional steps to be skipped and marked accordingly.
 - Validate the current step before advancing; never erase completed work.
@@ -408,9 +455,11 @@ Rules:
 ## 14. AI Studio
 
 ### Rationale
+
 AI Studio is the flagship workspace. It must make adaptation fast while preserving authorship, control, and platform-specific confidence.
 
 Desktop layout:
+
 - Top toolbar: content title/status, save state, version history, share, primary “Approve all.”
 - Left pane (38–44%): Master Article editor with outline and source controls.
 - Center pane (36–42%): platform tabs and generated variant editor.
@@ -418,6 +467,7 @@ Desktop layout:
 - Panes are resizable within minimum widths; below 1180 px the utility pane becomes a drawer.
 
 Core behavior:
+
 - Platform tabs show icon, account, character status, and approval state.
 - Generated content is editable; AI-generated and user-edited states are distinguishable in version history, not through noisy inline decoration.
 - Character counter shows current/limit and warning thresholds at 85% and 100%.
@@ -433,6 +483,7 @@ Core behavior:
 - Publishing tips identify platform constraints, best-time guidance, missing media/alt text, and account issues.
 
 Keyboard:
+
 - `Ctrl/Cmd+S`: save.
 - `Ctrl/Cmd+Enter`: generate or approve only when clearly labeled in context.
 - `Alt+1…9`: switch platform tabs.
@@ -440,6 +491,7 @@ Keyboard:
 - All AI actions announce start and completion to assistive technology.
 
 Mobile:
+
 - Use one pane at a time: Master, Variant, Preview, Insights.
 - Keep platform switcher and save state sticky.
 - Put approval actions in a bottom action bar.
@@ -449,14 +501,17 @@ Mobile:
 ## 15. Scheduler and Calendar
 
 ### Rationale
+
 Scheduling should expose timing conflicts and publishing risk while keeping rearrangement direct.
 
 Views:
+
 - Calendar: month/week/day with platform filters and timezone.
 - Timeline: chronological cross-platform plan.
 - Queue: ordered posts per account with cadence controls.
 
 Behavior:
+
 - Dragging shows valid targets, proposed time, conflicts, and a keyboard-accessible move alternative.
 - Dropping requires confirmation only when changing timezone/day, overriding a conflict, or moving a published item.
 - Cards show platform, time, status, content type, and account.
@@ -471,13 +526,16 @@ Behavior:
 ## 16. Analytics
 
 ### Rationale
+
 Analytics must connect publishing activity to outcomes and make cross-platform differences understandable without misleading comparisons.
 
 Page controls:
+
 - Date range, comparison period, platforms, accounts, campaigns, and export.
 - Persistent disclosure of timezone and data freshness.
 
 Sections:
+
 - KPI cards: Reach, Engagement, Followers, Publishing Frequency.
 - Growth Trends: time-series with comparison period.
 - Platform Comparison: normalized bars plus raw-value toggle.
@@ -486,6 +544,7 @@ Sections:
 - Insight callouts explain meaningful changes and methodology.
 
 Rules:
+
 - Define metrics in tooltips and document platform-specific differences.
 - Mark estimated or unavailable data.
 - Avoid red/green for positive/negative trend alone; use arrows and labels.
@@ -496,6 +555,7 @@ Rules:
 ## 17. Social Accounts and Settings
 
 ### Social Accounts
+
 - Group connections by platform and workspace.
 - Each account shows identity, permissions, connection health, last sync, and actions.
 - Connection flows explain requested permissions before redirect.
@@ -503,6 +563,7 @@ Rules:
 - Bulk health summary appears above account list.
 
 ### Settings
+
 - Secondary navigation: Workspace, Members, Roles, Brand, AI defaults, Publishing, Notifications, Billing, Integrations, Security.
 - Save locally scoped settings within each section; avoid one page-wide save button.
 - Show inherited versus overridden values.
@@ -514,6 +575,7 @@ Rules:
 ## 18. Responsive Rules
 
 ### Rationale
+
 Responsive design prioritizes tasks rather than shrinking desktop geometry.
 
 - **≥1440 px:** full sidebar, 12-column layout, optional utility panel.
@@ -532,6 +594,7 @@ Responsive design prioritizes tasks rather than shrinking desktop geometry.
 ## 19. Accessibility
 
 ### Rationale
+
 Accessibility is a product-quality requirement and supports keyboard-heavy professional workflows.
 
 - Meet WCAG 2.2 AA.
@@ -554,6 +617,7 @@ Accessibility is a product-quality requirement and supports keyboard-heavy profe
 ## 20. Motion
 
 ### Rationale
+
 Motion clarifies cause and effect. It must feel immediate and never delay work.
 
 - Hover/color transitions: 100–150 ms.
@@ -572,6 +636,7 @@ Motion clarifies cause and effect. It must feel immediate and never delay work.
 ## 21. Consistency and Governance
 
 ### Rationale
+
 A premium system stays coherent by constraining exceptions and making decisions traceable.
 
 - Components consume semantic tokens; feature teams do not introduce one-off colors, spacing, radii, or shadows.
@@ -589,6 +654,7 @@ A premium system stays coherent by constraining exceptions and making decisions 
 ## 22. Design QA and Developer Handoff
 
 ### Required design annotations
+
 - Component name and variant.
 - Token references rather than isolated values.
 - Responsive behavior at all four breakpoint ranges.
@@ -598,6 +664,7 @@ A premium system stays coherent by constraining exceptions and making decisions 
 - Accessibility name, role, state, and announcements for custom controls.
 
 ### Acceptance checklist
+
 - [ ] One primary action is evident in each action region.
 - [ ] Layout follows the page standard and spacing scale.
 - [ ] All colors and dimensions map to documented tokens.
@@ -612,5 +679,5 @@ A premium system stays coherent by constraining exceptions and making decisions 
 - [ ] No essential action depends exclusively on hover, color, or gesture.
 
 ### Definition of ready
-A screen is ready for development only when its content hierarchy, component variants, responsive transformations, interaction states, copy, accessibility behavior, and edge cases are documented. Any new visual pattern must first be reconciled with this system.
 
+A screen is ready for development only when its content hierarchy, component variants, responsive transformations, interaction states, copy, accessibility behavior, and edge cases are documented. Any new visual pattern must first be reconciled with this system.

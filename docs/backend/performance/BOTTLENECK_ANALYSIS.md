@@ -4,14 +4,14 @@ Identified performance constraints and their mitigation paths for the Cloud Cont
 
 ## Summary
 
-| Rank | Bottleneck | Severity | Layer | Mitigation |
-| --- | --- | --- | --- | --- |
-| 1 | Database connection pool under concurrent search | High | DB | PgBouncer, read replica, index tuning |
-| 2 | AI provider latency for content generation | High | External | Queue depth scaling, provider failover |
-| 3 | Outbox poll batch size vs. transaction duration | Medium | Events | Tune `batch_size`, horizontal pollers |
-| 4 | Azure Blob upload for large media | Medium | Storage | Chunked upload, CDN, async worker queue |
-| 5 | Social provider rate limits on publish | Medium | External | Retry backoff, staggered scheduler |
-| 6 | Serialization overhead on paged responses | Low | API | Response compression (gzip enabled) |
+| Rank | Bottleneck                                       | Severity | Layer    | Mitigation                              |
+| ---- | ------------------------------------------------ | -------- | -------- | --------------------------------------- |
+| 1    | Database connection pool under concurrent search | High     | DB       | PgBouncer, read replica, index tuning   |
+| 2    | AI provider latency for content generation       | High     | External | Queue depth scaling, provider failover  |
+| 3    | Outbox poll batch size vs. transaction duration  | Medium   | Events   | Tune `batch_size`, horizontal pollers   |
+| 4    | Azure Blob upload for large media                | Medium   | Storage  | Chunked upload, CDN, async worker queue |
+| 5    | Social provider rate limits on publish           | Medium   | External | Retry backoff, staggered scheduler      |
+| 6    | Serialization overhead on paged responses        | Low      | API      | Response compression (gzip enabled)     |
 
 ## 1. Database Connection Pool
 
@@ -113,13 +113,13 @@ are external.
 
 ## Non-Bottlenecks (Validated)
 
-| Component | Observation |
-| --- | --- |
-| JWT authentication | Sub-ms principal resolution in mock tests |
-| Task route resolution | Sub-0.2 ms for all 30+ registered tasks |
-| Retry classification | Sub-0.02 ms P95 |
-| Health probes | Sub-10 ms P95 |
-| In-memory outbox fetch | Sub-1 ms P95 for 100 rows |
+| Component              | Observation                               |
+| ---------------------- | ----------------------------------------- |
+| JWT authentication     | Sub-ms principal resolution in mock tests |
+| Task route resolution  | Sub-0.2 ms for all 30+ registered tasks   |
+| Retry classification   | Sub-0.02 ms P95                           |
+| Health probes          | Sub-10 ms P95                             |
+| In-memory outbox fetch | Sub-1 ms P95 for 100 rows                 |
 
 ## Monitoring Dashboards
 

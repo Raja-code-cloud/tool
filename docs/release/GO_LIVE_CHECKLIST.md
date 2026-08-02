@@ -73,17 +73,17 @@ Use this checklist for RC1 staging go-live and as the template for future GA pro
 
 ### Smoke tests (within 15 minutes)
 
-| #   | Test                         | Expected result                    | Pass |
-| --- | ---------------------------- | ---------------------------------- | ---- |
-| 1   | Root redirect `/` → `/dashboard` | 307/308                       | [ ]  |
-| 2   | Dashboard loads              | 200; shell with sidebar            | [ ]  |
-| 3   | All nav routes                 | No client errors                   | [ ]  |
-| 4   | Theme toggle                   | Persists on reload                 | [ ]  |
-| 5   | Upload wizard                  | Steps advance; draft in localStorage | [ ] |
-| 6   | Calendar placeholder           | Coming-soon UI displays            | [ ]  |
-| 7   | Responsive (375px, 1440px)     | Shell usable                       | [ ]  |
-| 8   | Browser console                | No uncaught errors on primary flows | [ ] |
-| 9   | Security headers               | CSP, X-Frame-Options, nosniff      | [ ]  |
+| #   | Test                             | Expected result                      | Pass |
+| --- | -------------------------------- | ------------------------------------ | ---- |
+| 1   | Root redirect `/` → `/dashboard` | 307/308                              | [ ]  |
+| 2   | Dashboard loads                  | 200; shell with sidebar              | [ ]  |
+| 3   | All nav routes                   | No client errors                     | [ ]  |
+| 4   | Theme toggle                     | Persists on reload                   | [ ]  |
+| 5   | Upload wizard                    | Steps advance; draft in localStorage | [ ]  |
+| 6   | Calendar placeholder             | Coming-soon UI displays              | [ ]  |
+| 7   | Responsive (375px, 1440px)       | Shell usable                         | [ ]  |
+| 8   | Browser console                  | No uncaught errors on primary flows  | [ ]  |
+| 9   | Security headers                 | CSP, X-Frame-Options, nosniff        | [ ]  |
 
 - [ ] Smoke test results recorded (tester, timestamp, environment)
 - [ ] Monitoring dashboards show healthy metrics
@@ -141,14 +141,14 @@ Do **not** promote to production GA until all items pass:
 
 ## Go / No-Go decision record
 
-| Field                | Value                          |
-| -------------------- | ------------------------------ |
-| Decision             | **GO WITH MINOR RISKS** (staging) |
-| Decision date        | 2026-08-02                     |
-| Approved by          | Release Manager (pending co-signatures) |
-| Scope                | Staging / internal validation only |
-| Blockers for workflow| `format:check` script + Prettier drift |
-| Blockers for GA      | RC3 Principal Review pending   |
+| Field                 | Value                                   |
+| --------------------- | --------------------------------------- |
+| Decision              | **GO WITH MINOR RISKS** (staging)       |
+| Decision date         | 2026-08-02                              |
+| Approved by           | Release Manager (pending co-signatures) |
+| Scope                 | Staging / internal validation only      |
+| Blockers for workflow | `format:check` script + Prettier drift  |
+| Blockers for GA       | RC3 Principal Review pending            |
 
 ---
 

@@ -6,16 +6,16 @@ This plan defines the automated regression strategy for the Cloud Content Hub ba
 
 ## Scope
 
-| Area | Suite location | Markers |
-| ---- | -------------- | ------- |
-| Authentication | `tests/regression/`, `tests/api/test_auth.py` | `regression`, `api` |
-| Asset management | `tests/api/test_assets_api.py`, `tests/regression/` | `regression`, `api` |
-| Content generation | `tests/api/test_content_api.py`, `tests/automation/` | `api`, `automation` |
-| Publishing | `tests/api/test_publishing_api.py`, `tests/automation/` | `api`, `automation` |
-| Scheduling | `tests/api/test_scheduler_api.py`, `tests/automation/` | `api`, `automation` |
-| Analytics | `tests/api/test_analytics_api.py`, `tests/automation/` | `api`, `automation` |
-| Notifications | `tests/api/test_notifications_admin_api.py` | `api`, `automation` |
-| Administration | `tests/api/test_notifications_admin_api.py` | `api`, `regression` |
+| Area               | Suite location                                          | Markers             |
+| ------------------ | ------------------------------------------------------- | ------------------- |
+| Authentication     | `tests/regression/`, `tests/api/test_auth.py`           | `regression`, `api` |
+| Asset management   | `tests/api/test_assets_api.py`, `tests/regression/`     | `regression`, `api` |
+| Content generation | `tests/api/test_content_api.py`, `tests/automation/`    | `api`, `automation` |
+| Publishing         | `tests/api/test_publishing_api.py`, `tests/automation/` | `api`, `automation` |
+| Scheduling         | `tests/api/test_scheduler_api.py`, `tests/automation/`  | `api`, `automation` |
+| Analytics          | `tests/api/test_analytics_api.py`, `tests/automation/`  | `api`, `automation` |
+| Notifications      | `tests/api/test_notifications_admin_api.py`             | `api`, `automation` |
+| Administration     | `tests/api/test_notifications_admin_api.py`             | `api`, `regression` |
 
 ## Regression packs
 
@@ -46,12 +46,12 @@ This plan defines the automated regression strategy for the Cloud Content Hub ba
 
 ## Supporting suites
 
-| Suite | Path | Role |
-| ----- | ---- | ---- |
-| API automation | `tests/api/` | Request/response models, pagination, auth, errors |
-| Workflow automation | `tests/automation/` | Real DB + handler orchestration |
-| Contract | `tests/contract/` | Envelope and error-code stability |
-| Fixtures | `tests/fixtures/` | Deterministic factories and mock handlers |
+| Suite               | Path                | Role                                              |
+| ------------------- | ------------------- | ------------------------------------------------- |
+| API automation      | `tests/api/`        | Request/response models, pagination, auth, errors |
+| Workflow automation | `tests/automation/` | Real DB + handler orchestration                   |
+| Contract            | `tests/contract/`   | Envelope and error-code stability                 |
+| Fixtures            | `tests/fixtures/`   | Deterministic factories and mock handlers         |
 
 ## Out of scope
 

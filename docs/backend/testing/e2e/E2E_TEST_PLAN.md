@@ -6,12 +6,12 @@ Validate complete Cloud Content Hub backend business workflows across authentica
 
 ## Scope
 
-| In scope | Out of scope |
-| --- | --- |
-| Workflow correctness across handlers, workers, and HTTP delivery | New APIs or repositories |
-| Positive, negative, retry, and recovery paths | Performance benchmarking |
-| Security isolation and permission enforcement | Penetration testing |
-| Outbox, Celery, PostgreSQL, Redis integration | Provider implementation changes |
+| In scope                                                         | Out of scope                    |
+| ---------------------------------------------------------------- | ------------------------------- |
+| Workflow correctness across handlers, workers, and HTTP delivery | New APIs or repositories        |
+| Positive, negative, retry, and recovery paths                    | Performance benchmarking        |
+| Security isolation and permission enforcement                    | Penetration testing             |
+| Outbox, Celery, PostgreSQL, Redis integration                    | Provider implementation changes |
 
 ## Test Layers
 
@@ -24,12 +24,12 @@ tests/fixtures/     Deterministic seed data and helpers
 
 ## Infrastructure Requirements
 
-| Service | Purpose |
-| --- | --- |
-| PostgreSQL 17 | Primary persistence with Alembic migrations |
-| Redis 7 | Celery broker and worker retry state |
-| Azurite (optional) | Blob storage when overriding TEST in-memory storage |
-| Celery (in-process) | Synchronous task execution via `FakeCeleryBroker` |
+| Service             | Purpose                                             |
+| ------------------- | --------------------------------------------------- |
+| PostgreSQL 17       | Primary persistence with Alembic migrations         |
+| Redis 7             | Celery broker and worker retry state                |
+| Azurite (optional)  | Blob storage when overriding TEST in-memory storage |
+| Celery (in-process) | Synchronous task execution via `FakeCeleryBroker`   |
 
 ## Workflow Coverage
 
@@ -39,10 +39,10 @@ tests/fixtures/     Deterministic seed data and helpers
 4. Video upload
 5. Content generation pipeline
 6. Schedule publication (outbox + Celery)
-7–12. Platform publish (LinkedIn, Facebook, Instagram, X, Medium, YouTube)
-13. Analytics import and dashboard
-14. Notification delivery
-15. Administration (roles, feature flags, maintenance mode)
+   7–12. Platform publish (LinkedIn, Facebook, Instagram, X, Medium, YouTube)
+7. Analytics import and dashboard
+8. Notification delivery
+9. Administration (roles, feature flags, maintenance mode)
 
 ## Execution
 

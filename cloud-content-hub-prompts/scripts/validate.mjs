@@ -3,14 +3,14 @@
  * Validates prompt packages against JSON Schemas and structural requirements.
  * Layer 1 of the evaluation framework.
  */
-
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import addFormats from "ajv-formats";
+import Ajv2020 from "ajv/dist/2020.js";
 import { globSync } from "glob";
 import YAML from "yaml";
-import Ajv2020 from "ajv/dist/2020.js";
-import addFormats from "ajv-formats";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");

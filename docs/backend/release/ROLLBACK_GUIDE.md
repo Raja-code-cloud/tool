@@ -4,13 +4,13 @@ Operational rollback procedures for Cloud Content Hub backend. Infrastructure ro
 
 ## Decision matrix
 
-| Symptom                                      | Roll back app | Roll back DB | Notes                          |
-| -------------------------------------------- | ------------- | ------------ | ------------------------------ |
-| Readiness 503 after deploy                   | Yes           | No           | Prior revision likely healthy  |
-| Elevated 5xx / failed smoke tests            | Yes           | No           | Correlate with deploy time     |
-| Migration job failure                        | No*           | Repair       | Do not roll forward blindly    |
-| Schema incompatible with old app             | Yes           | Expand/contract | Requires migration playbook |
-| Security incident (compromised secret)       | Redeploy      | No           | Rotate secrets, redeploy all   |
+| Symptom                                | Roll back app | Roll back DB    | Notes                         |
+| -------------------------------------- | ------------- | --------------- | ----------------------------- |
+| Readiness 503 after deploy             | Yes           | No              | Prior revision likely healthy |
+| Elevated 5xx / failed smoke tests      | Yes           | No              | Correlate with deploy time    |
+| Migration job failure                  | No*           | Repair          | Do not roll forward blindly   |
+| Schema incompatible with old app       | Yes           | Expand/contract | Requires migration playbook   |
+| Security incident (compromised secret) | Redeploy      | No              | Rotate secrets, redeploy all  |
 
 \*Fix migration or restore from PITR before resuming deploy.
 
@@ -94,11 +94,11 @@ Alembic migrations are **forward-only** by default. Automated schema rollback is
 
 ## Container rollback
 
-| Component | Method                                      |
-| --------- | ------------------------------------------- |
-| API       | ACA revision activation (traffic shift)     |
-| Worker    | Prior image tag/digest on worker container  |
-| Beat      | Prior image tag/digest on beat container    |
+| Component | Method                                         |
+| --------- | ---------------------------------------------- |
+| API       | ACA revision activation (traffic shift)        |
+| Worker    | Prior image tag/digest on worker container     |
+| Beat      | Prior image tag/digest on beat container       |
 | Migrate   | Re-run job with fixed migration or prior image |
 
 Docker Compose local rollback:
@@ -127,16 +127,16 @@ docker compose -f docker/docker-compose.yml up -d api worker
 
 Capture in the incident ticket:
 
-| Field                 | Value |
-| --------------------- | ----- |
-| Environment           |       |
-| Failed revision       |       |
-| Failed image tag      |       |
-| Rollback revision     |       |
-| Rollback image tag    |       |
-| Migration job status  |       |
-| Time to recovery      |       |
-| Customer impact       |       |
+| Field                | Value |
+| -------------------- | ----- |
+| Environment          |       |
+| Failed revision      |       |
+| Failed image tag     |       |
+| Rollback revision    |       |
+| Rollback image tag   |       |
+| Migration job status |       |
+| Time to recovery     |       |
+| Customer impact      |       |
 
 ## Prevention
 

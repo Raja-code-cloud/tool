@@ -15,11 +15,11 @@
 
 The frontend includes automated accessibility checks:
 
-| Layer | Tool | Location |
-| ----- | ---- | -------- |
-| Unit/integration | `vitest-axe` | `tests/utils/axe.ts`, `tests/integration/accessibility.test.tsx` |
-| E2E | `@axe-core/playwright` | `tests/e2e/accessibility.spec.ts` |
-| Component isolation | Storybook a11y addon | `.storybook/main.ts` (local only; not CI-gated) |
+| Layer               | Tool                   | Location                                                         |
+| ------------------- | ---------------------- | ---------------------------------------------------------------- |
+| Unit/integration    | `vitest-axe`           | `tests/utils/axe.ts`, `tests/integration/accessibility.test.tsx` |
+| E2E                 | `@axe-core/playwright` | `tests/e2e/accessibility.spec.ts`                                |
+| Component isolation | Storybook a11y addon   | `.storybook/main.ts` (local only; not CI-gated)                  |
 
 Helpers filter **critical** and **serious** axe violations. CI runs Vitest accessibility integration tests; Playwright a11y specs run locally via `npm run test:e2e`.
 

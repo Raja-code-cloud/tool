@@ -8,23 +8,23 @@ Scenario playbooks for Cloud Content Hub backend incidents. Use with `docs/backe
 Detect → Triage → Contain → Recover → Verify → Post-incident review
 ```
 
-| Phase | Owner | Key actions |
-| ----- | ----- | ----------- |
-| Detect | Monitoring / on-call | Alert fires, customer report, health check failure |
-| Triage | Incident commander | Classify severity, assign workstreams |
-| Contain | SRE | Stop bleeding — rollback, scale, isolate |
-| Recover | Platform + Engineering | Restore data, redeploy, fail over |
-| Verify | Engineering | Health checks, smoke tests, metrics normalization |
-| Review | All | Timeline, RTO/RPO achieved, action items |
+| Phase   | Owner                  | Key actions                                        |
+| ------- | ---------------------- | -------------------------------------------------- |
+| Detect  | Monitoring / on-call   | Alert fires, customer report, health check failure |
+| Triage  | Incident commander     | Classify severity, assign workstreams              |
+| Contain | SRE                    | Stop bleeding — rollback, scale, isolate           |
+| Recover | Platform + Engineering | Restore data, redeploy, fail over                  |
+| Verify  | Engineering            | Health checks, smoke tests, metrics normalization  |
+| Review  | All                    | Timeline, RTO/RPO achieved, action items           |
 
 ## Severity classification
 
-| Level | Criteria | Response |
-| ----- | -------- | -------- |
-| SEV-3 | Degraded non-critical dependency | Business hours fix |
+| Level | Criteria                           | Response              |
+| ----- | ---------------------------------- | --------------------- |
+| SEV-3 | Degraded non-critical dependency   | Business hours fix    |
 | SEV-2 | Readiness failures, worker backlog | On-call within 15 min |
-| SEV-1 | API unavailable for tenants | Immediate, all-hands |
-| SEV-0 | Regional / data loss event | DR activation |
+| SEV-1 | API unavailable for tenants        | Immediate, all-hands  |
+| SEV-0 | Regional / data loss event         | DR activation         |
 
 ---
 
@@ -40,12 +40,12 @@ Detect → Triage → Contain → Recover → Verify → Post-incident review
 
 **Recovery paths:**
 
-| Cause | Action |
-| ----- | ------ |
-| Azure platform outage | Monitor Azure status; prepare DR if prolonged |
-| Connection limit | Reduce API min replicas temporarily |
-| Failed migration | Stop deploys; PITR restore if schema corrupted |
-| Credential rotation error | Fix Key Vault secret; redeploy ACA |
+| Cause                     | Action                                         |
+| ------------------------- | ---------------------------------------------- |
+| Azure platform outage     | Monitor Azure status; prepare DR if prolonged  |
+| Connection limit          | Reduce API min replicas temporarily            |
+| Failed migration          | Stop deploys; PITR restore if schema corrupted |
+| Credential rotation error | Fix Key Vault secret; redeploy ACA             |
 
 **Verification:**
 
@@ -91,12 +91,12 @@ pytest tests/disaster_recovery/test_dependency_unavailability.py -m disaster_rec
 
 **Recovery:**
 
-| Cause | Action |
-| ----- | ------ |
-| Throttling | Backoff retries; scale down bulk export jobs |
-| Regional outage | GRS account failover |
-| Accidental delete | Soft-delete undelete |
-| Credential failure | Rotate storage identity / keys |
+| Cause              | Action                                       |
+| ------------------ | -------------------------------------------- |
+| Throttling         | Backoff retries; scale down bulk export jobs |
+| Regional outage    | GRS account failover                         |
+| Accidental delete  | Soft-delete undelete                         |
+| Credential failure | Rotate storage identity / keys               |
 
 **Verification:** Storage health check returns healthy; sample blob round-trip.
 
@@ -278,18 +278,18 @@ pytest tests/disaster_recovery/test_disaster_recovery_checklist.py -m disaster_r
 
 ## Post-incident review template
 
-| Field | Value |
-| ----- | ----- |
-| Incident ID | |
-| Start time (UTC) | |
-| Detection time (UTC) | |
-| Recovery time (UTC) | |
-| RTO achieved | |
-| RPO achieved | |
-| Root cause | |
-| Contributing factors | |
-| What went well | |
-| Action items | |
+| Field                | Value |
+| -------------------- | ----- |
+| Incident ID          |       |
+| Start time (UTC)     |       |
+| Detection time (UTC) |       |
+| Recovery time (UTC)  |       |
+| RTO achieved         |       |
+| RPO achieved         |       |
+| Root cause           |       |
+| Contributing factors |       |
+| What went well       |       |
+| Action items         |       |
 
 ## Related documents
 

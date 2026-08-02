@@ -101,11 +101,11 @@ See `tests/integration/msw-foundation.test.ts` for the reference pattern.
 
 ## Accessibility testing
 
-| Layer        | Tool                    | Location                                      |
-| ------------ | ----------------------- | --------------------------------------------- |
-| Unit/integr. | `vitest-axe`            | `tests/utils/axe.ts`, `tests/integration/accessibility.test.tsx` |
-| E2E          | `@axe-core/playwright`  | `tests/e2e/accessibility.spec.ts`             |
-| Manual       | Storybook a11y addon    | `npm run storybook` (not CI-gated)              |
+| Layer        | Tool                   | Location                                                         |
+| ------------ | ---------------------- | ---------------------------------------------------------------- |
+| Unit/integr. | `vitest-axe`           | `tests/utils/axe.ts`, `tests/integration/accessibility.test.tsx` |
+| E2E          | `@axe-core/playwright` | `tests/e2e/accessibility.spec.ts`                                |
+| Manual       | Storybook a11y addon   | `npm run storybook` (not CI-gated)                               |
 
 `expectNoCriticalViolations(container)` filters **critical** and **serious** axe violations. Route-level WCAG compliance still requires manual keyboard and screen-reader review.
 
@@ -134,13 +134,13 @@ Coverage is **not** enforced in CI pipelines today; thresholds apply when develo
 
 ## Running tests
 
-| Command              | Purpose                                      |
-| -------------------- | -------------------------------------------- |
-| `npm run test`       | Vitest watch mode                            |
-| `npm run test:run`   | Single CI-style Vitest run                   |
-| `npm run test:coverage` | Vitest with v8 coverage                 |
-| `npm run test:e2e`   | Playwright full suite                        |
-| `npm run verify`     | format:check + typecheck + lint + test:run   |
+| Command                 | Purpose                                    |
+| ----------------------- | ------------------------------------------ |
+| `npm run test`          | Vitest watch mode                          |
+| `npm run test:run`      | Single CI-style Vitest run                 |
+| `npm run test:coverage` | Vitest with v8 coverage                    |
+| `npm run test:e2e`      | Playwright full suite                      |
+| `npm run verify`        | format:check + typecheck + lint + test:run |
 
 **Windows note:** The full Vitest suite can take several minutes on Windows (`pool: "forks"`, `maxWorkers: 1`). Linux CI (`ubuntu-latest`) is the authoritative timing environment.
 

@@ -21,9 +21,9 @@ The application uses the standard Next.js server build; no hosting provider is d
 
 Set at deploy time (see `.env.example`):
 
-| Variable | Staging example | Production example | Required |
-| -------- | --------------- | ------------------ | -------- |
-| `NEXT_PUBLIC_APP_ENV` | `staging` | `production` | Recommended |
+| Variable                   | Staging example | Production example | Required               |
+| -------------------------- | --------------- | ------------------ | ---------------------- |
+| `NEXT_PUBLIC_APP_ENV`      | `staging`       | `production`       | Recommended            |
 | `NEXT_PUBLIC_API_BASE_URL` | API staging URL | API production URL | No until backend wired |
 
 Never embed secrets in `NEXT_PUBLIC_*` variables — they are exposed to browsers.

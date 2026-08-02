@@ -29,10 +29,10 @@ npm run build
 
 ## Environment variables
 
-| Variable | Required | Default |
-| -------- | -------- | ------- |
-| `NEXT_PUBLIC_APP_ENV` | No | `development` |
-| `NEXT_PUBLIC_API_BASE_URL` | No | unset (mock repositories) |
+| Variable                   | Required | Default                   |
+| -------------------------- | -------- | ------------------------- |
+| `NEXT_PUBLIC_APP_ENV`      | No       | `development`             |
+| `NEXT_PUBLIC_API_BASE_URL` | No       | unset (mock repositories) |
 
 See `.env.example` for details.
 
@@ -45,18 +45,18 @@ Feature UI is colocated under `app/(dashboard)/*/_components/`. Shared component
 Import from intentional category exports:
 
 ```tsx
-import { PageContainer, PageHeader } from "@/components/layout";
 import { PrimaryButton } from "@/components/buttons";
 import { ContentCard } from "@/components/cards";
+import { PageContainer, PageHeader } from "@/components/layout";
 import { SearchBar } from "@/components/navigation";
 ```
 
 Interactive shell state is provider-backed:
 
 ```tsx
+import { ThemeProvider, useTheme } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/hooks/use-sidebar";
 import { AppToastProvider, useToast } from "@/hooks/use-toast";
-import { ThemeProvider, useTheme } from "@/components/theme/theme-provider";
 ```
 
 ## Public categories

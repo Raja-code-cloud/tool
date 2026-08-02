@@ -4,12 +4,12 @@ Performance, load, stress, and benchmark suites for the Cloud Content Hub AI bac
 
 ## Test Layout
 
-| Directory | Purpose | Runner |
-| --- | --- | --- |
-| `backend/tests/performance/` | Latency and throughput validation with percentile assertions | `pytest -m performance` |
-| `backend/tests/benchmarks/` | Micro-benchmarks with statistical comparison | `pytest -m benchmark --benchmark-only` |
-| `backend/tests/load/` | Locust, k6, and simulated concurrent-user scenarios | Locust/k6 or `pytest -m load` |
-| `backend/tests/stress/` | Saturation and burst scenarios | `pytest -m stress` |
+| Directory                    | Purpose                                                      | Runner                                 |
+| ---------------------------- | ------------------------------------------------------------ | -------------------------------------- |
+| `backend/tests/performance/` | Latency and throughput validation with percentile assertions | `pytest -m performance`                |
+| `backend/tests/benchmarks/`  | Micro-benchmarks with statistical comparison                 | `pytest -m benchmark --benchmark-only` |
+| `backend/tests/load/`        | Locust, k6, and simulated concurrent-user scenarios          | Locust/k6 or `pytest -m load`          |
+| `backend/tests/stress/`      | Saturation and burst scenarios                               | `pytest -m stress`                     |
 
 ## Quick Start
 
@@ -45,14 +45,14 @@ k6 run -e CCH_BASE_URL=http://localhost:8000 -e CCH_PERF_TOKEN=<token> tests/loa
 
 ## Performance Targets
 
-| Metric | Target |
-| --- | --- |
-| API CRUD P95 | < 300 ms |
-| API search P95 | < 500 ms |
-| Scheduler dispatch P95 | < 5 s |
-| Outbox batch dispatch P95 | < 1 s |
-| Worker success rate | > 99 % |
-| DB CRUD P95 | < 100 ms |
-| Storage upload P95 (in-memory baseline) | < 2 s |
+| Metric                                  | Target   |
+| --------------------------------------- | -------- |
+| API CRUD P95                            | < 300 ms |
+| API search P95                          | < 500 ms |
+| Scheduler dispatch P95                  | < 5 s    |
+| Outbox batch dispatch P95               | < 1 s    |
+| Worker success rate                     | > 99 %   |
+| DB CRUD P95                             | < 100 ms |
+| Storage upload P95 (in-memory baseline) | < 2 s    |
 
 See `tests/performance/helpers/targets.py` for the canonical typed target definitions.

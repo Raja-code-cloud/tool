@@ -51,4 +51,3 @@ Use `class-variance-authority` for stable visual variants. Variant names describ
 ## Public APIs
 
 Use feature-level `index.ts` files only to expose intentional public APIs. Avoid repository-wide barrel files because they obscure dependencies and can increase bundle size.
-

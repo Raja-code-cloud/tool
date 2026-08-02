@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import { cn } from "@/lib/utils/cn";
 import { SETTINGS_SECTIONS } from "@/constants/settings";
+import { cn } from "@/lib/utils/cn";
 
 const FIRST_SECTION_ID = SETTINGS_SECTIONS[0].id;
 
@@ -38,7 +38,7 @@ export function SettingsNav(): React.JSX.Element {
 
   return (
     <nav aria-label="Settings sections" className="desktop:sticky desktop:top-20">
-      <ul className="scrollbar-thin flex gap-1 overflow-x-auto pb-2 desktop:grid desktop:overflow-visible desktop:pb-0">
+      <ul className="desktop:grid desktop:overflow-visible desktop:pb-0 flex scrollbar-thin gap-1 overflow-x-auto pb-2">
         {SETTINGS_SECTIONS.map((section) => {
           const isActive = section.id === activeId;
           return (
@@ -47,8 +47,8 @@ export function SettingsNav(): React.JSX.Element {
                 href={`#${section.id}`}
                 aria-current={isActive ? "true" : undefined}
                 className={cn(
-                  "block min-h-9 shrink-0 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-(--duration-fast) hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-                  isActive ? "bg-accent font-semibold text-foreground" : "text-muted-foreground",
+                  "hover:bg-accent hover:text-foreground focus-visible:ring-ring block min-h-9 shrink-0 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-(--duration-fast) focus-visible:ring-2 focus-visible:outline-none",
+                  isActive ? "bg-accent text-foreground font-semibold" : "text-muted-foreground",
                 )}
               >
                 {section.label}

@@ -2,10 +2,10 @@
 /**
  * Runs Layer 2–3 evaluations: template rendering and offline acceptance criteria.
  */
-
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
 import { globSync } from "glob";
 import YAML from "yaml";
 

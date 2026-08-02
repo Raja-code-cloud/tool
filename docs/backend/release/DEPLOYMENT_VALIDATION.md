@@ -21,22 +21,22 @@ pytest tests/deployment -m "deployment and external" -v
 
 ### Application startup
 
-| Check | Method |
-| ----- | ------ |
-| App factory imports | `create_app()` in release tests |
-| Settings validation | Production invariant tests |
-| DI container wiring | Handler registry uniqueness |
+| Check                     | Method                             |
+| ------------------------- | ---------------------------------- |
+| App factory imports       | `create_app()` in release tests    |
+| Settings validation       | Production invariant tests         |
+| DI container wiring       | Handler registry uniqueness        |
 | Lifespan hooks registered | FastAPI lifespan on `create_app()` |
 
 ### Configuration validation
 
-| Variable | Production rule |
-| -------- | --------------- |
-| `CCH_ENVIRONMENT` | `production` for prod/DR |
-| `CCH_DATABASE_URL` | `postgresql+asyncpg://` prefix |
-| `CCH_HTTP_ALLOWED_ORIGINS` | No wildcard `*` |
-| `CCH_OPENAPI_ENABLED` | `false` in prod |
-| Mock identity | Disabled in production |
+| Variable                   | Production rule                |
+| -------------------------- | ------------------------------ |
+| `CCH_ENVIRONMENT`          | `production` for prod/DR       |
+| `CCH_DATABASE_URL`         | `postgresql+asyncpg://` prefix |
+| `CCH_HTTP_ALLOWED_ORIGINS` | No wildcard `*`                |
+| `CCH_OPENAPI_ENABLED`      | `false` in prod                |
+| Mock identity              | Disabled in production         |
 
 Validate template keys:
 
@@ -47,11 +47,11 @@ python -c "from pathlib import Path; ..."  # see backend-ci.yml env template che
 
 ### Database migrations
 
-| Step | Command |
-| ---- | ------- |
-| Apply migrations | `alembic upgrade head` |
-| Docker profile | `docker compose --profile tools run --rm migrate` |
-| ACA job | `deployment/scripts/migrate.sh <env>` |
+| Step             | Command                                           |
+| ---------------- | ------------------------------------------------- |
+| Apply migrations | `alembic upgrade head`                            |
+| Docker profile   | `docker compose --profile tools run --rm migrate` |
+| ACA job          | `deployment/scripts/migrate.sh <env>`             |
 
 Verify:
 
@@ -61,11 +61,11 @@ Verify:
 
 ### Container startup
 
-| Image | Dockerfile | Health probe |
-| ----- | ---------- | ------------ |
-| API | `docker/Dockerfile` (runtime target) | See probe alignment below |
-| Worker | `docker/Dockerfile.worker` | Process health via worker runtime |
-| Test | `docker/Dockerfile` (test target) | pytest entrypoint |
+| Image  | Dockerfile                           | Health probe                      |
+| ------ | ------------------------------------ | --------------------------------- |
+| API    | `docker/Dockerfile` (runtime target) | See probe alignment below         |
+| Worker | `docker/Dockerfile.worker`           | Process health via worker runtime |
+| Test   | `docker/Dockerfile` (test target)    | pytest entrypoint                 |
 
 Local full stack:
 
@@ -79,10 +79,10 @@ docker compose --profile tools run --rm migrate
 
 Application implements:
 
-| Endpoint | Purpose |
-| -------- | ------- |
-| `GET /health` | Service summary (version, healthy) |
-| `GET /health/live` | Liveness — process alive (canonical) |
+| Endpoint            | Purpose                                    |
+| ------------------- | ------------------------------------------ |
+| `GET /health`       | Service summary (version, healthy)         |
+| `GET /health/live`  | Liveness — process alive (canonical)       |
 | `GET /health/ready` | Readiness — PostgreSQL + Redis (canonical) |
 
 Legacy aliases `GET /live` and `GET /ready` remain available with identical responses
@@ -115,13 +115,13 @@ Verify:
 
 ### Connectivity checks
 
-| Dependency | Readiness signal | Bootstrap startup |
-| ---------- | ---------------- | ----------------- |
-| PostgreSQL | `/health/ready` database check | `SELECT 1` on startup |
-| Redis | `/health/ready` redis check | `PING` on startup |
-| Blob storage | Health checker contributor | `storage_provider.health_check()` |
-| Identity | Identity health service | Provider probe on startup |
-| AI | Health checker contributor | Provider probe on startup |
+| Dependency   | Readiness signal               | Bootstrap startup                 |
+| ------------ | ------------------------------ | --------------------------------- |
+| PostgreSQL   | `/health/ready` database check | `SELECT 1` on startup             |
+| Redis        | `/health/ready` redis check    | `PING` on startup                 |
+| Blob storage | Health checker contributor     | `storage_provider.health_check()` |
+| Identity     | Identity health service        | Provider probe on startup         |
+| AI           | Health checker contributor     | Provider probe on startup         |
 
 ### Secrets configuration
 

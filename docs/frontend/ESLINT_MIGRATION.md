@@ -2,12 +2,12 @@
 
 ## Current state (RC3)
 
-| Surface        | Command                         | Notes                                      |
-| -------------- | ------------------------------- | ------------------------------------------ |
-| `npm run lint` | `next lint`                     | Next.js wrapper around ESLint              |
-| Pre-commit     | `eslint --fix --max-warnings=0` | Direct ESLint via lint-staged              |
-| Config         | `eslint.config.mjs`             | ESLint 9 flat config with `FlatCompat`     |
-| Extends        | `next/core-web-vitals`, `next/typescript` | Via `eslint-config-next`          |
+| Surface        | Command                                   | Notes                                  |
+| -------------- | ----------------------------------------- | -------------------------------------- |
+| `npm run lint` | `next lint`                               | Next.js wrapper around ESLint          |
+| Pre-commit     | `eslint --fix --max-warnings=0`           | Direct ESLint via lint-staged          |
+| Config         | `eslint.config.mjs`                       | ESLint 9 flat config with `FlatCompat` |
+| Extends        | `next/core-web-vitals`, `next/typescript` | Via `eslint-config-next`               |
 
 The repository already uses ESLint flat config. lint-staged invokes the ESLint CLI directly; only the npm `lint` script and CI lint step still call `next lint`.
 

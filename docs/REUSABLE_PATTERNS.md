@@ -46,4 +46,3 @@ Wrap the approved chart library behind shared chart components. Use semantic tok
 ## Feedback states
 
 Empty states explain what is absent and offer one relevant action. Toasts confirm transient outcomes; persistent or blocking failures remain inline. Confirmation dialogs state the object and consequence explicitly.
-

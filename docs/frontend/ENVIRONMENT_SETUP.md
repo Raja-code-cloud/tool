@@ -20,10 +20,10 @@ Use `npm install` when intentionally updating dependencies; commit the resulting
 
 Copy `.env.example` to `.env.local` and adjust values as needed:
 
-| Variable | Required | Default | Purpose |
-| -------- | -------- | ------- | ------- |
-| `NEXT_PUBLIC_APP_ENV` | No | `development` | Logical environment exposed to the browser |
-| `NEXT_PUBLIC_API_BASE_URL` | No | unset | Future HTTP API origin; unset keeps mock repositories |
+| Variable                   | Required | Default       | Purpose                                               |
+| -------------------------- | -------- | ------------- | ----------------------------------------------------- |
+| `NEXT_PUBLIC_APP_ENV`      | No       | `development` | Logical environment exposed to the browser            |
+| `NEXT_PUBLIC_API_BASE_URL` | No       | unset         | Future HTTP API origin; unset keeps mock repositories |
 
 Variables are validated in `lib/config/env.ts`. Do not copy backend secrets into frontend documentation or expose credentials with `NEXT_PUBLIC_` names.
 

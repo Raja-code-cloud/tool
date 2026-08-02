@@ -4,13 +4,13 @@ Failover procedures for Cloud Content Hub backend components and regional disast
 
 ## Failover tiers
 
-| Tier | Trigger | Method | Traffic impact |
-| ---- | ------- | ------ | -------------- |
-| T0 | Single container crash | ACA auto-restart / replica scale | None |
-| T1 | Bad deploy | ACA revision rollback | Brief (< 1 min) |
-| T2 | Dependency degradation | Scale workers, optional read-only mode | Partial |
-| T3 | Single-region dependency loss | Restore / failover dependency | Minutes to hours |
-| T4 | Regional outage | DR environment activation | Hours |
+| Tier | Trigger                       | Method                                 | Traffic impact   |
+| ---- | ----------------------------- | -------------------------------------- | ---------------- |
+| T0   | Single container crash        | ACA auto-restart / replica scale       | None             |
+| T1   | Bad deploy                    | ACA revision rollback                  | Brief (< 1 min)  |
+| T2   | Dependency degradation        | Scale workers, optional read-only mode | Partial          |
+| T3   | Single-region dependency loss | Restore / failover dependency          | Minutes to hours |
+| T4   | Regional outage               | DR environment activation              | Hours            |
 
 ## Component failover
 
@@ -33,9 +33,9 @@ az containerapp update \
 
 **Health probes (canonical routes):**
 
-| Probe | Route | Failure action |
-| ----- | ----- | -------------- |
-| Liveness | `GET /health/live` | Restart container |
+| Probe     | Route               | Failure action            |
+| --------- | ------------------- | ------------------------- |
+| Liveness  | `GET /health/live`  | Restart container         |
 | Readiness | `GET /health/ready` | Remove from load balancer |
 
 Legacy aliases `GET /live` and `GET /ready` remain available with identical responses.
@@ -100,12 +100,12 @@ az containerapp update \
 
 **Failover options:**
 
-| Scenario | Action |
-| -------- | ------ |
-| Connection saturation | Scale API replicas down temporarily; increase DB compute |
-| Server failure (HA enabled) | Azure automatic failover to standby |
-| Data corruption | PITR restore per `RESTORE_GUIDE.md` |
-| Regional loss | Geo-restore to DR region |
+| Scenario                    | Action                                                   |
+| --------------------------- | -------------------------------------------------------- |
+| Connection saturation       | Scale API replicas down temporarily; increase DB compute |
+| Server failure (HA enabled) | Azure automatic failover to standby                      |
+| Data corruption             | PITR restore per `RESTORE_GUIDE.md`                      |
+| Regional loss               | Geo-restore to DR region                                 |
 
 Application uses `postgresql+asyncpg://` with connection pooling. After failover, recycle all ACA revisions to reset pools.
 
@@ -115,11 +115,11 @@ Application uses `postgresql+asyncpg://` with connection pooling. After failover
 
 **Failover:**
 
-| Scenario | Action |
-| -------- | ------ |
-| Transient outage | Wait for Azure recovery; ACA restarts |
-| Instance loss | Recreate cache; update Key Vault URL; redeploy |
-| Regional loss | Provision DR Redis; update DR Key Vault |
+| Scenario         | Action                                         |
+| ---------------- | ---------------------------------------------- |
+| Transient outage | Wait for Azure recovery; ACA restarts          |
+| Instance loss    | Recreate cache; update Key Vault URL; redeploy |
+| Regional loss    | Provision DR Redis; update DR Key Vault        |
 
 Queued Celery tasks may be lost. Outbox redispatches integration events.
 
@@ -148,11 +148,11 @@ Storage failure is **degraded**, not blocking, for API readiness. Upload/downloa
 
 DR environment is defined in `infra/container-apps/bicep/parameters/dr.bicepparam`:
 
-| Setting | Production | DR |
-| ------- | ---------- | -- |
-| Region | eastus | westus2 |
-| Registry | acrcchprod | acrcchprod (shared) |
-| Key Vault | kv-cch-prod | kv-cch-dr |
+| Setting       | Production                  | DR                             |
+| ------------- | --------------------------- | ------------------------------ |
+| Region        | eastus                      | westus2                        |
+| Registry      | acrcchprod                  | acrcchprod (shared)            |
+| Key Vault     | kv-cch-prod                 | kv-cch-dr                      |
 | Custom domain | api.cloudcontenthub.example | api-dr.cloudcontenthub.example |
 
 ### DR activation procedure
@@ -202,17 +202,17 @@ Tests verify:
 
 ## Escalation
 
-| Severity | Condition | Escalation |
-| -------- | --------- | ---------- |
-| SEV-2 | Single dependency degraded > 15 min | On-call SRE |
-| SEV-1 | API unavailable > 5 min | Incident commander + platform |
-| SEV-0 | Regional outage | DR activation + executive notification |
+| Severity | Condition                           | Escalation                             |
+| -------- | ----------------------------------- | -------------------------------------- |
+| SEV-2    | Single dependency degraded > 15 min | On-call SRE                            |
+| SEV-1    | API unavailable > 5 min             | Incident commander + platform          |
+| SEV-0    | Regional outage                     | DR activation + executive notification |
 
 Emergency contacts (replace placeholders):
 
-| Role | Contact |
-| ---- | ------- |
-| Incident commander | oncall-platform@example.com |
-| Database administrator | dba-team@example.com |
-| Security officer | security@example.com |
-| Azure subscription owner | azure-admin@example.com |
+| Role                     | Contact                     |
+| ------------------------ | --------------------------- |
+| Incident commander       | oncall-platform@example.com |
+| Database administrator   | dba-team@example.com        |
+| Security officer         | security@example.com        |
+| Azure subscription owner | azure-admin@example.com     |

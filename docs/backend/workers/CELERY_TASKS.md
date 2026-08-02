@@ -18,12 +18,12 @@ Cloud Content Hub background work is executed by Celery workers registered under
 
 ## Queues
 
-| Queue | Purpose |
-| --- | --- |
-| `media` | Asset ingestion and scanning |
-| `ai` | Content generation |
-| `notification` | Notification delivery |
-| `maintenance` | Publishing, analytics, cleanup, outbox |
+| Queue          | Purpose                                |
+| -------------- | -------------------------------------- |
+| `media`        | Asset ingestion and scanning           |
+| `ai`           | Content generation                     |
+| `notification` | Notification delivery                  |
+| `maintenance`  | Publishing, analytics, cleanup, outbox |
 
 ## Outbox Tasks
 

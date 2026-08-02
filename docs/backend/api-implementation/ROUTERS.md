@@ -4,11 +4,11 @@ All business routes are mounted under `/api/v1`. Health probes are unversioned.
 
 ## Health (`routers/v1/health.py`)
 
-| Operation ID   | Method | Path      | Auth   |
-| -------------- | ------ | --------- | ------ |
-| `getHealth`    | GET    | `/health` | public |
-| `getLiveness`  | GET    | `/health/live`   | public |
-| `getReadiness` | GET    | `/health/ready`  | public |
+| Operation ID   | Method | Path            | Auth   |
+| -------------- | ------ | --------------- | ------ |
+| `getHealth`    | GET    | `/health`       | public |
+| `getLiveness`  | GET    | `/health/live`  | public |
+| `getReadiness` | GET    | `/health/ready` | public |
 
 ## Assets (`routers/v1/assets.py`)
 

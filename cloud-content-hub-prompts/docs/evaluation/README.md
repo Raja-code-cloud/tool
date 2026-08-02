@@ -4,13 +4,13 @@ This document defines how prompt packages are evaluated for correctness, quality
 
 ## Goals
 
-| Goal | Description |
-|------|-------------|
-| **Correctness** | Template renders correctly for all input cases |
-| **Regression safety** | Changes do not break previously passing cases |
-| **Objectivity** | Acceptance criteria are measurable, not subjective |
-| **CI-friendly** | Evaluations run without live LLM API calls in default CI |
-| **Traceability** | Cases link to prompt version and acceptance criteria |
+| Goal                  | Description                                              |
+| --------------------- | -------------------------------------------------------- |
+| **Correctness**       | Template renders correctly for all input cases           |
+| **Regression safety** | Changes do not break previously passing cases            |
+| **Objectivity**       | Acceptance criteria are measurable, not subjective       |
+| **CI-friendly**       | Evaluations run without live LLM API calls in default CI |
+| **Traceability**      | Cases link to prompt version and acceptance criteria     |
 
 ## Evaluation Layers
 
@@ -80,28 +80,28 @@ Used for integration scenarios spanning multiple prompts.
 
 ## Acceptance Criteria Types
 
-| Type | Layer | Description |
-|------|-------|-------------|
-| `rendered_equals` | 2 | Rendered template exactly matches `value` |
-| `rendered_contains` | 2 | Rendered template contains `value` |
-| `rendered_matches_regex` | 2 | Rendered template matches regex `value` |
-| `output_contains` | 3 | Fixture output contains `value` |
-| `output_not_contains` | 3 | Fixture output does not contain `value` |
-| `output_matches_regex` | 3 | Fixture output matches regex `value` |
-| `output_length_min` | 3 | Fixture output length ≥ `value` |
-| `output_length_max` | 3 | Fixture output length ≤ `value` |
-| `output_json_valid` | 3 | Fixture output parses as JSON |
-| `output_json_schema` | 3 | Fixture output validates against `schema_file` |
+| Type                     | Layer | Description                                    |
+| ------------------------ | ----- | ---------------------------------------------- |
+| `rendered_equals`        | 2     | Rendered template exactly matches `value`      |
+| `rendered_contains`      | 2     | Rendered template contains `value`             |
+| `rendered_matches_regex` | 2     | Rendered template matches regex `value`        |
+| `output_contains`        | 3     | Fixture output contains `value`                |
+| `output_not_contains`    | 3     | Fixture output does not contain `value`        |
+| `output_matches_regex`   | 3     | Fixture output matches regex `value`           |
+| `output_length_min`      | 3     | Fixture output length ≥ `value`                |
+| `output_length_max`      | 3     | Fixture output length ≤ `value`                |
+| `output_json_valid`      | 3     | Fixture output parses as JSON                  |
+| `output_json_schema`     | 3     | Fixture output validates against `schema_file` |
 
 ## Case Requirements
 
 ### All prompts (`_examples/` included)
 
-| Requirement | Minimum |
-|-------------|---------|
+| Requirement      | Minimum                      |
+| ---------------- | ---------------------------- |
 | Evaluation cases | 1 (examples), 2 (production) |
-| Happy path case | 1 |
-| Edge case | 1 (production only) |
+| Happy path case  | 1                            |
+| Edge case        | 1 (production only)          |
 
 ### Production prompts
 

@@ -12,21 +12,21 @@ scenarios at 1, 10, and 100 concurrent users plus burst patterns.
 
 ## Scope
 
-| Layer | In scope | Out of scope |
-| --- | --- | --- |
-| HTTP delivery | Health, assets, content, publish, schedule, analytics, admin | Frontend, CDN |
-| Workers | Dispatch latency, outbox enqueue, retry classification | External Celery cluster tuning |
-| Database | CRUD, search, pagination under concurrency | Schema redesign |
-| Storage | Upload/download, large media, concurrent writes | Azure SLA negotiation |
-| Providers | Mock AI latency, platform constraint lookup | Live social API calls |
+| Layer         | In scope                                                     | Out of scope                   |
+| ------------- | ------------------------------------------------------------ | ------------------------------ |
+| HTTP delivery | Health, assets, content, publish, schedule, analytics, admin | Frontend, CDN                  |
+| Workers       | Dispatch latency, outbox enqueue, retry classification       | External Celery cluster tuning |
+| Database      | CRUD, search, pagination under concurrency                   | Schema redesign                |
+| Storage       | Upload/download, large media, concurrent writes              | Azure SLA negotiation          |
+| Providers     | Mock AI latency, platform constraint lookup                  | Live social API calls          |
 
 ## Environments
 
-| Environment | Use |
-| --- | --- |
+| Environment | Use                                                            |
+| ----------- | -------------------------------------------------------------- |
 | `test` (CI) | In-process pytest performance/load/stress with mocked handlers |
-| `local` | Full-stack Locust/k6 against Docker Compose stack |
-| `staging` | Pre-production capacity validation with realistic data volume |
+| `local`     | Full-stack Locust/k6 against Docker Compose stack              |
+| `staging`   | Pre-production capacity validation with realistic data volume  |
 
 Configure via `CCH_ENVIRONMENT`. See [ENVIRONMENTS.md](../devops/ENVIRONMENTS.md).
 
@@ -80,14 +80,14 @@ Configure via `CCH_ENVIRONMENT`. See [ENVIRONMENTS.md](../devops/ENVIRONMENTS.md
 
 ## Metrics Collected
 
-| Metric | Source |
-| --- | --- |
-| P50 / P95 / P99 latency | pytest `LatencyStats`, k6 Trends, Locust charts |
-| Requests/sec | pytest wall-clock RPS, k6 `http_reqs` |
-| Jobs/sec | Outbox dispatch batch counts, worker handler await counts |
-| Queue depth | Prometheus `queue_depth` (runtime), broker task list length (tests) |
-| Error rate | k6 `Rate`, Locust failures, pytest assertions |
-| CPU / memory | Prometheus process metrics (runtime); optional `psutil` during manual runs |
+| Metric                  | Source                                                                     |
+| ----------------------- | -------------------------------------------------------------------------- |
+| P50 / P95 / P99 latency | pytest `LatencyStats`, k6 Trends, Locust charts                            |
+| Requests/sec            | pytest wall-clock RPS, k6 `http_reqs`                                      |
+| Jobs/sec                | Outbox dispatch batch counts, worker handler await counts                  |
+| Queue depth             | Prometheus `queue_depth` (runtime), broker task list length (tests)        |
+| Error rate              | k6 `Rate`, Locust failures, pytest assertions                              |
+| CPU / memory            | Prometheus process metrics (runtime); optional `psutil` during manual runs |
 
 ## Execution Checklist
 
@@ -104,9 +104,9 @@ Configure via `CCH_ENVIRONMENT`. See [ENVIRONMENTS.md](../devops/ENVIRONMENTS.md
 ```yaml
 # Suggested CI step (in-process only)
 pytest tests/performance tests/load tests/stress tests/benchmarks \
-  -m "not integration" \
-  --benchmark-disable \
-  -q
+-m "not integration" \
+--benchmark-disable \
+-q
 ```
 
 Integration-backed DB tests run nightly or on-demand when `CCH_DATABASE_URL` is available.

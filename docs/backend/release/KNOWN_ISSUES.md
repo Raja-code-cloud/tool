@@ -28,8 +28,8 @@ Automated schema downgrade is not supported. Rollback requires application revis
 
 ## Resolved issues
 
-| ID | Summary | Resolved in | Date |
-| -- | ------- | ----------- | ---- |
+| ID         | Summary                                                               | Resolved in                                   | Date       |
+| ---------- | --------------------------------------------------------------------- | --------------------------------------------- | ---------- |
 | HEALTH-001 | Probe path mismatch between application and deployment infrastructure | Application route aliases and infra alignment | 2026-08-02 |
 
 ### HEALTH-001 (resolved): Probe path mismatch

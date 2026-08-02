@@ -75,4 +75,3 @@ Tests and stories should colocate with implementation unless project tooling req
 ## Environment configuration
 
 Validate environment variables in one server-only module at startup. Expose browser-safe variables only with the `NEXT_PUBLIC_` prefix and a separate client schema. Commit `.env.example` with names and safe placeholders. Never commit credentials, log secrets, or read arbitrary `process.env` values throughout the codebase.
-

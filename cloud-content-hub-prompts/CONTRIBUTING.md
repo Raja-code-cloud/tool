@@ -15,13 +15,13 @@ Do **not** submit application code (Python, FastAPI, Next.js), infrastructure (T
 
 ## Branching Strategy
 
-| Branch | Purpose |
-|--------|---------|
-| `main` | Production-ready prompt library state |
-| `develop` | Integration branch for staged prompt changes |
-| `feature/*` | New prompts, schema updates, documentation |
-| `fix/*` | Corrections to existing prompts or schemas |
-| `chore/*` | Tooling, CI, and non-functional updates |
+| Branch      | Purpose                                      |
+| ----------- | -------------------------------------------- |
+| `main`      | Production-ready prompt library state        |
+| `develop`   | Integration branch for staged prompt changes |
+| `feature/*` | New prompts, schema updates, documentation   |
+| `fix/*`     | Corrections to existing prompts or schemas   |
+| `chore/*`   | Tooling, CI, and non-functional updates      |
 
 ## Development Workflow
 
@@ -55,13 +55,13 @@ Full standards: **[docs/standards/prompt-standards.md](docs/standards/prompt-sta
 
 ### Required files per prompt package
 
-| File | Required | Description |
-|------|----------|-------------|
-| `metadata.yaml` | Yes | Identity, version, purpose, status |
-| `template.md` | Yes | Prompt body with `{variable}` placeholders |
-| `input.schema.json` | Yes | JSON Schema for template variables |
-| `README.md` | Yes | Usage, constraints, local changelog |
-| `evaluations/*.yaml` | Production only | Evaluation cases with acceptance criteria |
+| File                 | Required        | Description                                |
+| -------------------- | --------------- | ------------------------------------------ |
+| `metadata.yaml`      | Yes             | Identity, version, purpose, status         |
+| `template.md`        | Yes             | Prompt body with `{variable}` placeholders |
+| `input.schema.json`  | Yes             | JSON Schema for template variables         |
+| `README.md`          | Yes             | Usage, constraints, local changelog        |
+| `evaluations/*.yaml` | Production only | Evaluation cases with acceptance criteria  |
 
 ### Template syntax
 
@@ -80,10 +80,10 @@ Full standards: **[docs/standards/prompt-standards.md](docs/standards/prompt-sta
 
 All production prompts must include evaluation cases. See [Evaluation Framework](docs/evaluation/README.md).
 
-| Requirement | Description |
-|-------------|-------------|
-| Minimum cases | At least 2 cases: one happy path, one edge case |
-| Acceptance criteria | Measurable checks (contains, length, format) |
+| Requirement             | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| Minimum cases           | At least 2 cases: one happy path, one edge case   |
+| Acceptance criteria     | Measurable checks (contains, length, format)      |
 | No live API calls in CI | Evaluations use fixture outputs or mock providers |
 
 ## Pull Request Checklist

@@ -1,4 +1,11 @@
-export { BarChart, ChartContainer, ChartDataTable, ChartFrame, ChartLegend, KPIWidget } from "./charts";
+export {
+  BarChart,
+  ChartContainer,
+  ChartDataTable,
+  ChartFrame,
+  ChartLegend,
+  KPIWidget,
+} from "./charts";
 export type {
   BarChartProps,
   ChartDataTableProps,

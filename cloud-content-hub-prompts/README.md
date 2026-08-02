@@ -6,32 +6,32 @@ This repository is **prompts-only**. It does not contain application code, infra
 
 ## Repository Philosophy
 
-| Principle | Description |
-|-----------|-------------|
-| **Prompts only** | No application code, no infrastructure, no runtime dependencies |
-| **Standards-first** | Conventions and schemas documented before prompt collections |
-| **Versioned artifacts** | Every prompt is an immutable, semver-versioned package |
-| **Evaluated by default** | New prompts ship with evaluation cases and acceptance criteria |
-| **Backend-aligned** | Template syntax and metadata map to `AIPromptTemplate` in the backend |
-| **Separation of concerns** | Platform prompts live here; execution lives in the backend |
+| Principle                  | Description                                                           |
+| -------------------------- | --------------------------------------------------------------------- |
+| **Prompts only**           | No application code, no infrastructure, no runtime dependencies       |
+| **Standards-first**        | Conventions and schemas documented before prompt collections          |
+| **Versioned artifacts**    | Every prompt is an immutable, semver-versioned package                |
+| **Evaluated by default**   | New prompts ship with evaluation cases and acceptance criteria        |
+| **Backend-aligned**        | Template syntax and metadata map to `AIPromptTemplate` in the backend |
+| **Separation of concerns** | Platform prompts live here; execution lives in the backend            |
 
 ## Related Repositories
 
-| Repository | Purpose |
-|------------|---------|
-| `cloud-content-hub-ai` | Frontend workspace |
-| `backend` | FastAPI application and AI provider integration |
-| `cloud-content-hub-infra` | Azure Infrastructure as Code |
+| Repository                | Purpose                                         |
+| ------------------------- | ----------------------------------------------- |
+| `cloud-content-hub-ai`    | Frontend workspace                              |
+| `backend`                 | FastAPI application and AI provider integration |
+| `cloud-content-hub-infra` | Azure Infrastructure as Code                    |
 
 ## Technology Stack
 
-| Component | Technology |
-|-----------|------------|
+| Component        | Technology                              |
+| ---------------- | --------------------------------------- |
 | Prompt templates | Markdown (`.md`) or plain text (`.txt`) |
-| Metadata | YAML (`metadata.yaml`) |
-| Schemas | JSON Schema (Draft 2020-12) |
-| Evaluations | YAML evaluation suites |
-| Validation | AJV (JSON Schema), YAML lint |
+| Metadata         | YAML (`metadata.yaml`)                  |
+| Schemas          | JSON Schema (Draft 2020-12)             |
+| Evaluations      | YAML evaluation suites                  |
+| Validation       | AJV (JSON Schema), YAML lint            |
 
 ## Repository Structure
 
@@ -100,23 +100,23 @@ This checks:
 
 Prompts use [Semantic Versioning 2.0.0](https://semver.org/). See [Versioning Strategy](docs/standards/versioning.md).
 
-| Change type | Version bump | Example |
-|-------------|--------------|---------|
-| Breaking template or input schema change | MAJOR | `1.0.0` → `2.0.0` |
-| New optional variables or improved instructions | MINOR | `1.0.0` → `1.1.0` |
-| Typo fix, metadata-only update | PATCH | `1.0.0` → `1.0.1` |
+| Change type                                     | Version bump | Example           |
+| ----------------------------------------------- | ------------ | ----------------- |
+| Breaking template or input schema change        | MAJOR        | `1.0.0` → `2.0.0` |
+| New optional variables or improved instructions | MINOR        | `1.0.0` → `1.1.0` |
+| Typo fix, metadata-only update                  | PATCH        | `1.0.0` → `1.0.1` |
 
 ## Documentation Index
 
-| Document | Description |
-|----------|-------------|
-| [Architecture Overview](docs/architecture/overview.md) | How prompts integrate with the platform |
-| [Prompt Standards](docs/standards/prompt-standards.md) | Authoring rules and template syntax |
-| [Naming Conventions](docs/standards/naming-conventions.md) | IDs, domains, and file naming |
-| [Versioning Strategy](docs/standards/versioning.md) | Semver rules and lifecycle |
-| [Evaluation Framework](docs/evaluation/README.md) | How to write and run evaluations |
-| [ADR-0001](docs/adr/adr-0001-prompt-library-foundation.md) | Foundation architecture decision |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution workflow |
+| Document                                                   | Description                             |
+| ---------------------------------------------------------- | --------------------------------------- |
+| [Architecture Overview](docs/architecture/overview.md)     | How prompts integrate with the platform |
+| [Prompt Standards](docs/standards/prompt-standards.md)     | Authoring rules and template syntax     |
+| [Naming Conventions](docs/standards/naming-conventions.md) | IDs, domains, and file naming           |
+| [Versioning Strategy](docs/standards/versioning.md)        | Semver rules and lifecycle              |
+| [Evaluation Framework](docs/evaluation/README.md)          | How to write and run evaluations        |
+| [ADR-0001](docs/adr/adr-0001-prompt-library-foundation.md) | Foundation architecture decision        |
+| [CONTRIBUTING.md](CONTRIBUTING.md)                         | Contribution workflow                   |
 
 ## Phase 1 Scope
 

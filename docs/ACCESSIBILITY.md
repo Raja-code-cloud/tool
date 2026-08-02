@@ -38,4 +38,3 @@ Respect `prefers-reduced-motion`. Disable nonessential motion and replace spatia
 ## Verification
 
 Check keyboard-only operation, focus order, accessible names, zoom/reflow, high-contrast behavior, and automated accessibility rules. Validate critical workflows with a screen reader; automated tools are insufficient by themselves.
-

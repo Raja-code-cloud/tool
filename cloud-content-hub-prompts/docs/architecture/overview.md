@@ -30,14 +30,14 @@ The prompt library is the **source of truth** for prompt content. The backend is
 
 ### AIPromptTemplate mapping
 
-| Prompt Library | Backend (`AIPromptTemplate`) |
-|----------------|------------------------------|
-| `metadata.yaml → name` | `name` |
-| `metadata.yaml → purpose` | `purpose` |
-| `template.md` content | `template_text` |
-| `metadata.yaml → version` (encoded) | `template_version` |
-| `input.schema.json` content | `input_schema` (JSONB) |
-| `metadata.yaml → status: active` | `is_active: true` |
+| Prompt Library                      | Backend (`AIPromptTemplate`) |
+| ----------------------------------- | ---------------------------- |
+| `metadata.yaml → name`              | `name`                       |
+| `metadata.yaml → purpose`           | `purpose`                    |
+| `template.md` content               | `template_text`              |
+| `metadata.yaml → version` (encoded) | `template_version`           |
+| `input.schema.json` content         | `input_schema` (JSONB)       |
+| `metadata.yaml → status: active`    | `is_active: true`            |
 
 ### Template rendering
 
@@ -62,13 +62,13 @@ Prompts are deployed per workspace. The import process:
 
 ## Repository Boundaries
 
-| In this repository | Not in this repository |
-|--------------------|------------------------|
-| Prompt template text | API endpoints |
-| Variable schemas | Database migrations |
-| Evaluation cases | Provider authentication |
-| Standards and docs | Frontend UI components |
-| Validation tooling | Infrastructure (Terraform) |
+| In this repository   | Not in this repository     |
+| -------------------- | -------------------------- |
+| Prompt template text | API endpoints              |
+| Variable schemas     | Database migrations        |
+| Evaluation cases     | Provider authentication    |
+| Standards and docs   | Frontend UI components     |
+| Validation tooling   | Infrastructure (Terraform) |
 
 ## Data Flow
 
@@ -87,12 +87,12 @@ Author ──▶ PR ──▶ CI validate ──▶ merge ──▶ tag release
 
 ## Phase Roadmap
 
-| Phase | Scope | Status |
-|-------|-------|--------|
+| Phase       | Scope                                              | Status  |
+| ----------- | -------------------------------------------------- | ------- |
 | **Phase 1** | Repository foundation, schemas, standards, example | Current |
-| **Phase 2** | Platform prompt collections, import tooling | Planned |
-| **Phase 3** | Live evaluation pipeline, regression baselines | Planned |
-| **Phase 4** | Workspace-specific prompt overrides | Planned |
+| **Phase 2** | Platform prompt collections, import tooling        | Planned |
+| **Phase 3** | Live evaluation pipeline, regression baselines     | Planned |
+| **Phase 4** | Workspace-specific prompt overrides                | Planned |
 
 ## Security Considerations
 

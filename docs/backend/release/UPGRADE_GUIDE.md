@@ -89,13 +89,13 @@ Requirements:
 
 ## Migration compatibility
 
-| Change type | Strategy |
-| ----------- | -------- |
-| Add nullable column | Single migration; safe for old app |
-| Add non-null column | Default value or multi-phase expand/contract |
-| Rename column | Add new column → backfill → switch app → drop old |
-| Index addition | Use `CREATE INDEX CONCURRENTLY` in production |
-| Table drop | Contract phase after all app instances use new schema |
+| Change type         | Strategy                                              |
+| ------------------- | ----------------------------------------------------- |
+| Add nullable column | Single migration; safe for old app                    |
+| Add non-null column | Default value or multi-phase expand/contract          |
+| Rename column       | Add new column → backfill → switch app → drop old     |
+| Index addition      | Use `CREATE INDEX CONCURRENTLY` in production         |
+| Table drop          | Contract phase after all app instances use new schema |
 
 Test upgrades:
 
@@ -149,8 +149,8 @@ If upgrade fails after migration:
 
 Record for each release:
 
-| Release | Git SHA | Alembic revision | Min compatible revision | Notes |
-| ------- | ------- | ---------------- | ----------------------- | ----- |
+| Release | Git SHA | Alembic revision | Min compatible revision | Notes               |
+| ------- | ------- | ---------------- | ----------------------- | ------------------- |
 | 0.1.0   |         | bd3726e86063     | bd3726e86063            | Initial GA baseline |
 
 ## Local upgrade test

@@ -10,10 +10,10 @@ Generates a simple greeting instruction for a named recipient with a specified t
 
 ## Inputs
 
-| Variable | Type | Required | Description |
-|----------|------|----------|-------------|
-| `recipient_name` | string | Yes | Name of the person being greeted (1–100 chars) |
-| `tone` | string | Yes | Desired tone: `formal`, `casual`, or `friendly` |
+| Variable         | Type   | Required | Description                                     |
+| ---------------- | ------ | -------- | ----------------------------------------------- |
+| `recipient_name` | string | Yes      | Name of the person being greeted (1–100 chars)  |
+| `tone`           | string | Yes      | Desired tone: `formal`, `casual`, or `friendly` |
 
 ## Usage
 
@@ -37,16 +37,16 @@ Keep the greeting concise (one to two sentences).
 
 ## Constraints
 
-| Constraint | Value |
-|------------|-------|
-| Template engine | python-format |
+| Constraint            | Value              |
+| --------------------- | ------------------ |
+| Template engine       | python-format      |
 | Max prompt characters | 2000 (recommended) |
 
 ## Changelog
 
-| Version | Date | Summary |
-|---------|------|---------|
-| 1.0.0 | 2026-08-03 | Initial example prompt |
+| Version | Date       | Summary                |
+| ------- | ---------- | ---------------------- |
+| 1.0.0   | 2026-08-03 | Initial example prompt |
 
 ## Evaluation
 

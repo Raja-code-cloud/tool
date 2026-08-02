@@ -40,4 +40,3 @@ Use server pagination by default. Consider virtualization for measured rendering
 ## Runtime quality
 
 Set explicit performance budgets when baseline measurements exist. Track Core Web Vitals, layout shift, interaction latency, route payloads, and client bundle growth. Performance claims require production-like measurement, not development-mode impressions.
-

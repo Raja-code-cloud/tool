@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { NAV_ROUTES, ROUTES as APP_ROUTES } from "@/constants/navigation";
+import { ROUTES as APP_ROUTES, NAV_ROUTES } from "@/constants/navigation";
 import { buildBreadcrumbs, buildRouteMetadata } from "@/lib/utils/navigation";
+
 import { ROUTES } from "../fixtures/routes";
 
 describe("routing workflow", () => {

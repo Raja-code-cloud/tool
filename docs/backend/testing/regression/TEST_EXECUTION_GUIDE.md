@@ -97,9 +97,9 @@ pytest tests/unit tests/api tests/regression tests/contract \
 
 ## Troubleshooting
 
-| Symptom | Resolution |
-| ------- | ---------- |
-| `DATABASE_URL is not configured` | Set `DATABASE_URL` or skip automation with `-m "not integration"` |
-| Unknown pytest marker | Ensure `pyproject.toml` markers include the marker name |
-| Strict mypy failures in tests | Run `mypy src tests` and fix type annotations |
-| Azurite/storage errors in automation | Start full compose stack including Azurite |
+| Symptom                              | Resolution                                                        |
+| ------------------------------------ | ----------------------------------------------------------------- |
+| `DATABASE_URL is not configured`     | Set `DATABASE_URL` or skip automation with `-m "not integration"` |
+| Unknown pytest marker                | Ensure `pyproject.toml` markers include the marker name           |
+| Strict mypy failures in tests        | Run `mypy src tests` and fix type annotations                     |
+| Azurite/storage errors in automation | Start full compose stack including Azurite                        |

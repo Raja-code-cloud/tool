@@ -34,16 +34,16 @@ docker compose -f backend/operations/compose/monitoring-stack.yml up -d
 
 ## Dashboards
 
-| Dashboard | File | Focus |
-| --------- | ---- | ----- |
-| API | `grafana/dashboards/api.json` | HTTP rate, latency, 5xx, in-flight |
-| Workers | `grafana/dashboards/workers.json` | Job outcomes, duration, queue depth |
-| Scheduler | `grafana/dashboards/scheduler.json` | Scheduler lag and job outcomes |
-| Publishing | `grafana/dashboards/publishing.json` | Outbox retries, publish success |
-| Storage | `grafana/dashboards/storage.json` | Blob operations and transfer bytes |
-| Authentication | `grafana/dashboards/authentication.json` | Auth events by method/outcome |
-| Analytics | `grafana/dashboards/analytics.json` | Cross-cutting SLI overview |
-| Infrastructure | `grafana/dashboards/infrastructure.json` | DB pool, cache, process telemetry |
+| Dashboard      | File                                     | Focus                               |
+| -------------- | ---------------------------------------- | ----------------------------------- |
+| API            | `grafana/dashboards/api.json`            | HTTP rate, latency, 5xx, in-flight  |
+| Workers        | `grafana/dashboards/workers.json`        | Job outcomes, duration, queue depth |
+| Scheduler      | `grafana/dashboards/scheduler.json`      | Scheduler lag and job outcomes      |
+| Publishing     | `grafana/dashboards/publishing.json`     | Outbox retries, publish success     |
+| Storage        | `grafana/dashboards/storage.json`        | Blob operations and transfer bytes  |
+| Authentication | `grafana/dashboards/authentication.json` | Auth events by method/outcome       |
+| Analytics      | `grafana/dashboards/analytics.json`      | Cross-cutting SLI overview          |
+| Infrastructure | `grafana/dashboards/infrastructure.json` | DB pool, cache, process telemetry   |
 
 Import dashboards into Grafana via provisioning or UI import.
 

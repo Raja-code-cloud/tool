@@ -112,15 +112,15 @@ This RC validates the complete frontend engineering implementation, documentatio
 
 ## Testing
 
-| Suite              | Scope                                      | RC1 status        |
-| ------------------ | ------------------------------------------ | ----------------- |
-| TypeScript         | Strict compile                             | **Pass**          |
-| ESLint             | `next lint`                                | **Pass**          |
-| Vitest             | 42 files, 144 tests (unit + integration)   | **Pass**          |
-| Production build   | 13 static routes                           | **Pass**          |
-| Accessibility (axe)| Component integration test                 | **Pass**          |
-| Playwright E2E     | Browser regression                         | Not in CI         |
-| Coverage thresholds| 80% lines/statements/functions, 75% branches | Configured; not CI-gated |
+| Suite               | Scope                                        | RC1 status               |
+| ------------------- | -------------------------------------------- | ------------------------ |
+| TypeScript          | Strict compile                               | **Pass**                 |
+| ESLint              | `next lint`                                  | **Pass**                 |
+| Vitest              | 42 files, 144 tests (unit + integration)     | **Pass**                 |
+| Production build    | 13 static routes                             | **Pass**                 |
+| Accessibility (axe) | Component integration test                   | **Pass**                 |
+| Playwright E2E      | Browser regression                           | Not in CI                |
+| Coverage thresholds | 80% lines/statements/functions, 75% branches | Configured; not CI-gated |
 
 ---
 

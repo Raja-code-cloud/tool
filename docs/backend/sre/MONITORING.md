@@ -5,19 +5,19 @@ for alerting; logs and traces provide diagnostic context.
 
 ## Components monitored
 
-| Component | Signals | Dashboard |
-| --------- | ------- | --------- |
-| FastAPI | HTTP rate, latency, 5xx, in-flight, errors | `backend/monitoring/grafana/dashboards/api.json` |
-| Celery workers | Job outcomes, duration, queue depth/latency | `workers.json` |
-| Outbox worker | Outbox retries, maintenance queue depth | `publishing.json` |
-| Scheduler runtime | Scheduler lag, job outcomes | `scheduler.json` |
-| Repository layer | Database operations, pool state, duration | `infrastructure.json` |
-| Azure Blob | Operation outcomes, bytes transferred | `storage.json` |
-| AI providers | Request outcomes, latency, tokens | `analytics.json` |
-| Social providers | Error boundary metrics | `analytics.json` |
-| Redis | Cache operation outcomes | `infrastructure.json` |
-| PostgreSQL | Database errors, pool connections | `infrastructure.json` |
-| Authentication | Auth events by method/outcome | `authentication.json` |
+| Component         | Signals                                     | Dashboard                                        |
+| ----------------- | ------------------------------------------- | ------------------------------------------------ |
+| FastAPI           | HTTP rate, latency, 5xx, in-flight, errors  | `backend/monitoring/grafana/dashboards/api.json` |
+| Celery workers    | Job outcomes, duration, queue depth/latency | `workers.json`                                   |
+| Outbox worker     | Outbox retries, maintenance queue depth     | `publishing.json`                                |
+| Scheduler runtime | Scheduler lag, job outcomes                 | `scheduler.json`                                 |
+| Repository layer  | Database operations, pool state, duration   | `infrastructure.json`                            |
+| Azure Blob        | Operation outcomes, bytes transferred       | `storage.json`                                   |
+| AI providers      | Request outcomes, latency, tokens           | `analytics.json`                                 |
+| Social providers  | Error boundary metrics                      | `analytics.json`                                 |
+| Redis             | Cache operation outcomes                    | `infrastructure.json`                            |
+| PostgreSQL        | Database errors, pool connections           | `infrastructure.json`                            |
+| Authentication    | Auth events by method/outcome               | `authentication.json`                            |
 
 ## Metric namespace
 
@@ -26,21 +26,21 @@ live in `backend/monitoring/prometheus/recording_rules.yml` with the `cch:` pref
 
 ## Scrape configuration
 
-| Target | Path | Interval | Notes |
-| ------ | ---- | -------- | ----- |
-| API (ACA) | `/metrics` | 30s | Internal network only |
-| Worker | `/metrics` | 30s | Optional sidecar on port 9100 |
-| Prometheus self | `/metrics` | 30s | Self-monitoring |
+| Target          | Path       | Interval | Notes                         |
+| --------------- | ---------- | -------- | ----------------------------- |
+| API (ACA)       | `/metrics` | 30s      | Internal network only         |
+| Worker          | `/metrics` | 30s      | Optional sidecar on port 9100 |
+| Prometheus self | `/metrics` | 30s      | Self-monitoring               |
 
 See `backend/monitoring/prometheus/prometheus.yml` for target definitions.
 
 ## Health vs metrics
 
-| Probe | Path | Purpose |
-| ----- | ---- | ------- |
-| Liveness | `/health/live` | Process alive |
-| Readiness | `/health/ready` | PostgreSQL + Redis |
-| Informational | `/health` | Version metadata |
+| Probe           | Path                   | Purpose                                |
+| --------------- | ---------------------- | -------------------------------------- |
+| Liveness        | `/health/live`         | Process alive                          |
+| Readiness       | `/health/ready`        | PostgreSQL + Redis                     |
+| Informational   | `/health`              | Version metadata                       |
 | Admin aggregate | `/api/v1/admin/system` | Full dependency health (auth required) |
 
 Legacy aliases `/live` and `/ready` remain available for backwards compatibility and

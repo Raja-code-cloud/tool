@@ -5,18 +5,18 @@ Use before production deployment and after each security-relevant change.
 
 ## Risk Register
 
-| ID | Title | Severity | Status | Owner |
-|----|-------|----------|--------|-------|
-| R-001 | Missing HTTP security headers | High | Open | platform-security |
-| R-002 | No HTTP rate limiting | High | Open | platform-security |
-| R-003 | Workspace membership not enforced | High | Open | platform-security |
-| R-004 | Worker wildcard permissions | Medium | Accepted | platform-security |
-| R-005 | No RLS in migrations | Medium | Open | platform-security |
-| R-006 | No-op virus scan default | Medium | Open | platform-security |
-| R-007 | RevocationStore not wired | Medium | Open | platform-security |
-| R-008 | No SSRF protection | Medium | Open | platform-security |
-| R-009 | CSRF protocol only | Low | Open | platform-security |
-| R-010 | No dependency lockfile | Low | Open | platform-security |
+| ID    | Title                             | Severity | Status   | Owner             |
+| ----- | --------------------------------- | -------- | -------- | ----------------- |
+| R-001 | Missing HTTP security headers     | High     | Open     | platform-security |
+| R-002 | No HTTP rate limiting             | High     | Open     | platform-security |
+| R-003 | Workspace membership not enforced | High     | Open     | platform-security |
+| R-004 | Worker wildcard permissions       | Medium   | Accepted | platform-security |
+| R-005 | No RLS in migrations              | Medium   | Open     | platform-security |
+| R-006 | No-op virus scan default          | Medium   | Open     | platform-security |
+| R-007 | RevocationStore not wired         | Medium   | Open     | platform-security |
+| R-008 | No SSRF protection                | Medium   | Open     | platform-security |
+| R-009 | CSRF protocol only                | Low      | Open     | platform-security |
+| R-010 | No dependency lockfile            | Low      | Open     | platform-security |
 
 ## Authentication & Identity
 

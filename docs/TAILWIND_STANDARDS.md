@@ -31,4 +31,3 @@ Use Inter with `Segoe UI` and system fallbacks; use JetBrains Mono with `Cascadi
 ## State styling
 
 Every interactive component defines hover, active, focus-visible, disabled, loading, invalid, and selected states as applicable. Never remove outlines without an equivalent visible focus ring.
-

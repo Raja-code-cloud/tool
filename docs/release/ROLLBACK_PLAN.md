@@ -54,11 +54,11 @@ Initiate rollback when any of the following occur post-deploy:
 
 For the first RC1 deployment, there is no prior production release. Rollback options:
 
-| Scenario                         | Action                                                              |
-| -------------------------------- | ------------------------------------------------------------------- |
-| RC1 deploy fails smoke tests     | Do not promote; fix forward or redeploy previous staging artifact   |
-| RC1 promoted then fails          | Redeploy last known-good staging build (pre-RC1 artifact or commit) |
-| No prior artifact exists         | Take application offline; redeploy from validated `main` commit     |
+| Scenario                     | Action                                                              |
+| ---------------------------- | ------------------------------------------------------------------- |
+| RC1 deploy fails smoke tests | Do not promote; fix forward or redeploy previous staging artifact   |
+| RC1 promoted then fails      | Redeploy last known-good staging build (pre-RC1 artifact or commit) |
+| No prior artifact exists     | Take application offline; redeploy from validated `main` commit     |
 
 After first successful RC1 deploy, update the release pointer:
 
@@ -164,12 +164,12 @@ Forward fix ticket:   __________
 
 ## Failed rollback contingencies
 
-| Situation                    | Action                                                                                 |
-| ---------------------------- | -------------------------------------------------------------------------------------- |
-| Previous artifact also fails | Escalate SEV-1; deploy known stable commit build; engage platform team                 |
-| Artifact unavailable         | Retrieve from 90-day GitHub Actions artifact retention or backup storage               |
-| Database migration (future)  | N/A for RC1 mock frontend; document forward-only migrations when backend integrates   |
-| Partial deploy (CDN cached)  | Purge CDN cache; confirm cache TTL headers                                             |
+| Situation                    | Action                                                                              |
+| ---------------------------- | ----------------------------------------------------------------------------------- |
+| Previous artifact also fails | Escalate SEV-1; deploy known stable commit build; engage platform team              |
+| Artifact unavailable         | Retrieve from 90-day GitHub Actions artifact retention or backup storage            |
+| Database migration (future)  | N/A for RC1 mock frontend; document forward-only migrations when backend integrates |
+| Partial deploy (CDN cached)  | Purge CDN cache; confirm cache TTL headers                                          |
 
 ---
 

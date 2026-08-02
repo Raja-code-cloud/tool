@@ -16,25 +16,25 @@ alerts/
 
 ## Alert catalog
 
-| Alert | Severity | Component | Runbook |
-| ----- | -------- | --------- | ------- |
-| `CchApiUnavailable` | critical | api | RUNBOOKS.md#api-unavailable |
-| `CchApiHighErrorRate` | critical | api | RUNBOOKS.md#api-unavailable |
-| `CchApiHighLatency` | warning | api | RUNBOOKS.md#high-latency |
-| `CchApiAvailabilitySLOBurn` | critical | api | SLOS.md#availability |
-| `CchWorkerHighFailureRate` | critical | worker | RUNBOOKS.md#worker-crash |
-| `CchWorkerSuccessRateLow` | warning | worker | SLOS.md#worker-success-rate |
-| `CchQueueDepthHigh` | warning | worker | RUNBOOKS.md#worker-crash |
-| `CchOutboxBacklog` | warning | outbox | RUNBOOKS.md#outbox-backlog |
-| `CchSchedulerLag` | critical | scheduler | RUNBOOKS.md#scheduler-failure |
-| `CchPublishSuccessRateLow` | warning | publishing | SLOS.md#publish-success-rate |
-| `CchDatabaseErrors` | critical | database | RUNBOOKS.md#database-unavailable |
-| `CchCacheErrors` | critical | redis | RUNBOOKS.md#redis-unavailable |
-| `CchDatabasePoolExhaustion` | warning | database | OPERATIONS_GUIDE.md#capacity |
-| `CchStorageFailures` | critical | storage | RUNBOOKS.md#blob-storage-failure |
-| `CchAiProviderFailures` | warning | ai | RUNBOOKS.md#provider-outage |
-| `CchSocialProviderFailures` | warning | social | RUNBOOKS.md#provider-outage |
-| `CchAuthFailureSpike` | warning | auth | RUNBOOKS.md#provider-outage |
+| Alert                       | Severity | Component  | Runbook                          |
+| --------------------------- | -------- | ---------- | -------------------------------- |
+| `CchApiUnavailable`         | critical | api        | RUNBOOKS.md#api-unavailable      |
+| `CchApiHighErrorRate`       | critical | api        | RUNBOOKS.md#api-unavailable      |
+| `CchApiHighLatency`         | warning  | api        | RUNBOOKS.md#high-latency         |
+| `CchApiAvailabilitySLOBurn` | critical | api        | SLOS.md#availability             |
+| `CchWorkerHighFailureRate`  | critical | worker     | RUNBOOKS.md#worker-crash         |
+| `CchWorkerSuccessRateLow`   | warning  | worker     | SLOS.md#worker-success-rate      |
+| `CchQueueDepthHigh`         | warning  | worker     | RUNBOOKS.md#worker-crash         |
+| `CchOutboxBacklog`          | warning  | outbox     | RUNBOOKS.md#outbox-backlog       |
+| `CchSchedulerLag`           | critical | scheduler  | RUNBOOKS.md#scheduler-failure    |
+| `CchPublishSuccessRateLow`  | warning  | publishing | SLOS.md#publish-success-rate     |
+| `CchDatabaseErrors`         | critical | database   | RUNBOOKS.md#database-unavailable |
+| `CchCacheErrors`            | critical | redis      | RUNBOOKS.md#redis-unavailable    |
+| `CchDatabasePoolExhaustion` | warning  | database   | OPERATIONS_GUIDE.md#capacity     |
+| `CchStorageFailures`        | critical | storage    | RUNBOOKS.md#blob-storage-failure |
+| `CchAiProviderFailures`     | warning  | ai         | RUNBOOKS.md#provider-outage      |
+| `CchSocialProviderFailures` | warning  | social     | RUNBOOKS.md#provider-outage      |
+| `CchAuthFailureSpike`       | warning  | auth       | RUNBOOKS.md#provider-outage      |
 
 ## Validation
 

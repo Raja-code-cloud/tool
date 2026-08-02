@@ -40,24 +40,24 @@ This document records intentional gaps, mock behaviors, and engineering debt acc
 
 ## Quality and testing
 
-| ID     | Limitation                                                                     | Impact                                              | Status                                       |
-| ------ | ------------------------------------------------------------------------------ | --------------------------------------------------- | -------------------------------------------- |
-| KL-030 | Playwright E2E tests excluded from CI pipelines                                | No automated browser regression in release path     | **Accepted** — add before v1.1.0 if required |
-| KL-031 | Coverage thresholds enforced only when running `npm run test:coverage`       | CI does not fail on coverage shortfalls             | **Accepted**                                 |
-| KL-032 | Vitest full suite slow on Windows (~7 min); Linux CI is faster                 | Local developer friction on Windows                 | **Accepted**                                 |
-| KL-033 | `passWithNoTests: true` in Vitest config                                       | Empty test run would not fail                       | Low risk while test files exist              |
-| KL-035 | Prettier formatting drift across source and documentation files                | `npm run format:check` fails; CI format step blocked      | **Open** until `npm run format` applied      |
+| ID     | Limitation                                                             | Impact                                               | Status                                       |
+| ------ | ---------------------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------- |
+| KL-030 | Playwright E2E tests excluded from CI pipelines                        | No automated browser regression in release path      | **Accepted** — add before v1.1.0 if required |
+| KL-031 | Coverage thresholds enforced only when running `npm run test:coverage` | CI does not fail on coverage shortfalls              | **Accepted**                                 |
+| KL-032 | Vitest full suite slow on Windows (~7 min); Linux CI is faster         | Local developer friction on Windows                  | **Accepted**                                 |
+| KL-033 | `passWithNoTests: true` in Vitest config                               | Empty test run would not fail                        | Low risk while test files exist              |
+| KL-035 | Prettier formatting drift across source and documentation files        | `npm run format:check` fails; CI format step blocked | **Open** until `npm run format` applied      |
 
 ---
 
 ## Deployment and operations
 
-| ID     | Limitation                                                  | Impact                                                            | Status                                |
-| ------ | ----------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------- |
-| KL-040 | No hosting-provider deploy job in GitHub Actions            | Release produces tarball only; manual or external deploy required | **Accepted** — ops prerequisite       |
-| KL-041 | Release tarball is not `output: "standalone"`               | Deploy host needs `npm ci --omit=dev` after extract               | **Accepted**                          |
-| KL-042 | No frontend-specific npm audit workflow                     | Frontend dependency CVEs rely on PR dependency review only        | **Accepted**                          |
-| KL-043 | Release artifact may contain source maps and server bundles | Potential information disclosure on public artifact hosting       | Review before public release          |
+| ID     | Limitation                                                  | Impact                                                            | Status                          |
+| ------ | ----------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------- |
+| KL-040 | No hosting-provider deploy job in GitHub Actions            | Release produces tarball only; manual or external deploy required | **Accepted** — ops prerequisite |
+| KL-041 | Release tarball is not `output: "standalone"`               | Deploy host needs `npm ci --omit=dev` after extract               | **Accepted**                    |
+| KL-042 | No frontend-specific npm audit workflow                     | Frontend dependency CVEs rely on PR dependency review only        | **Accepted**                    |
+| KL-043 | Release artifact may contain source maps and server bundles | Potential information disclosure on public artifact hosting       | Review before public release    |
 
 ---
 

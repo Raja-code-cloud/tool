@@ -20,14 +20,14 @@ Use this checklist when deploying **v1.0.0-rc.1** to staging or production.
 
 ### Quality gates (must be green on release commit)
 
-| Gate       | Command / Source           | RC1 assessment status | Notes                                      |
-| ---------- | -------------------------- | --------------------- | ------------------------------------------ |
-| TypeScript | `npm run typecheck`        | **Pass**              | Verified 2026-08-02                        |
-| ESLint     | `npm run lint`             | **Pass**              | No warnings or errors                      |
-| Vitest     | `npm run test:run`         | **Pass**              | 42 files, 144 tests                        |
-| Build      | `npm run build`            | **Pass**              | 13 static routes                           |
-| Formatting | `npm run format:check`     | **Fail**              | Script missing from `package.json`; CI blocked |
-| npm audit  | `npm audit --omit=dev`     | **Pass**              | 0 production vulnerabilities               |
+| Gate       | Command / Source       | RC1 assessment status | Notes                                          |
+| ---------- | ---------------------- | --------------------- | ---------------------------------------------- |
+| TypeScript | `npm run typecheck`    | **Pass**              | Verified 2026-08-02                            |
+| ESLint     | `npm run lint`         | **Pass**              | No warnings or errors                          |
+| Vitest     | `npm run test:run`     | **Pass**              | 42 files, 144 tests                            |
+| Build      | `npm run build`        | **Pass**              | 13 static routes                               |
+| Formatting | `npm run format:check` | **Fail**              | Script missing from `package.json`; CI blocked |
+| npm audit  | `npm audit --omit=dev` | **Pass**              | 0 production vulnerabilities                   |
 
 - [ ] All quality gates pass on clean CI runner (`ubuntu-latest`, Node 22.22.1)
 - [ ] Resolve `format:check` script gap before triggering release workflow
@@ -72,12 +72,12 @@ Set on the deployment host or container orchestrator:
 
 ### Required secrets
 
-| Secret / credential        | Scope        | RC1 status                          |
-| -------------------------- | ------------ | ----------------------------------- |
-| GitHub token (release job) | CI           | Provided by `GITHUB_TOKEN`          |
-| Hosting provider creds     | Deploy       | **Not configured** — manual deploy  |
-| OIDC federation            | Deploy       | **Not configured**                  |
-| API keys / OAuth           | Application  | **Not required** — mock-backed RC1  |
+| Secret / credential        | Scope       | RC1 status                         |
+| -------------------------- | ----------- | ---------------------------------- |
+| GitHub token (release job) | CI          | Provided by `GITHUB_TOKEN`         |
+| Hosting provider creds     | Deploy      | **Not configured** — manual deploy |
+| OIDC federation            | Deploy      | **Not configured**                 |
+| API keys / OAuth           | Application | **Not required** — mock-backed RC1 |
 
 ### Infrastructure
 
@@ -123,16 +123,16 @@ npm run start
 
 Execute within 15 minutes of deploy:
 
-| #   | Test                    | Expected                                       |
-| --- | ----------------------- | ---------------------------------------------- |
-| 1   | `GET /`                 | 307/308 redirect to `/dashboard`               |
-| 2   | `GET /dashboard`        | 200; shell renders with sidebar                |
-| 3   | Navigate all nav routes | Each route loads without client error          |
-| 4   | Theme toggle            | Light/dark switches; persists on reload        |
-| 5   | `/upload` wizard        | Steps advance; draft persists in local storage |
-| 6   | `/calendar`             | Placeholder displays (known limitation)        |
-| 7   | Responsive layout       | Shell usable at 375px and 1440px widths        |
-| 8   | Browser console         | No uncaught errors on primary flows            |
+| #   | Test                    | Expected                                           |
+| --- | ----------------------- | -------------------------------------------------- |
+| 1   | `GET /`                 | 307/308 redirect to `/dashboard`                   |
+| 2   | `GET /dashboard`        | 200; shell renders with sidebar                    |
+| 3   | Navigate all nav routes | Each route loads without client error              |
+| 4   | Theme toggle            | Light/dark switches; persists on reload            |
+| 5   | `/upload` wizard        | Steps advance; draft persists in local storage     |
+| 6   | `/calendar`             | Placeholder displays (known limitation)            |
+| 7   | Responsive layout       | Shell usable at 375px and 1440px widths            |
+| 8   | Browser console         | No uncaught errors on primary flows                |
 | 9   | Security headers        | CSP, X-Frame-Options, nosniff present on responses |
 
 - [ ] Smoke tests recorded (timestamp, tester, environment)

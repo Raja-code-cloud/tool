@@ -15,17 +15,17 @@ The backend is **not production-ready without remediation** of three high-severi
 
 ## Strengths
 
-| Area | Status | Evidence |
-|------|--------|----------|
-| JWT verification | Pass | Asymmetric algorithms only; issuer/audience/exp enforced (`jwt.py`) |
-| OAuth hardening | Pass | PKCE, state/nonce, redirect URI allowlists (`validators.py`, `base_oauth.py`) |
-| RBAC | Partial | Role inheritance, permission wildcards, route-level `require_permission()` |
-| Storage validation | Pass | Path traversal rejection, MIME/extension allowlists, size limits, checksum |
-| SAS URLs | Pass | HTTPS-only, user-delegation, bounded expiry (`azure/sas.py`) |
-| Logging redaction | Pass | Secret key patterns redacted (`observability/utils.py`) |
-| Secret repr | Pass | Signing keys and connection strings use `repr=False` |
-| Worker DLQ | Pass | Redis-backed dead-letter queue with poison detection |
-| Production config | Pass | Mock provider, wildcard CORS blocked in production |
+| Area               | Status  | Evidence                                                                      |
+| ------------------ | ------- | ----------------------------------------------------------------------------- |
+| JWT verification   | Pass    | Asymmetric algorithms only; issuer/audience/exp enforced (`jwt.py`)           |
+| OAuth hardening    | Pass    | PKCE, state/nonce, redirect URI allowlists (`validators.py`, `base_oauth.py`) |
+| RBAC               | Partial | Role inheritance, permission wildcards, route-level `require_permission()`    |
+| Storage validation | Pass    | Path traversal rejection, MIME/extension allowlists, size limits, checksum    |
+| SAS URLs           | Pass    | HTTPS-only, user-delegation, bounded expiry (`azure/sas.py`)                  |
+| Logging redaction  | Pass    | Secret key patterns redacted (`observability/utils.py`)                       |
+| Secret repr        | Pass    | Signing keys and connection strings use `repr=False`                          |
+| Worker DLQ         | Pass    | Redis-backed dead-letter queue with poison detection                          |
+| Production config  | Pass    | Mock provider, wildcard CORS blocked in production                            |
 
 ## High Findings
 
@@ -55,32 +55,32 @@ API responses do not emit HSTS, CSP, `X-Content-Type-Options`, `X-Frame-Options`
 
 ## Medium Findings
 
-| ID | Finding | Status |
-|----|---------|--------|
-| R-004 | Workers run with wildcard (`*`) permissions | Accepted (documented) |
-| R-005 | No RLS policies in database migrations | Open |
-| R-006 | Default virus scan hook is no-op | Open |
-| R-007 | RevocationStore not wired in production IdentityFactory | Open |
-| R-008 | No SSRF protection for outbound HTTP | Open |
+| ID    | Finding                                                 | Status                |
+| ----- | ------------------------------------------------------- | --------------------- |
+| R-004 | Workers run with wildcard (`*`) permissions             | Accepted (documented) |
+| R-005 | No RLS policies in database migrations                  | Open                  |
+| R-006 | Default virus scan hook is no-op                        | Open                  |
+| R-007 | RevocationStore not wired in production IdentityFactory | Open                  |
+| R-008 | No SSRF protection for outbound HTTP                    | Open                  |
 
 ## Low Findings
 
-| ID | Finding |
-|----|---------|
+| ID    | Finding                                                         |
+| ----- | --------------------------------------------------------------- |
 | R-009 | CSRF protector protocol defined but cookie auth not implemented |
-| R-010 | Dependencies not hash-pinned; no lockfile |
+| R-010 | Dependencies not hash-pinned; no lockfile                       |
 
 ## Deliverables Completed
 
-| Deliverable | Location |
-|-------------|----------|
-| Automated security test suite | `backend/tests/security/` (69 tests) |
-| Security validation helpers | `backend/src/cloud_content_hub/security/` |
-| OWASP validation | `OWASP_VALIDATION.md` |
-| Dependency audit | `DEPENDENCY_AUDIT.md` |
-| Threat model | `THREAT_MODEL.md` |
-| Hardening checklist | `HARDENING_CHECKLIST.md` |
-| Risk register | `backend/src/cloud_content_hub/security/risk_register.py` |
+| Deliverable                   | Location                                                  |
+| ----------------------------- | --------------------------------------------------------- |
+| Automated security test suite | `backend/tests/security/` (69 tests)                      |
+| Security validation helpers   | `backend/src/cloud_content_hub/security/`                 |
+| OWASP validation              | `OWASP_VALIDATION.md`                                     |
+| Dependency audit              | `DEPENDENCY_AUDIT.md`                                     |
+| Threat model                  | `THREAT_MODEL.md`                                         |
+| Hardening checklist           | `HARDENING_CHECKLIST.md`                                  |
+| Risk register                 | `backend/src/cloud_content_hub/security/risk_register.py` |
 
 ## Production Code Changes
 

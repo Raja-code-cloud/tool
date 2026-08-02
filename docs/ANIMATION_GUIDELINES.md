@@ -35,4 +35,3 @@ Motion must not flash, trap attention, or communicate essential information with
 ## Ownership
 
 Shared durations, easings, and variants belong in a central motion module. Components may select approved patterns but must not invent new motion language without design review.
-

@@ -13,10 +13,10 @@ metric rates or SLO burn — not individual log lines or transient retries.
 
 ## Severity levels
 
-| Severity | Page | Response SLA | Channel |
-| -------- | ---- | ------------ | ------- |
-| critical | Yes | 15 min | PagerDuty + Slack |
-| warning | No | 60 min | Slack platform |
+| Severity | Page | Response SLA | Channel           |
+| -------- | ---- | ------------ | ----------------- |
+| critical | Yes  | 15 min       | PagerDuty + Slack |
+| warning  | No   | 60 min       | Slack platform    |
 
 Routing matrix: `backend/alerts/routing/severity_matrix.yaml`.
 
@@ -24,45 +24,45 @@ Routing matrix: `backend/alerts/routing/severity_matrix.yaml`.
 
 ### API
 
-| Alert | Condition | For | Runbook |
-| ----- | --------- | --- | ------- |
-| `CchApiUnavailable` | Scrape target down | 2m | [API unavailable](#api-unavailable) |
-| `CchApiHighErrorRate` | 5xx > 1% | 5m | [API unavailable](#api-unavailable) |
-| `CchApiHighLatency` | p95 > 500ms | 10m | [High latency](#high-latency) |
-| `CchApiAvailabilitySLOBurn` | Fast burn > 14.4× | 5m | SLOS.md |
+| Alert                       | Condition          | For | Runbook                             |
+| --------------------------- | ------------------ | --- | ----------------------------------- |
+| `CchApiUnavailable`         | Scrape target down | 2m  | [API unavailable](#api-unavailable) |
+| `CchApiHighErrorRate`       | 5xx > 1%           | 5m  | [API unavailable](#api-unavailable) |
+| `CchApiHighLatency`         | p95 > 500ms        | 10m | [High latency](#high-latency)       |
+| `CchApiAvailabilitySLOBurn` | Fast burn > 14.4×  | 5m  | SLOS.md                             |
 
 ### Workers
 
-| Alert | Condition | For | Runbook |
-| ----- | --------- | --- | ------- |
-| `CchWorkerHighFailureRate` | Failures > 0.1/s | 5m | [Worker crash](#worker-crash) |
-| `CchWorkerSuccessRateLow` | Success < 95% | 10m | SLOS.md |
-| `CchQueueDepthHigh` | Depth > 1000 | 10m | [Worker crash](#worker-crash) |
+| Alert                      | Condition        | For | Runbook                       |
+| -------------------------- | ---------------- | --- | ----------------------------- |
+| `CchWorkerHighFailureRate` | Failures > 0.1/s | 5m  | [Worker crash](#worker-crash) |
+| `CchWorkerSuccessRateLow`  | Success < 95%    | 10m | SLOS.md                       |
+| `CchQueueDepthHigh`        | Depth > 1000     | 10m | [Worker crash](#worker-crash) |
 
 ### Publishing & scheduler
 
-| Alert | Condition | For | Runbook |
-| ----- | --------- | --- | ------- |
-| `CchOutboxBacklog` | Outbox retries > 1/s | 5m | [Outbox backlog](#outbox-backlog) |
-| `CchSchedulerLag` | Lag > 300s | 5m | [Scheduler failure](#scheduler-failure) |
-| `CchPublishSuccessRateLow` | Success < 95% | 10m | SLOS.md |
+| Alert                      | Condition            | For | Runbook                                 |
+| -------------------------- | -------------------- | --- | --------------------------------------- |
+| `CchOutboxBacklog`         | Outbox retries > 1/s | 5m  | [Outbox backlog](#outbox-backlog)       |
+| `CchSchedulerLag`          | Lag > 300s           | 5m  | [Scheduler failure](#scheduler-failure) |
+| `CchPublishSuccessRateLow` | Success < 95%        | 10m | SLOS.md                                 |
 
 ### Dependencies
 
-| Alert | Condition | For | Runbook |
-| ----- | --------- | --- | ------- |
-| `CchDatabaseErrors` | DB errors > 0.5/s | 3m | [Database unavailable](#database-unavailable) |
-| `CchCacheErrors` | Cache errors > 0.5/s | 3m | [Redis unavailable](#redis-unavailable) |
-| `CchDatabasePoolExhaustion` | Pool > 90% | 5m | OPERATIONS_GUIDE.md |
+| Alert                       | Condition            | For | Runbook                                       |
+| --------------------------- | -------------------- | --- | --------------------------------------------- |
+| `CchDatabaseErrors`         | DB errors > 0.5/s    | 3m  | [Database unavailable](#database-unavailable) |
+| `CchCacheErrors`            | Cache errors > 0.5/s | 3m  | [Redis unavailable](#redis-unavailable)       |
+| `CchDatabasePoolExhaustion` | Pool > 90%           | 5m  | OPERATIONS_GUIDE.md                           |
 
 ### Providers
 
-| Alert | Condition | For | Runbook |
-| ----- | --------- | --- | ------- |
-| `CchStorageFailures` | Blob errors > 0.1/s | 5m | [Blob storage failure](#blob-storage-failure) |
-| `CchAiProviderFailures` | AI errors > 0.1/s | 5m | [Provider outage](#provider-outage) |
-| `CchSocialProviderFailures` | Social errors > 0.05/s | 5m | [Provider outage](#provider-outage) |
-| `CchAuthFailureSpike` | Auth failures > 1/s | 5m | [Provider outage](#provider-outage) |
+| Alert                       | Condition              | For | Runbook                                       |
+| --------------------------- | ---------------------- | --- | --------------------------------------------- |
+| `CchStorageFailures`        | Blob errors > 0.1/s    | 5m  | [Blob storage failure](#blob-storage-failure) |
+| `CchAiProviderFailures`     | AI errors > 0.1/s      | 5m  | [Provider outage](#provider-outage)           |
+| `CchSocialProviderFailures` | Social errors > 0.05/s | 5m  | [Provider outage](#provider-outage)           |
+| `CchAuthFailureSpike`       | Auth failures > 1/s    | 5m  | [Provider outage](#provider-outage)           |
 
 ## Configuration files
 

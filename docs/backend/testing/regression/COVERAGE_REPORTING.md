@@ -22,26 +22,26 @@ The Docker test service emits coverage to `backend/test-results/coverage.xml` an
 
 ## Coverage dimensions
 
-| Dimension | Measured by | Target signal |
-| --------- | ----------- | ------------- |
-| API coverage | `tests/api/`, `tests/regression/test_full_regression.py` | All documented v1 routes exercised |
-| Workflow coverage | `tests/automation/`, `tests/workflows/` | Upload, generate, publish, schedule, analytics, notifications |
-| Module coverage | Regression parametrized reads + API module tests | Assets, content, publishing, scheduler, analytics, notifications, admin |
-| Critical path coverage | `tests/regression/test_critical_path.py` | Upload → generate → publish → schedule |
-| Regression stability | Repeated nightly runs | Zero flaky failures over 7-day window |
+| Dimension              | Measured by                                              | Target signal                                                           |
+| ---------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------- |
+| API coverage           | `tests/api/`, `tests/regression/test_full_regression.py` | All documented v1 routes exercised                                      |
+| Workflow coverage      | `tests/automation/`, `tests/workflows/`                  | Upload, generate, publish, schedule, analytics, notifications           |
+| Module coverage        | Regression parametrized reads + API module tests         | Assets, content, publishing, scheduler, analytics, notifications, admin |
+| Critical path coverage | `tests/regression/test_critical_path.py`                 | Upload → generate → publish → schedule                                  |
+| Regression stability   | Repeated nightly runs                                    | Zero flaky failures over 7-day window                                   |
 
 ## Module-to-test mapping
 
-| Module | Primary tests |
-| ------ | ------------- |
-| Authentication | `tests/api/test_auth.py`, `tests/regression/test_negative.py` |
-| Assets | `tests/api/test_assets_api.py`, `tests/automation/test_content_pipeline.py` |
-| Content | `tests/api/test_content_api.py`, `tests/automation/test_content_pipeline.py` |
-| Publishing | `tests/api/test_publishing_api.py`, `tests/automation/test_publish_schedule.py` |
-| Scheduling | `tests/api/test_scheduler_api.py`, `tests/automation/test_publish_schedule.py` |
-| Analytics | `tests/api/test_analytics_api.py`, `tests/automation/test_analytics_notifications.py` |
-| Notifications | `tests/api/test_notifications_admin_api.py`, `tests/automation/test_analytics_notifications.py` |
-| Administration | `tests/api/test_notifications_admin_api.py`, `tests/regression/test_nightly.py` |
+| Module         | Primary tests                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| Authentication | `tests/api/test_auth.py`, `tests/regression/test_negative.py`                                   |
+| Assets         | `tests/api/test_assets_api.py`, `tests/automation/test_content_pipeline.py`                     |
+| Content        | `tests/api/test_content_api.py`, `tests/automation/test_content_pipeline.py`                    |
+| Publishing     | `tests/api/test_publishing_api.py`, `tests/automation/test_publish_schedule.py`                 |
+| Scheduling     | `tests/api/test_scheduler_api.py`, `tests/automation/test_publish_schedule.py`                  |
+| Analytics      | `tests/api/test_analytics_api.py`, `tests/automation/test_analytics_notifications.py`           |
+| Notifications  | `tests/api/test_notifications_admin_api.py`, `tests/automation/test_analytics_notifications.py` |
+| Administration | `tests/api/test_notifications_admin_api.py`, `tests/regression/test_nightly.py`                 |
 
 ## CI artifact upload
 

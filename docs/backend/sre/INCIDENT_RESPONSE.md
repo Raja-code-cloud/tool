@@ -4,12 +4,12 @@ Incident lifecycle for Cloud Content Hub AI backend production issues.
 
 ## Severity classification
 
-| Level | Criteria | Response | Examples |
-| ----- | -------- | -------- | -------- |
-| SEV-1 | Complete outage or data loss risk | Page immediately, war room | API down, DB unavailable |
-| SEV-2 | Major degradation, SLO burn | Page on-call, async updates | High 5xx, worker fleet down |
-| SEV-3 | Partial degradation | Slack notification | Single provider outage, elevated latency |
-| SEV-4 | Minor issue, no user impact | Ticket, next business day | Warning alerts, non-prod |
+| Level | Criteria                          | Response                    | Examples                                 |
+| ----- | --------------------------------- | --------------------------- | ---------------------------------------- |
+| SEV-1 | Complete outage or data loss risk | Page immediately, war room  | API down, DB unavailable                 |
+| SEV-2 | Major degradation, SLO burn       | Page on-call, async updates | High 5xx, worker fleet down              |
+| SEV-3 | Partial degradation               | Slack notification          | Single provider outage, elevated latency |
+| SEV-4 | Minor issue, no user impact       | Ticket, next business day   | Warning alerts, non-prod                 |
 
 Map alert severity to incident level:
 
@@ -46,17 +46,17 @@ Sources:
 
 Follow runbook for affected component (`RUNBOOKS.md`):
 
-| Component | Runbook |
-| --------- | ------- |
-| API | `#api-unavailable` |
-| Database | `#database-unavailable` |
-| Redis | `#redis-unavailable` |
-| Storage | `#blob-storage-failure` |
-| Workers | `#worker-crash` |
-| Scheduler | `#scheduler-failure` |
-| Outbox | `#outbox-backlog` |
-| Providers | `#provider-outage` |
-| Bad deploy | `#deployment-rollback` |
+| Component  | Runbook                 |
+| ---------- | ----------------------- |
+| API        | `#api-unavailable`      |
+| Database   | `#database-unavailable` |
+| Redis      | `#redis-unavailable`    |
+| Storage    | `#blob-storage-failure` |
+| Workers    | `#worker-crash`         |
+| Scheduler  | `#scheduler-failure`    |
+| Outbox     | `#outbox-backlog`       |
+| Providers  | `#provider-outage`      |
+| Bad deploy | `#deployment-rollback`  |
 
 Prefer mitigation over root-cause during active incident:
 
@@ -79,24 +79,24 @@ Communicate resolution to stakeholders.
 
 Required for SEV-1 and SEV-2. Template:
 
-| Section | Content |
-| ------- | ------- |
-| Summary | What happened, duration, impact |
-| Timeline | Detect → mitigate → resolve timestamps |
-| Root cause | Technical cause (5 whys) |
-| Contributing factors | Deploy, capacity, missing alert, etc. |
-| Action items | Prevent recurrence, improve detection |
-| SLO impact | Error budget consumed |
+| Section              | Content                                |
+| -------------------- | -------------------------------------- |
+| Summary              | What happened, duration, impact        |
+| Timeline             | Detect → mitigate → resolve timestamps |
+| Root cause           | Technical cause (5 whys)               |
+| Contributing factors | Deploy, capacity, missing alert, etc.  |
+| Action items         | Prevent recurrence, improve detection  |
+| SLO impact           | Error budget consumed                  |
 
 Blameless culture — focus on systems and processes.
 
 ## Communication
 
-| Audience | SEV-1/2 | SEV-3 | SEV-4 |
-| -------- | ------- | ----- | ----- |
-| Engineering | Real-time in incident channel | Slack update | Ticket |
-| Product | Status every 30 min | End notification | None |
-| Users | Status page if user-facing | If affected | None |
+| Audience    | SEV-1/2                       | SEV-3            | SEV-4  |
+| ----------- | ----------------------------- | ---------------- | ------ |
+| Engineering | Real-time in incident channel | Slack update     | Ticket |
+| Product     | Status every 30 min           | End notification | None   |
+| Users       | Status page if user-facing    | If affected      | None   |
 
 ## Escalation
 

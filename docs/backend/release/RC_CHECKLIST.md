@@ -32,11 +32,11 @@ Use this checklist before promoting a backend build from QA to Release Candidate
 
 Verify implemented routes respond before ACA traffic cutover:
 
-| Probe     | Canonical route        | Expected |
-| --------- | ---------------------- | -------- |
-| Liveness  | `GET /health/live`     | 200      |
-| Readiness | `GET /health/ready`    | 200 when PostgreSQL and Redis reachable |
-| Summary   | `GET /health`          | 200      |
+| Probe     | Canonical route     | Expected                                |
+| --------- | ------------------- | --------------------------------------- |
+| Liveness  | `GET /health/live`  | 200                                     |
+| Readiness | `GET /health/ready` | 200 when PostgreSQL and Redis reachable |
+| Summary   | `GET /health`       | 200                                     |
 
 Legacy aliases `GET /live` and `GET /ready` remain available and return identical responses.
 
@@ -110,9 +110,9 @@ pytest tests/smoke -m "smoke and external" -v
 
 ## Sign-off
 
-| Role              | Name | Date | RC / GA |
-| ----------------- | ---- | ---- | ------- |
-| Backend engineer  |      |      |         |
-| DevOps            |      |      |         |
-| Security          |      |      |         |
-| Release manager   |      |      |         |
+| Role             | Name | Date | RC / GA |
+| ---------------- | ---- | ---- | ------- |
+| Backend engineer |      |      |         |
+| DevOps           |      |      |         |
+| Security         |      |      |         |
+| Release manager  |      |      |         |

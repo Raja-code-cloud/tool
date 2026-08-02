@@ -64,19 +64,19 @@ mypy tests
 
 ## Markers
 
-| Marker | Description |
-| --- | --- |
-| `e2e` | End-to-end workflow validation (requires PostgreSQL + Redis) |
-| `integration` | Inherited by E2E fixtures |
+| Marker        | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| `e2e`         | End-to-end workflow validation (requires PostgreSQL + Redis) |
+| `integration` | Inherited by E2E fixtures                                    |
 
 ## Troubleshooting
 
-| Symptom | Resolution |
-| --- | --- |
-| Tests skipped for missing `DATABASE_URL` | Export `CCH_DATABASE_URL` |
-| Alembic migration failure | Ensure PostgreSQL is healthy and credentials match compose file |
-| Redis connection errors | Start `redis-test` service or set `CCH_REDIS_URL` |
-| Unique constraint violations | Drop and recreate test database, rerun migrations |
+| Symptom                                  | Resolution                                                      |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| Tests skipped for missing `DATABASE_URL` | Export `CCH_DATABASE_URL`                                       |
+| Alembic migration failure                | Ensure PostgreSQL is healthy and credentials match compose file |
+| Redis connection errors                  | Start `redis-test` service or set `CCH_REDIS_URL`               |
+| Unique constraint violations             | Drop and recreate test database, rerun migrations               |
 
 ## Determinism Notes
 

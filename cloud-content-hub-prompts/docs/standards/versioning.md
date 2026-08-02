@@ -10,11 +10,11 @@ All prompts use [Semantic Versioning 2.0.0](https://semver.org/):
 MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
 ```
 
-| Component | When to bump |
-|-----------|--------------|
+| Component | When to bump                                                                                                      |
+| --------- | ----------------------------------------------------------------------------------------------------------------- |
 | **MAJOR** | Breaking change to template output contract, removed/renamed required variables, incompatible input schema change |
-| **MINOR** | New optional variables, expanded instructions, new evaluation cases, backward-compatible improvements |
-| **PATCH** | Typo fixes, metadata corrections, documentation-only changes within the package |
+| **MINOR** | New optional variables, expanded instructions, new evaluation cases, backward-compatible improvements             |
+| **PATCH** | Typo fixes, metadata corrections, documentation-only changes within the package                                   |
 
 ### Breaking changes (MAJOR)
 
@@ -57,8 +57,8 @@ The backend stores `template_version` as a positive integer on `AIPromptTemplate
 template_version = MAJOR * 10000 + MINOR * 100 + PATCH
 ```
 
-| Semver | Integer |
-|--------|---------|
+| Semver  | Integer |
+| ------- | ------- |
 | `1.0.0` | `10000` |
 | `1.2.3` | `10203` |
 | `2.0.0` | `20000` |
@@ -72,12 +72,12 @@ Constraints:
 
 The repository itself follows semver in `CHANGELOG.md`:
 
-| Repository version | Meaning |
-|--------------------|---------|
-| `0.x.x` | Foundation and scaffolding (Phase 1) |
-| `1.0.0` | First production prompt collection released |
-| `1.x.x` | New prompts and non-breaking library changes |
-| `2.0.0` | Breaking schema or standards change |
+| Repository version | Meaning                                      |
+| ------------------ | -------------------------------------------- |
+| `0.x.x`            | Foundation and scaffolding (Phase 1)         |
+| `1.0.0`            | First production prompt collection released  |
+| `1.x.x`            | New prompts and non-breaking library changes |
+| `2.0.0`            | Breaking schema or standards change          |
 
 Repository tags use the prefix `v` (e.g., `v0.1.0`).
 
@@ -89,11 +89,11 @@ Repository tags use the prefix `v` (e.g., `v0.1.0`).
 └─────────┘     └────────┘     └────────────┘     └──────────┘
 ```
 
-| Transition | Action |
-|------------|--------|
-| draft → active | Prompt passes validation and evaluation; version is finalized |
-| active → deprecated | Set `status: deprecated`, `deprecated_at`, and `superseded_by` |
-| deprecated → archived | After grace period; no new deployments |
+| Transition            | Action                                                         |
+| --------------------- | -------------------------------------------------------------- |
+| draft → active        | Prompt passes validation and evaluation; version is finalized  |
+| active → deprecated   | Set `status: deprecated`, `deprecated_at`, and `superseded_by` |
+| deprecated → archived | After grace period; no new deployments                         |
 
 ### Deprecation policy
 

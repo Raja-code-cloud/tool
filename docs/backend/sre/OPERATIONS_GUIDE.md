@@ -4,12 +4,12 @@ Day-to-day operational procedures for Cloud Content Hub AI backend.
 
 ## Service topology
 
-| Unit | Identifier | Scaling | Health |
-| ---- | ---------- | ------- | ------ |
-| API | `ca-cch-api-<env>` | HTTP concurrency | `/health/live`, `/health/ready` |
-| Worker | `ca-cch-worker-<env>` | CPU utilization | Celery inspect + exec probe |
-| Beat | `ca-cch-beat-<env>` | Fixed 1 replica | Schedule file + inspect |
-| Migrate | `caj-cch-migrate-<env>` | Manual job | N/A |
+| Unit    | Identifier              | Scaling          | Health                          |
+| ------- | ----------------------- | ---------------- | ------------------------------- |
+| API     | `ca-cch-api-<env>`      | HTTP concurrency | `/health/live`, `/health/ready` |
+| Worker  | `ca-cch-worker-<env>`   | CPU utilization  | Celery inspect + exec probe     |
+| Beat    | `ca-cch-beat-<env>`     | Fixed 1 replica  | Schedule file + inspect         |
+| Migrate | `caj-cch-migrate-<env>` | Manual job       | N/A                             |
 
 ## Health probe validation
 
@@ -27,11 +27,11 @@ Probe definitions: `backend/operations/probes.yaml`.
 
 Canonical probe routes:
 
-| Probe | Path | Notes |
-| ----- | ---- | ----- |
-| Liveness | `GET /health/live` | Process alive; no dependency checks |
-| Readiness | `GET /health/ready` | PostgreSQL + Redis must respond |
-| Summary | `GET /health` | Version metadata |
+| Probe     | Path                | Notes                               |
+| --------- | ------------------- | ----------------------------------- |
+| Liveness  | `GET /health/live`  | Process alive; no dependency checks |
+| Readiness | `GET /health/ready` | PostgreSQL + Redis must respond     |
+| Summary   | `GET /health`       | Version metadata                    |
 
 Legacy compatibility aliases `GET /live` and `GET /ready` remain available and return
 identical responses. They are excluded from OpenAPI. New integrations must use the
@@ -69,19 +69,19 @@ Reference: `backend/operations/capacity.yaml`.
 
 ### Worker scaling
 
-| Environment | Min | Max | Concurrency |
-| ----------- | --- | --- | ----------- |
-| dev | 1 | 3 | 2 (local) / 4 (ACA) |
-| prod | 2 | 30 | 4 |
+| Environment | Min | Max | Concurrency         |
+| ----------- | --- | --- | ------------------- |
+| dev         | 1   | 3   | 2 (local) / 4 (ACA) |
+| prod        | 2   | 30  | 4                   |
 
 Scale when `CchQueueDepthHigh` or queue latency SLO burns.
 
 ### API scaling
 
-| Environment | Min | Max | Trigger |
-| ----------- | --- | --- | ------- |
-| dev | 1 | 3 | HTTP concurrency 100 |
-| prod | 2 | 20 | HTTP concurrency 100 |
+| Environment | Min | Max | Trigger              |
+| ----------- | --- | --- | -------------------- |
+| dev         | 1   | 3   | HTTP concurrency 100 |
+| prod        | 2   | 20  | HTTP concurrency 100 |
 
 ```bash
 az containerapp update --name ca-cch-api-prod --resource-group rg-cch-prod \
@@ -100,9 +100,9 @@ Queues: `media`, `ai`, `notification`, `maintenance`.
 
 | Environment | Memory |
 | ----------- | ------ |
-| dev | 256Mi |
-| qa | 512Mi |
-| prod | 2Gi |
+| dev         | 256Mi  |
+| qa          | 512Mi  |
+| prod        | 2Gi    |
 
 Monitor memory usage and evictions. Redis holds broker, results, DLQ, and cache.
 

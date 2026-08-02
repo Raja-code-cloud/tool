@@ -51,4 +51,3 @@ Order imports as framework/external, internal aliases, then relative modules. Se
 ## Review requirements
 
 No dead code, suppressed type errors without rationale, untracked TODOs, debug logging, duplicated components, inaccessible interactions, or secrets may enter production code.
-

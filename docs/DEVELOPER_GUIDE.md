@@ -14,18 +14,18 @@ constants/mock data → repositories → services → client feature hooks → f
 
 **Folder layout:**
 
-| Path | Purpose |
-| ---- | ------- |
-| `app/` | Layouts, route pages, metadata, and route boundaries |
-| `app/(dashboard)/*/_components/` | Route-local feature views, hooks, and components |
-| `components/` | Exported shared UI by category (`layout`, `navigation`, `forms`, etc.) |
-| `hooks/` | Shared sidebar, toast, pagination, and theme-facing state |
-| `constants/` | Stable values and mock feature data |
-| `lib/services/`, `lib/adapters/` | Use-case and mock data-source boundaries |
-| `lib/domain/` | Repository contracts and domain types |
-| `lib/config/env.ts` | Validated frontend environment variables |
-| `styles/` | Global Tailwind theme and utilities |
-| `tests/` | Vitest unit/integration tests, Playwright E2E, MSW mocks |
+| Path                             | Purpose                                                                |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| `app/`                           | Layouts, route pages, metadata, and route boundaries                   |
+| `app/(dashboard)/*/_components/` | Route-local feature views, hooks, and components                       |
+| `components/`                    | Exported shared UI by category (`layout`, `navigation`, `forms`, etc.) |
+| `hooks/`                         | Shared sidebar, toast, pagination, and theme-facing state              |
+| `constants/`                     | Stable values and mock feature data                                    |
+| `lib/services/`, `lib/adapters/` | Use-case and mock data-source boundaries                               |
+| `lib/domain/`                    | Repository contracts and domain types                                  |
+| `lib/config/env.ts`              | Validated frontend environment variables                               |
+| `styles/`                        | Global Tailwind theme and utilities                                    |
+| `tests/`                         | Vitest unit/integration tests, Playwright E2E, MSW mocks               |
 
 The `(dashboard)` route group is organizational and does not appear in URLs. Feature UI is colocated under each route's `_components/` directory — not under a top-level `features/` folder.
 
@@ -35,10 +35,10 @@ See [Folder structure](./frontend/FOLDER_STRUCTURE.md) for route details.
 
 Copy `.env.example` to `.env.local` for local development:
 
-| Variable | Required | Default | Purpose |
-| -------- | -------- | ------- | ------- |
-| `NEXT_PUBLIC_APP_ENV` | No | `development` | Logical environment: `development`, `staging`, or `production` |
-| `NEXT_PUBLIC_API_BASE_URL` | No | unset | Base URL for future HTTP repository adapters |
+| Variable                   | Required | Default       | Purpose                                                        |
+| -------------------------- | -------- | ------------- | -------------------------------------------------------------- |
+| `NEXT_PUBLIC_APP_ENV`      | No       | `development` | Logical environment: `development`, `staging`, or `production` |
+| `NEXT_PUBLIC_API_BASE_URL` | No       | unset         | Base URL for future HTTP repository adapters                   |
 
 When `NEXT_PUBLIC_API_BASE_URL` is unset, all data comes from in-memory mock repositories. Never put secrets in `NEXT_PUBLIC_*` variables.
 
@@ -57,13 +57,13 @@ Validation is centralized in `lib/config/env.ts`. Import `env` instead of readin
 
 The frontend has a full test stack:
 
-| Tool | Purpose | Command |
-| ---- | ------- | ------- |
-| **Vitest** | Unit and integration tests | `npm run test:run` |
-| **Playwright** | Browser E2E tests | `npm run test:e2e` |
-| **MSW** | HTTP mocking in Vitest | configured in `tests/mocks/` |
-| **vitest-axe** | Component accessibility checks | used via `@/tests/utils` |
-| **Storybook 10** | Isolated component development | `npm run storybook` |
+| Tool             | Purpose                        | Command                      |
+| ---------------- | ------------------------------ | ---------------------------- |
+| **Vitest**       | Unit and integration tests     | `npm run test:run`           |
+| **Playwright**   | Browser E2E tests              | `npm run test:e2e`           |
+| **MSW**          | HTTP mocking in Vitest         | configured in `tests/mocks/` |
+| **vitest-axe**   | Component accessibility checks | used via `@/tests/utils`     |
+| **Storybook 10** | Isolated component development | `npm run storybook`          |
 
 **Test locations:**
 

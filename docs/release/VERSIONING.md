@@ -14,23 +14,23 @@ The frontend follows [Semantic Versioning 2.0.0](https://semver.org/):
 MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
 ```
 
-| Segment        | When to increment                                                                                | Examples                     |
-| -------------- | ------------------------------------------------------------------------------------------------ | ---------------------------- |
-| **MAJOR**      | Breaking UI contract, route removal, required env var, or incompatible deploy artifact format    | `1.0.0` → `2.0.0`            |
-| **MINOR**      | Backward-compatible features, new routes, new optional env vars                                  | `1.0.0` → `1.1.0`            |
-| **PATCH**      | Backward-compatible fixes, dependency patches                                                      | `1.0.0` → `1.0.1`            |
-| **PRERELEASE** | Release candidates, betas                                                                        | `1.0.0-rc.1`, `1.0.0-beta.2` |
+| Segment        | When to increment                                                                             | Examples                     |
+| -------------- | --------------------------------------------------------------------------------------------- | ---------------------------- |
+| **MAJOR**      | Breaking UI contract, route removal, required env var, or incompatible deploy artifact format | `1.0.0` → `2.0.0`            |
+| **MINOR**      | Backward-compatible features, new routes, new optional env vars                               | `1.0.0` → `1.1.0`            |
+| **PATCH**      | Backward-compatible fixes, dependency patches                                                 | `1.0.0` → `1.0.1`            |
+| **PRERELEASE** | Release candidates, betas                                                                     | `1.0.0-rc.1`, `1.0.0-beta.2` |
 
 ---
 
 ## RC1 version recommendation
 
-| Field              | Value              |
-| ------------------ | ------------------ |
-| **Recommended RC** | `1.0.0-rc.1`       |
-| **Git tag**        | `v1.0.0-rc.1`      |
-| **Prerelease**     | Yes                |
-| **Current package**| `0.1.0` (unchanged until release workflow runs) |
+| Field               | Value                                           |
+| ------------------- | ----------------------------------------------- |
+| **Recommended RC**  | `1.0.0-rc.1`                                    |
+| **Git tag**         | `v1.0.0-rc.1`                                   |
+| **Prerelease**      | Yes                                             |
+| **Current package** | `0.1.0` (unchanged until release workflow runs) |
 
 ### Why `1.0.0-rc.1` is appropriate
 
@@ -52,12 +52,12 @@ Cut `1.0.0` only after RC sign-off, RC3 Principal Review clearance, and resoluti
 
 ## Version sources of truth
 
-| Artifact        | Location                     | Notes                                                                        |
-| --------------- | ---------------------------- | ---------------------------------------------------------------------------- |
-| Package version | `package.json` `"version"`   | Updated ephemerally during release workflow; **not committed** by automation |
-| Git tag         | `v<semver>` (e.g., `v1.0.0-rc.1`) | Created by `release.yml` at validated `main` commit                     |
-| GitHub Release  | Releases page                | Title: `Frontend v<semver>`; attaches tarball artifact                       |
-| Changelog       | `docs/release/CHANGELOG.md`  | Maintained before release; GitHub auto-notes supplement                      |
+| Artifact        | Location                          | Notes                                                                        |
+| --------------- | --------------------------------- | ---------------------------------------------------------------------------- |
+| Package version | `package.json` `"version"`        | Updated ephemerally during release workflow; **not committed** by automation |
+| Git tag         | `v<semver>` (e.g., `v1.0.0-rc.1`) | Created by `release.yml` at validated `main` commit                          |
+| GitHub Release  | Releases page                     | Title: `Frontend v<semver>`; attaches tarball artifact                       |
+| Changelog       | `docs/release/CHANGELOG.md`       | Maintained before release; GitHub auto-notes supplement                      |
 
 ---
 
@@ -90,9 +90,9 @@ Automated via `.github/workflows/release.yml`:
 
 ## Compatibility matrix (RC1)
 
-| Frontend version | Node.js    | Next.js  | React  |
-| ---------------- | ---------- | -------- | ------ |
-| 1.0.0-rc.1       | 22.22.1    | 15.5.22  | 19.2.8 |
+| Frontend version | Node.js | Next.js | React  |
+| ---------------- | ------- | ------- | ------ |
+| 1.0.0-rc.1       | 22.22.1 | 15.5.22 | 19.2.8 |
 
 Pin Node in CI via `NODE_VERSION: "22.22.1"` in workflow env blocks. Local development should match CI (see `.nvmrc`).
 
@@ -102,11 +102,11 @@ Pin Node in CI via `NODE_VERSION: "22.22.1"` in workflow env blocks. Local devel
 
 ## Branching and immutability
 
-| Branch           | Purpose                                           |
-| ---------------- | ------------------------------------------------- |
-| `main`           | Production-ready line; release tags point here    |
-| Feature branches | Merge via pull request                            |
-| Hotfix branches  | Cut from tagged release or `main`; merge via PR   |
+| Branch           | Purpose                                         |
+| ---------------- | ----------------------------------------------- |
+| `main`           | Production-ready line; release tags point here  |
+| Feature branches | Merge via pull request                          |
+| Hotfix branches  | Cut from tagged release or `main`; merge via PR |
 
 Release tags are **immutable**. Never force-move or delete published tags without release-owner approval.
 

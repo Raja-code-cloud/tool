@@ -14,7 +14,10 @@ export type SidebarProviderProps = { children: React.ReactNode; defaultCollapsed
 
 const SidebarContext = React.createContext<SidebarContextValue | null>(null);
 
-export function SidebarProvider({ children, defaultCollapsed = false }: SidebarProviderProps): React.JSX.Element {
+export function SidebarProvider({
+  children,
+  defaultCollapsed = false,
+}: SidebarProviderProps): React.JSX.Element {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const value: SidebarContextValue = {

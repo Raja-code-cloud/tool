@@ -41,4 +41,3 @@ These standards govern frontend implementation for Cloud Content Hub AI. Product
 ## Quality gate
 
 Before review, changes must pass TypeScript, linting, relevant tests, responsive checks, keyboard checks, and an inspection for duplicated patterns. Document intentional exceptions.
-

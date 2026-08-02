@@ -17,11 +17,11 @@ The frontend uses GitHub Actions with npm, Node.js **22.22.1**, and the committe
 
 Pull requests must pass:
 
-| Job        | Checks                                                                 |
-| ---------- | ---------------------------------------------------------------------- |
+| Job        | Checks                                                                    |
+| ---------- | ------------------------------------------------------------------------- |
 | Validate   | TypeScript, Prettier, ESLint, Vitest with coverage gate, production build |
-| E2E        | Playwright (Chromium) against the Next.js dev server                   |
-| Dependency | GitHub dependency review on changed packages                           |
+| E2E        | Playwright (Chromium) against the Next.js dev server                      |
+| Dependency | GitHub dependency review on changed packages                              |
 
 Main branch and release workflows enforce TypeScript, formatting, ESLint, coverage, and build. Pull request E2E runs in a dedicated parallel job to keep browser startup isolated from the compile/test job.
 

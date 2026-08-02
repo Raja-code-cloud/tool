@@ -4,11 +4,11 @@ Worker retries mirror the transactional outbox retry model with bounded exponent
 
 ## Components
 
-| Module | Responsibility |
-| --- | --- |
-| `workers/retry.py` | `WorkerRetryPolicy`, `DeadLetterQueue`, `is_transient_error` |
-| `workers/base.py` | `WorkerTaskRunner`, `TransientWorkerRetrySignal` |
-| `workers/config.py` | `WorkerRetryConfig` defaults |
+| Module              | Responsibility                                               |
+| ------------------- | ------------------------------------------------------------ |
+| `workers/retry.py`  | `WorkerRetryPolicy`, `DeadLetterQueue`, `is_transient_error` |
+| `workers/base.py`   | `WorkerTaskRunner`, `TransientWorkerRetrySignal`             |
+| `workers/config.py` | `WorkerRetryConfig` defaults                                 |
 
 ## Classification
 

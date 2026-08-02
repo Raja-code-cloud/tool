@@ -6,13 +6,13 @@ This directory documents the automated test harness for prompt packages.
 
 Prompt tests extend evaluations with structural and integration checks:
 
-| Test type | Description | Phase |
-|-----------|-------------|-------|
-| Schema validation | Metadata and input schema conformance | 1 |
-| Render tests | Template renders without error for all cases | 1 |
-| Acceptance tests | Offline criteria pass against fixtures | 1 |
-| Snapshot tests | Rendered output matches committed snapshots | 2 |
-| Integration tests | End-to-end via backend API in staging | 3 |
+| Test type         | Description                                  | Phase |
+| ----------------- | -------------------------------------------- | ----- |
+| Schema validation | Metadata and input schema conformance        | 1     |
+| Render tests      | Template renders without error for all cases | 1     |
+| Acceptance tests  | Offline criteria pass against fixtures       | 1     |
+| Snapshot tests    | Rendered output matches committed snapshots  | 2     |
+| Integration tests | End-to-end via backend API in staging        | 3     |
 
 ## Per-prompt tests
 

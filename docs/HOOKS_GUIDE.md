@@ -40,4 +40,3 @@ Shared hooks around storage, media queries, observers, and event listeners must 
 ## Testing
 
 Test externally observable transitions, cancellation, cleanup, error paths, and provider misuse. For data hooks, mock the API boundary rather than implementation details of the query library.
-

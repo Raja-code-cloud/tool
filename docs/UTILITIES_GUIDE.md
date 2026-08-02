@@ -39,4 +39,3 @@ Define backend-facing DTOs and runtime schemas at feature boundaries. Map DTOs t
 ## Quality
 
 Utilities must avoid hidden global state and browser assumptions unless named as browser adapters. Cover boundary values, invalid input, locale behavior, and security-sensitive URL/storage cases with unit tests.
-

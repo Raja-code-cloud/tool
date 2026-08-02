@@ -53,75 +53,75 @@ flowchart TB
 
 ## Trust Boundaries
 
-| Boundary | Trust level | Controls |
-|----------|-------------|----------|
-| Internet → API | Untrusted | TLS, JWT verification, permission deps |
-| API → PostgreSQL | Semi-trusted | Parameterized ORM, workspace_id scoping |
-| API → Redis | Semi-trusted | Internal network, no auth in dev config |
-| API → Azure Blob | Semi-trusted | Managed identity / SP, SAS least-privilege |
-| Celery → PostgreSQL | Trusted internal | Wildcard worker permissions (risk) |
-| Workers → Redis queue | Semi-trusted | No message signing (gap) |
+| Boundary              | Trust level      | Controls                                   |
+| --------------------- | ---------------- | ------------------------------------------ |
+| Internet → API        | Untrusted        | TLS, JWT verification, permission deps     |
+| API → PostgreSQL      | Semi-trusted     | Parameterized ORM, workspace_id scoping    |
+| API → Redis           | Semi-trusted     | Internal network, no auth in dev config    |
+| API → Azure Blob      | Semi-trusted     | Managed identity / SP, SAS least-privilege |
+| Celery → PostgreSQL   | Trusted internal | Wildcard worker permissions (risk)         |
+| Workers → Redis queue | Semi-trusted     | No message signing (gap)                   |
 
 ## STRIDE Analysis
 
 ### Spoofing
 
-| Threat | Mitigation | Residual risk |
-|--------|------------|---------------|
-| Forged JWT | Asymmetric signature, issuer/audience validation | Medium — no revocation in prod |
-| OAuth code interception | PKCE, state/nonce | Low |
-| Celery task spoofing | None | **High** — no task auth |
+| Threat                  | Mitigation                                       | Residual risk                  |
+| ----------------------- | ------------------------------------------------ | ------------------------------ |
+| Forged JWT              | Asymmetric signature, issuer/audience validation | Medium — no revocation in prod |
+| OAuth code interception | PKCE, state/nonce                                | Low                            |
+| Celery task spoofing    | None                                             | **High** — no task auth        |
 
 ### Tampering
 
-| Threat | Mitigation | Residual risk |
-|--------|------------|---------------|
-| Blob path traversal | Filename/blob validators | Low |
-| SQL injection | SQLAlchemy parameterized queries | Low |
-| Webhook payload tampering | Not implemented | **High** |
+| Threat                    | Mitigation                       | Residual risk |
+| ------------------------- | -------------------------------- | ------------- |
+| Blob path traversal       | Filename/blob validators         | Low           |
+| SQL injection             | SQLAlchemy parameterized queries | Low           |
+| Webhook payload tampering | Not implemented                  | **High**      |
 
 ### Repudiation
 
-| Threat | Mitigation | Residual risk |
-|--------|------------|---------------|
+| Threat              | Mitigation              | Residual risk                |
+| ------------------- | ----------------------- | ---------------------------- |
 | Admin action denial | Audit log schema exists | Medium — incomplete coverage |
-| OAuth token use | Provider logs only | Medium |
+| OAuth token use     | Provider logs only      | Medium                       |
 
 ### Information Disclosure
 
-| Threat | Mitigation | Residual risk |
-|--------|------------|---------------|
-| Token in logs | Redaction pipeline | Low |
-| Cross-tenant data access | Workspace scoping | **Medium** — no membership check |
-| Signed URL leakage | Short TTL, HTTPS only | Low |
-| Error message enumeration | Problem+json without secrets | Low |
+| Threat                    | Mitigation                   | Residual risk                    |
+| ------------------------- | ---------------------------- | -------------------------------- |
+| Token in logs             | Redaction pipeline           | Low                              |
+| Cross-tenant data access  | Workspace scoping            | **Medium** — no membership check |
+| Signed URL leakage        | Short TTL, HTTPS only        | Low                              |
+| Error message enumeration | Problem+json without secrets | Low                              |
 
 ### Denial of Service
 
-| Threat | Mitigation | Residual risk |
-|--------|------------|---------------|
-| Large uploads | Size validators | Medium |
-| AI cost abuse | Provider retry only | **High** — no HTTP rate limits |
-| Worker retry storms | Bounded backoff, poison detection | Low |
+| Threat              | Mitigation                        | Residual risk                  |
+| ------------------- | --------------------------------- | ------------------------------ |
+| Large uploads       | Size validators                   | Medium                         |
+| AI cost abuse       | Provider retry only               | **High** — no HTTP rate limits |
+| Worker retry storms | Bounded backoff, poison detection | Low                            |
 
 ### Elevation of Privilege
 
-| Threat | Mitigation | Residual risk |
-|--------|------------|---------------|
-| Permission bypass via JWT claims | Route-level permission deps | Medium |
-| Worker wildcard permissions | Queue isolation assumed | **Medium** — accepted R-004 |
-| Admin route access | Role/permission deps | Medium — limited tests |
+| Threat                           | Mitigation                  | Residual risk               |
+| -------------------------------- | --------------------------- | --------------------------- |
+| Permission bypass via JWT claims | Route-level permission deps | Medium                      |
+| Worker wildcard permissions      | Queue isolation assumed     | **Medium** — accepted R-004 |
+| Admin route access               | Role/permission deps        | Medium — limited tests      |
 
 ## Critical Assets
 
-| Asset | Classification | Protection |
-|-------|----------------|------------|
-| JWT signing key | Critical secret | Env var, repr=False |
-| OAuth client secrets | Critical secret | Settings, not logged |
-| OAuth token vault | Confidential | Ciphertext / managed secret ref |
-| User content blobs | Confidential | Private containers, SAS |
-| Refresh tokens | Critical | JWT with jti; revocation partial |
-| Database credentials | Critical | Env var; separate worker creds recommended |
+| Asset                | Classification  | Protection                                 |
+| -------------------- | --------------- | ------------------------------------------ |
+| JWT signing key      | Critical secret | Env var, repr=False                        |
+| OAuth client secrets | Critical secret | Settings, not logged                       |
+| OAuth token vault    | Confidential    | Ciphertext / managed secret ref            |
+| User content blobs   | Confidential    | Private containers, SAS                    |
+| Refresh tokens       | Critical        | JWT with jti; revocation partial           |
+| Database credentials | Critical        | Env var; separate worker creds recommended |
 
 ## Attack Scenarios
 

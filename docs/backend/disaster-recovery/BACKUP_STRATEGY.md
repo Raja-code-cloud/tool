@@ -4,16 +4,16 @@ Cloud Content Hub AI relies on Azure platform-managed backups for durable state.
 
 ## Backup inventory
 
-| Asset | Mechanism | Frequency | Retention | Owner |
-| ----- | --------- | --------- | --------- | ----- |
-| PostgreSQL (primary) | Azure automated backup + PITR | Continuous WAL, daily snapshot | 7–35 days (env-specific) | Platform |
-| PostgreSQL (DR replica) | Geo-redundant backup / read replica | Continuous | Matches primary policy | Platform |
-| Blob storage | GRS / RA-GRS replication | Continuous | 30-day soft delete (recommended) | Platform |
-| Redis | RDB snapshots (optional) | Hourly (if enabled) | 1–7 days | Platform |
-| Key Vault secrets | Soft delete + purge protection | On change | 90-day soft delete | Security |
-| Container images | ACR immutable tags | On CI build | 90+ days / lifecycle policy | DevOps |
-| IaC (Bicep) | Git repository | On merge | Indefinite | Engineering |
-| Log Analytics | Workspace retention | Continuous ingest | 30–90 days | Platform |
+| Asset                   | Mechanism                           | Frequency                      | Retention                        | Owner       |
+| ----------------------- | ----------------------------------- | ------------------------------ | -------------------------------- | ----------- |
+| PostgreSQL (primary)    | Azure automated backup + PITR       | Continuous WAL, daily snapshot | 7–35 days (env-specific)         | Platform    |
+| PostgreSQL (DR replica) | Geo-redundant backup / read replica | Continuous                     | Matches primary policy           | Platform    |
+| Blob storage            | GRS / RA-GRS replication            | Continuous                     | 30-day soft delete (recommended) | Platform    |
+| Redis                   | RDB snapshots (optional)            | Hourly (if enabled)            | 1–7 days                         | Platform    |
+| Key Vault secrets       | Soft delete + purge protection      | On change                      | 90-day soft delete               | Security    |
+| Container images        | ACR immutable tags                  | On CI build                    | 90+ days / lifecycle policy      | DevOps      |
+| IaC (Bicep)             | Git repository                      | On merge                       | Indefinite                       | Engineering |
+| Log Analytics           | Workspace retention                 | Continuous ingest              | 30–90 days                       | Platform    |
 
 ## PostgreSQL
 
@@ -55,23 +55,23 @@ Blob metadata in PostgreSQL (`content_assets`, file references) must be restored
 
 Redis holds Celery broker state, result backends (if configured), and ephemeral cache entries.
 
-| Data class | Backup required | Recovery approach |
-| ---------- | --------------- | ----------------- |
-| Celery task queue | No | Tasks retry from outbox / user action |
-| Rate-limit counters | No | Reset on cold start |
-| Session cache (if used) | No | Users re-authenticate |
-| Distributed locks | No | TTL expiry releases locks |
+| Data class              | Backup required | Recovery approach                     |
+| ----------------------- | --------------- | ------------------------------------- |
+| Celery task queue       | No              | Tasks retry from outbox / user action |
+| Rate-limit counters     | No              | Reset on cold start                   |
+| Session cache (if used) | No              | Users re-authenticate                 |
+| Distributed locks       | No              | TTL expiry releases locks             |
 
 Enable Azure Cache for Redis **premium persistence** only when operational review requires shorter RPO for in-flight tasks. Default policy accepts loss of queued-but-unprocessed Celery messages; outbox guarantees at-least-once redelivery.
 
 ## Configuration and secrets
 
-| Item | Backup source | Notes |
-| ---- | ------------- | ----- |
-| `CCH_*` environment variables | Bicep parameters + Key Vault | No secrets in Git |
-| Key Vault secret versions | Azure native | Enable soft delete and purge protection |
-| ACA revision history | Azure platform | Prior revisions retained for rollback |
-| Feature flags | PostgreSQL `settings` | Included in DB backup |
+| Item                          | Backup source                | Notes                                   |
+| ----------------------------- | ---------------------------- | --------------------------------------- |
+| `CCH_*` environment variables | Bicep parameters + Key Vault | No secrets in Git                       |
+| Key Vault secret versions     | Azure native                 | Enable soft delete and purge protection |
+| ACA revision history          | Azure platform               | Prior revisions retained for rollback   |
+| Feature flags                 | PostgreSQL `settings`        | Included in DB backup                   |
 
 Key Vault secrets (per environment):
 
@@ -85,10 +85,10 @@ Secrets rotation does not require image rebuild. Containers resolve Key Vault se
 
 Images are built once in CI and promoted by immutable tag (Git SHA):
 
-| Image | Registry tag pattern |
-| ----- | -------------------- |
-| `cloud-content-hub-api` | `<env>-<git-sha>` |
-| `cloud-content-hub-worker` | `<env>-<git-sha>` |
+| Image                      | Registry tag pattern |
+| -------------------------- | -------------------- |
+| `cloud-content-hub-api`    | `<env>-<git-sha>`    |
+| `cloud-content-hub-worker` | `<env>-<git-sha>`    |
 
 ACR retention policies prevent unbounded growth. Production DR (`dr.bicepparam`) pulls from the production registry (`acrcchprod.azurecr.io`).
 
@@ -108,12 +108,12 @@ Checks include:
 
 ## Retention policy summary
 
-| Environment | PostgreSQL PITR | Blob soft delete | Log retention |
-| ----------- | --------------- | ---------------- | ------------- |
-| dev | 7 days | 7 days | 30 days |
-| qa | 14 days | 14 days | 30 days |
-| prod | 35 days | 30 days | 90 days |
-| dr | 35 days (replica) | 30 days | 90 days |
+| Environment | PostgreSQL PITR   | Blob soft delete | Log retention |
+| ----------- | ----------------- | ---------------- | ------------- |
+| dev         | 7 days            | 7 days           | 30 days       |
+| qa          | 14 days           | 14 days          | 30 days       |
+| prod        | 35 days           | 30 days          | 90 days       |
+| dr          | 35 days (replica) | 30 days          | 90 days       |
 
 Adjust values in Azure portal / IaC parameters to match organizational compliance requirements.
 

@@ -45,4 +45,3 @@ Use `useState` or `useReducer` for local transitions. Context is appropriate for
 - `useUpload()` — upload queue and lifecycle.
 
 Hooks must hide mechanics, not product policy. A hook is warranted when behavior repeats or needs isolated testing.
-

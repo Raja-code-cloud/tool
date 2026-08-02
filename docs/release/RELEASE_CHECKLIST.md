@@ -11,17 +11,17 @@
 
 These items must pass before production deployment. A single blocker is sufficient for **No-Go** on automated release workflow.
 
-| #   | Gate                           | Command / Source                | Status (2026-08-03) | Notes                                                                                                      |
-| --- | ------------------------------ | ------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
-| B1  | TypeScript                     | `npm run typecheck`             | **PASS**            | Verified locally                                                                                           |
-| B2  | ESLint                         | `npm run lint`                  | **PASS**            | Zero warnings or errors                                                                                    |
+| #   | Gate                           | Command / Source                | Status (2026-08-03) | Notes                                                                        |
+| --- | ------------------------------ | ------------------------------- | ------------------- | ---------------------------------------------------------------------------- |
+| B1  | TypeScript                     | `npm run typecheck`             | **PASS**            | Verified locally                                                             |
+| B2  | ESLint                         | `npm run lint`                  | **PASS**            | Zero warnings or errors                                                      |
 | B3  | Prettier                       | `npm run format:check`          | **FAIL**            | 163 files with formatting drift (includes docs); run `npm run format` to fix |
-| B4  | Unit / integration tests       | `npm run test:run`              | **PASS**            | 47 test files across `tests/unit/` and `tests/integration/`                                                |
-| B5  | Production build               | `npm run build`                 | **PASS**            | Next.js 15 production build completes                                                                      |
-| B6  | CI green on `main`             | GitHub Actions `ci.yml`         | **VERIFY ON MERGE** | PR workflow runs format, typecheck, lint, test, build                                                      |
-| B7  | Production deployment pipeline | `.github/workflows/release.yml` | **INCOMPLETE**      | Release workflow packages artifacts; no hosting-provider deploy job                                        |
-| B8  | Root environment template      | `.env.example`                  | **PASS**            | Frontend `NEXT_PUBLIC_*` variables documented at repository root                                           |
-| B9  | RC3 Principal Review           | Documentation remediation       | **COMPLETE**        | RC3 findings F-003, F-007, F-015, F-016 addressed                                                          |
+| B4  | Unit / integration tests       | `npm run test:run`              | **PASS**            | 47 test files across `tests/unit/` and `tests/integration/`                  |
+| B5  | Production build               | `npm run build`                 | **PASS**            | Next.js 15 production build completes                                        |
+| B6  | CI green on `main`             | GitHub Actions `ci.yml`         | **VERIFY ON MERGE** | PR workflow runs format, typecheck, lint, test, build                        |
+| B7  | Production deployment pipeline | `.github/workflows/release.yml` | **INCOMPLETE**      | Release workflow packages artifacts; no hosting-provider deploy job          |
+| B8  | Root environment template      | `.env.example`                  | **PASS**            | Frontend `NEXT_PUBLIC_*` variables documented at repository root             |
+| B9  | RC3 Principal Review           | Documentation remediation       | **COMPLETE**        | RC3 findings F-003, F-007, F-015, F-016 addressed                            |
 
 ---
 
@@ -35,7 +35,7 @@ Warnings do not automatically block release but require explicit sign-off from E
 | W2  | Calendar route            | Medium   | `/calendar` renders a placeholder; navigation advertises a full editorial calendar                                |
 | W3  | Playwright E2E            | Medium   | `test:e2e` configured but excluded from CI pipelines                                                              |
 | W4  | Storybook build           | Low      | `npm run build-storybook` optional; 11 story modules; not in CI                                                   |
-| W5  | Coverage in CI            | Low      | Thresholds enforced only when running `npm run test:coverage`; not a CI gate                                    |
+| W5  | Coverage in CI            | Low      | Thresholds enforced only when running `npm run test:coverage`; not a CI gate                                      |
 | W6  | Frontend security scan    | Low      | `security-scan.yml` targets backend/docker paths only; no dedicated frontend npm audit job                        |
 | W7  | Release artifact exposure | Medium   | Release tarball includes full `.next` tree; review for source maps and embedded build-time values on public repos |
 | W8  | No hosting deploy job     | Medium   | Manual or external deployment required after release artifact download                                            |

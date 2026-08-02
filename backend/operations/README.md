@@ -6,23 +6,23 @@ contain application business logic.
 
 ## Contents
 
-| Path | Purpose |
-| ---- | ------- |
-| `probes.yaml` | Liveness, readiness, and startup probe definitions for all runtime units |
-| `capacity.yaml` | Connection pool, scaling, and sizing recommendations |
-| `compose/monitoring-stack.yml` | Local Prometheus + Grafana stack for SRE validation |
-| `scripts/validate_health.sh` | Verify health endpoints against a running API |
-| `scripts/validate_alerts.py` | Validate Prometheus alert rule syntax |
+| Path                           | Purpose                                                                  |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| `probes.yaml`                  | Liveness, readiness, and startup probe definitions for all runtime units |
+| `capacity.yaml`                | Connection pool, scaling, and sizing recommendations                     |
+| `compose/monitoring-stack.yml` | Local Prometheus + Grafana stack for SRE validation                      |
+| `scripts/validate_health.sh`   | Verify health endpoints against a running API                            |
+| `scripts/validate_alerts.py`   | Validate Prometheus alert rule syntax                                    |
 
 ## Health probe routes
 
 The FastAPI application exposes canonical unversioned probes:
 
-| Probe | Path | Expected |
-| ----- | ---- | -------- |
-| Informational | `/health` | 200 |
-| Liveness | `/health/live` | 200 |
-| Readiness | `/health/ready` | 200 (PostgreSQL + Redis) |
+| Probe         | Path            | Expected                 |
+| ------------- | --------------- | ------------------------ |
+| Informational | `/health`       | 200                      |
+| Liveness      | `/health/live`  | 200                      |
+| Readiness     | `/health/ready` | 200 (PostgreSQL + Redis) |
 
 Legacy aliases `/live` and `/ready` remain available with identical responses (excluded
 from OpenAPI). `validate_health.sh` checks both canonical and legacy paths.

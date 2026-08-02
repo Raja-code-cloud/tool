@@ -4,12 +4,12 @@ This document defines naming rules for prompts, files, directories, and identifi
 
 ## Prompt Identifiers
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Prompt ID | `kebab-case`, lowercase, starts with letter | `content-summary` |
-| Domain | `kebab-case`, lowercase | `content-generation` |
-| Evaluation case ID | `kebab-case` | `empty-input-rejected` |
-| Tags | `kebab-case`, lowercase | `social-media` |
+| Element            | Convention                                  | Example                |
+| ------------------ | ------------------------------------------- | ---------------------- |
+| Prompt ID          | `kebab-case`, lowercase, starts with letter | `content-summary`      |
+| Domain             | `kebab-case`, lowercase                     | `content-generation`   |
+| Evaluation case ID | `kebab-case`                                | `empty-input-rejected` |
+| Tags               | `kebab-case`, lowercase                     | `social-media`         |
 
 ### Prompt ID rules
 
@@ -59,37 +59,37 @@ prompts/
 
 Domains group prompts by functional area. Reserved domains for Phase 2+:
 
-| Domain | Purpose |
-|--------|---------|
-| `content-generation` | Copy, captions, summaries |
-| `content-optimization` | SEO, readability, tone adjustment |
-| `scheduling` | Post timing, calendar suggestions |
-| `analytics` | Insight summaries, report narratives |
-| `workspace` | Settings, onboarding, help text |
+| Domain                 | Purpose                              |
+| ---------------------- | ------------------------------------ |
+| `content-generation`   | Copy, captions, summaries            |
+| `content-optimization` | SEO, readability, tone adjustment    |
+| `scheduling`           | Post timing, calendar suggestions    |
+| `analytics`            | Insight summaries, report narratives |
+| `workspace`            | Settings, onboarding, help text      |
 
 New domains require documentation update and reviewer approval.
 
 ### Special directories
 
-| Directory | Prefix | Purpose |
-|-----------|--------|---------|
-| `_examples/` | Leading underscore | Non-production reference prompts |
-| `_shared/` | Leading underscore | Shared schema fragments (Phase 2+) |
+| Directory    | Prefix             | Purpose                            |
+| ------------ | ------------------ | ---------------------------------- |
+| `_examples/` | Leading underscore | Non-production reference prompts   |
+| `_shared/`   | Leading underscore | Shared schema fragments (Phase 2+) |
 
 Leading underscore indicates **not for production deployment**.
 
 ## File Naming
 
-| File | Name | Required |
-|------|------|----------|
-| Metadata | `metadata.yaml` | Yes |
-| Template | `template.md` or `template.txt` | Yes |
-| Input schema | `input.schema.json` | Yes |
-| Package README | `README.md` | Yes |
-| Example inputs | `examples/<case-name>.json` | Optional |
-| Evaluation suite | `evaluations/<suite-name>.yaml` | Production |
-| Output schema | `output.schema.json` | When structured output required |
-| Tests | `tests/<test-name>.yaml` | Optional |
+| File             | Name                            | Required                        |
+| ---------------- | ------------------------------- | ------------------------------- |
+| Metadata         | `metadata.yaml`                 | Yes                             |
+| Template         | `template.md` or `template.txt` | Yes                             |
+| Input schema     | `input.schema.json`             | Yes                             |
+| Package README   | `README.md`                     | Yes                             |
+| Example inputs   | `examples/<case-name>.json`     | Optional                        |
+| Evaluation suite | `evaluations/<suite-name>.yaml` | Production                      |
+| Output schema    | `output.schema.json`            | When structured output required |
+| Tests            | `tests/<test-name>.yaml`        | Optional                        |
 
 ### Example input files
 
@@ -114,11 +114,11 @@ evaluations/
 
 Template variables use `snake_case`:
 
-| Valid | Invalid |
-|-------|---------|
+| Valid            | Invalid         |
+| ---------------- | --------------- |
 | `recipient_name` | `recipientName` |
-| `max_length` | `max-length` |
-| `content_body` | `ContentBody` |
+| `max_length`     | `max-length`    |
+| `content_body`   | `ContentBody`   |
 
 ## Schema `$id` Values
 
@@ -131,12 +131,12 @@ https://cloud-content-hub.dev/prompts/<domain>/<prompt-id>/input.schema.json
 
 ## Git Branch Naming
 
-| Pattern | Use |
-|---------|-----|
-| `feature/<domain>-<prompt-id>` | New prompt |
-| `feature/<short-description>` | Schema or docs changes |
-| `fix/<prompt-id>-<short-description>` | Prompt correction |
-| `chore/<short-description>` | Tooling updates |
+| Pattern                               | Use                    |
+| ------------------------------------- | ---------------------- |
+| `feature/<domain>-<prompt-id>`        | New prompt             |
+| `feature/<short-description>`         | Schema or docs changes |
+| `fix/<prompt-id>-<short-description>` | Prompt correction      |
+| `chore/<short-description>`           | Tooling updates        |
 
 Examples:
 

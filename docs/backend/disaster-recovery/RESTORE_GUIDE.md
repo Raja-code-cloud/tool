@@ -208,12 +208,12 @@ Global events that cannot dead-letter require manual replay from audit logs.
 
 ## 7. Configuration restore
 
-| Source | Restore action |
-| ------ | -------------- |
-| Bicep parameters | Redeploy from Git tag matching last known good |
-| Key Vault | Recover soft-deleted secrets or restore from HSM backup |
-| Database settings | Included in PostgreSQL PITR |
-| `.env` (local only) | Copy from team password manager; never from Git |
+| Source              | Restore action                                          |
+| ------------------- | ------------------------------------------------------- |
+| Bicep parameters    | Redeploy from Git tag matching last known good          |
+| Key Vault           | Recover soft-deleted secrets or restore from HSM backup |
+| Database settings   | Included in PostgreSQL PITR                             |
+| `.env` (local only) | Copy from team password manager; never from Git         |
 
 Production and DR never load `.env` files (`docs/backend/devops/ENVIRONMENTS.md`).
 
