@@ -46,6 +46,7 @@ This document records intentional gaps, mock behaviors, and engineering debt acc
 | KL-031 | Coverage thresholds enforced only when running `npm run test:coverage`       | CI does not fail on coverage shortfalls             | **Accepted**                                 |
 | KL-032 | Vitest full suite slow on Windows (~7 min); Linux CI is faster                 | Local developer friction on Windows                 | **Accepted**                                 |
 | KL-033 | `passWithNoTests: true` in Vitest config                                       | Empty test run would not fail                       | Low risk while test files exist              |
+| KL-035 | Prettier formatting drift across source and documentation files                | `npm run format:check` fails; CI format step blocked      | **Open** until `npm run format` applied      |
 
 ---
 
@@ -76,7 +77,7 @@ The following items from RC1/RC2 assessments are **resolved** and no longer bloc
 
 - TypeScript compilation errors — `npm run typecheck` passes
 - ESLint failures — `npm run lint` passes with zero warnings
-- Prettier format script and drift — `format:check` present in `package.json` and CI
+- Prettier format script missing — `format:check` present in `package.json` and CI (formatting drift remains; see KL-035)
 - Dashboard `TODAY_AGENDA` undefined constant — panel uses `dashboardService.listAgenda()`
 - Missing root `.env.example` — committed at repository root
 - Vitest suite — 47 test files; `npm run test:run` passes on assessment host and Linux CI

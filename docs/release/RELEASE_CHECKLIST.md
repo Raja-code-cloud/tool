@@ -15,7 +15,7 @@ These items must pass before production deployment. A single blocker is sufficie
 | --- | ------------------------------ | ------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
 | B1  | TypeScript                     | `npm run typecheck`             | **PASS**            | Verified locally                                                                                           |
 | B2  | ESLint                         | `npm run lint`                  | **PASS**            | Zero warnings or errors                                                                                    |
-| B3  | Prettier                       | `npm run format:check`          | **PASS**            | Script present; CI and local parity confirmed                                                              |
+| B3  | Prettier                       | `npm run format:check`          | **FAIL**            | 163 files with formatting drift (includes docs); run `npm run format` to fix |
 | B4  | Unit / integration tests       | `npm run test:run`              | **PASS**            | 47 test files across `tests/unit/` and `tests/integration/`                                                |
 | B5  | Production build               | `npm run build`                 | **PASS**            | Next.js 15 production build completes                                                                      |
 | B6  | CI green on `main`             | GitHub Actions `ci.yml`         | **VERIFY ON MERGE** | PR workflow runs format, typecheck, lint, test, build                                                      |
@@ -134,4 +134,4 @@ Aggregate shortcut: `npm run verify` (format + typecheck + lint + test; excludes
 | DevOps / Platform |      |      |            |
 | Security          |      |      |            |
 
-**Current recommendation:** **GO WITH DOCUMENTED RISKS** — core build gates pass; mock data layer and missing hosting deploy job require explicit product and ops sign-off before GA.
+**Current recommendation:** **GO WITH DOCUMENTED RISKS** — typecheck, lint, tests, and build pass; resolve B3 (Prettier drift) before CI merge; mock data layer and missing hosting deploy job require explicit product and ops sign-off.

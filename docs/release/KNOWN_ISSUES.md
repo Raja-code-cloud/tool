@@ -11,7 +11,8 @@ This document records **verified remaining issues** at RC3 assessment (2026-08-0
 | ID     | Issue                                                                 | Severity | Impact                                              | Owner            | Mitigation                                              | Target release |
 | ------ | --------------------------------------------------------------------- | -------- | --------------------------------------------------- | ---------------- | ------------------------------------------------------- | -------------- |
 | KI-001 | No hosting-provider deploy job in GitHub Actions                      | **Medium** | Release produces tarball only; manual deploy required | DevOps           | Add provider deploy job after target selected           | v1.1.0         |
-| KI-002 | `package.json` lacks `repository`, `license`, and `author` metadata  | **Low**  | Incomplete package provenance for release artifacts | Release Engineering | Add metadata fields per org policy                    | v1.1.0         |
+| KI-003 | Prettier formatting drift (163 files)                                 | **Medium** | CI `format:check` fails                             | Engineering      | Run `npm run format` on repository                  | Before release |
+| KI-004 | `package.json` lacks `repository`, `license`, and `author` metadata   | **Low**  | Incomplete package provenance for release artifacts | Release Engineering | Add metadata fields per org policy                        | v1.1.0         |
 
 ---
 
@@ -20,7 +21,6 @@ This document records **verified remaining issues** at RC3 assessment (2026-08-0
 | ID     | Issue (was)                                                         | Resolution |
 | ------ | ------------------------------------------------------------------- | ---------- |
 | —      | `format:check` script missing                                       | Present in `package.json`; CI runs it |
-| —      | Prettier formatting drift                                           | `format:check` passes on assessment |
 | —      | No frontend `.env.example`                                          | Created at repository root |
 | —      | TypeScript / ESLint blockers                                        | `typecheck` and `lint` pass |
 | —      | Vitest suite unverified                                             | 47 test files; `test:run` passes |
@@ -94,12 +94,12 @@ This document records **verified remaining issues** at RC3 assessment (2026-08-0
 
 | Category              | Open engineering | Accepted | Total |
 | --------------------- | ---------------- | -------- | ----- |
-| Release engineering   | 2                | 0        | 2     |
+| Release engineering   | 3                | 0        | 3     |
 | Data / auth           | 0                | 5        | 5     |
 | Feature completeness  | 0                | 6        | 6     |
 | Testing / CI          | 0                | 3        | 3     |
 | Deployment / ops      | 0                | 3        | 3     |
 | Accessibility         | 0                | 3        | 3     |
-| **Total**             | **2**            | **20**   | **22**|
+| **Total**             | **3**            | **20**   | **23**|
 
-**Remaining engineering items:** KI-001 (hosting deploy job), KI-002 (package metadata)
+**Remaining engineering items:** KI-001 (hosting deploy job), KI-003 (Prettier drift), KI-004 (package metadata)
