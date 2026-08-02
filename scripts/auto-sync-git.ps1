@@ -22,7 +22,7 @@ Write-Log "Auto-sync started (every $IntervalMinutes min, branch: $Branch)"
 
 while ($true) {
     try {
-        $status = git status --porcelain 2>&1
+        $status = git status --porcelain 2>&1 | Where-Object { $_ -notmatch 'cloud-content-hub-infra' }
 
         if ($LASTEXITCODE -ne 0) {
             Write-Log "ERROR: git status failed"
@@ -30,7 +30,7 @@ while ($true) {
         elseif ($status) {
             Write-Log "Changes detected - committing..."
 
-            git add -A 2>&1 | Out-Null
+            git add -A -- . ":(exclude)cloud-content-hub-infra" 2>&1 | Out-Null
             $commitMessage = "Auto-sync: update workspace $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
             git commit -m $commitMessage 2>&1 | ForEach-Object { Write-Log $_ }
 

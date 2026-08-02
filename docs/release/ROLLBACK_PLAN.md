@@ -1,19 +1,20 @@
-# Rollback Plan — Cloud Content Hub AI Frontend
+# Rollback Plan — Cloud Content Hub AI Frontend RC1
 
-This document defines the procedure for rolling back a frontend production deployment to a previously validated release.
+This document defines rollback procedures for frontend deployments from GitHub Release artifacts.
 
-**Scope:** Frontend Next.js server deployment from GitHub Release artifacts.  
-**Related:** [RELEASE_PROCESS.md](../frontend/RELEASE_PROCESS.md) · [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+**Scope:** Frontend Next.js server deployment  
+**Target version:** v1.0.0-rc.1  
+**Related:** [RELEASE_PROCESS.md](../frontend/RELEASE_PROCESS.md) · [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) · [GO_LIVE_CHECKLIST.md](./GO_LIVE_CHECKLIST.md)
 
 ---
 
-## When to rollback
+## Rollback triggers
 
 Initiate rollback when any of the following occur post-deploy:
 
 | Trigger                            | Examples                                                                         |
 | ---------------------------------- | -------------------------------------------------------------------------------- |
-| **Availability**                   | Service unreachable, crash loop, 5xx error rate above SLO                        |
+| **Availability**                   | Service unreachable, crash loop, sustained 5xx error rate                        |
 | **Critical functional regression** | Dashboard or shell fails to render; navigation broken                            |
 | **Security incident**              | Accidental secret exposure, compromised artifact, critical CVE in deployed build |
 | **Performance collapse**           | Response times exceed agreed threshold with no quick mitigation                  |
@@ -21,8 +22,9 @@ Initiate rollback when any of the following occur post-deploy:
 
 **Do not rollback for:**
 
-- Known mock-data limitations documented in [KNOWN_LIMITATIONS.md](./KNOWN_LIMITATIONS.md)
+- Known mock-data limitations documented in [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 - Calendar placeholder behavior (pre-existing)
+- Decorative global search or non-functional analytics date filter (pre-existing)
 - Issues requiring code fix — prefer forward fix via new patch release after revert on `main`
 
 ---
@@ -37,18 +39,6 @@ Initiate rollback when any of the following occur post-deploy:
 
 ---
 
-## Roles and responsibilities
-
-| Role                   | Responsibility                                            |
-| ---------------------- | --------------------------------------------------------- |
-| **Incident commander** | Declares rollback; coordinates comms                      |
-| **DevOps / Platform**  | Executes redeploy; verifies infrastructure                |
-| **Release engineer**   | Identifies last known-good version; validates artifact    |
-| **Frontend lead**      | Confirms functional recovery; triages root cause          |
-| **Product owner**      | Approves rollback for non-critical issues; customer comms |
-
----
-
 ## Rollback decision matrix
 
 | Severity | User impact                             | Action                       | Target time |
@@ -60,25 +50,24 @@ Initiate rollback when any of the following occur post-deploy:
 
 ---
 
-## Last known-good release identification
+## RC1 baseline
 
-1. Open **GitHub → Releases** for the repository
-2. Locate the most recent release **before** the failed deployment
-3. Confirm its validation status (CI green at tagged commit)
-4. Record:
-   - Version tag: `v<semver>`
-   - Commit SHA
-   - Artifact name: `cloud-content-hub-frontend-v<semver>.tar.gz`
-   - Deploy timestamp and operator
+For the first RC1 deployment, there is no prior production release. Rollback options:
 
-Maintain a **release pointer file** in ops runbook:
+| Scenario                         | Action                                                              |
+| -------------------------------- | ------------------------------------------------------------------- |
+| RC1 deploy fails smoke tests     | Do not promote; fix forward or redeploy previous staging artifact   |
+| RC1 promoted then fails          | Redeploy last known-good staging build (pre-RC1 artifact or commit) |
+| No prior artifact exists         | Take application offline; redeploy from validated `main` commit     |
+
+After first successful RC1 deploy, update the release pointer:
 
 ```
-CURRENT_PRODUCTION=v1.0.0
-PREVIOUS_PRODUCTION=<last-good>
+CURRENT_STAGING=v1.0.0-rc.1
+PREVIOUS_STAGING=<none or prior build>
+CURRENT_PRODUCTION=<unset until GA>
+PREVIOUS_PRODUCTION=<unset>
 ```
-
-Update after every successful deploy.
 
 ---
 
@@ -103,23 +92,18 @@ tar -xzf cloud-content-hub-frontend-v<PREV_VERSION>.tar.gz
 npm ci --omit=dev --no-audit --no-fund
 ```
 
-- [ ] Artifact version matches documented `PREVIOUS_PRODUCTION`
+- [ ] Artifact version matches documented previous release
 - [ ] Extract completed without errors
-- [ ] Environment variables match production runbook (except version-specific notes)
+- [ ] Environment variables match production runbook
 
 ### Step 3 — Redeploy (10–20 min)
 
 **Option A — Directory swap (single host)**
 
 ```sh
-# Stop current process
-systemctl stop cloud-content-hub-frontend   # or equivalent
-
-# Swap directories
+systemctl stop cloud-content-hub-frontend
 mv /opt/cloud-content-hub-frontend /opt/cloud-content-hub-frontend-failed
 mv /opt/cloud-content-hub-frontend-rollback /opt/cloud-content-hub-frontend
-
-# Start previous version
 systemctl start cloud-content-hub-frontend
 ```
 
@@ -133,8 +117,6 @@ systemctl start cloud-content-hub-frontend
 
 ### Step 4 — Verify recovery (20–30 min)
 
-Run abbreviated smoke tests:
-
 | Test                            | Pass |
 | ------------------------------- | ---- |
 | `/` redirects to `/dashboard`   | [ ]  |
@@ -144,7 +126,7 @@ Run abbreviated smoke tests:
 | Monitoring green                | [ ]  |
 
 - [ ] Incident commander confirms service restored
-- [ ] Update `CURRENT_PRODUCTION` pointer to rolled-back version
+- [ ] Update release pointer to rolled-back version
 
 ### Step 5 — Communicate (parallel with Steps 3–4)
 
@@ -157,12 +139,12 @@ Run abbreviated smoke tests:
 - [ ] Preserve failed deployment directory/logs for analysis
 - [ ] Create incident report with timeline
 - [ ] Open revert PR on `main` if bad commit merged
-- [ ] Plan forward patch release after fix validated
+- [ ] Plan forward patch or RC2 release after fix validated
 - [ ] Update [CHANGELOG.md](./CHANGELOG.md) if customer-visible rollback occurred
 
 ---
 
-## Rollback verification checklist
+## Recovery checklist
 
 ```
 Rollback version:     v__________
@@ -174,6 +156,8 @@ Smoke tests pass:     [ ] Yes  [ ] No
 Monitoring normal:    [ ] Yes  [ ] No
 Stakeholders notified:[ ] Yes  [ ] No
 Incident ticket:      __________
+Root cause summary:   __________
+Forward fix ticket:   __________
 ```
 
 ---
@@ -182,21 +166,10 @@ Incident ticket:      __________
 
 | Situation                    | Action                                                                                 |
 | ---------------------------- | -------------------------------------------------------------------------------------- |
-| Previous artifact also fails | Escalate SEV-1; deploy known stable tag further back; engage platform team             |
+| Previous artifact also fails | Escalate SEV-1; deploy known stable commit build; engage platform team                 |
 | Artifact unavailable         | Retrieve from 90-day GitHub Actions artifact retention or backup storage               |
-| Database migration (future)  | N/A for v1.0.0 mock frontend; document forward-only migrations when backend integrates |
+| Database migration (future)  | N/A for RC1 mock frontend; document forward-only migrations when backend integrates   |
 | Partial deploy (CDN cached)  | Purge CDN cache; confirm cache TTL headers                                             |
-
----
-
-## Prevention measures
-
-- Always deploy validated GitHub Release artifacts, never ad-hoc builds
-- Keep `PREVIOUS_PRODUCTION` pointer updated after each successful deploy
-- Run full smoke tests before marking deploy complete
-- Require GitHub Environment approval for production
-- Resolve CI blockers before cutting release tags
-- Maintain staging deploy parity with production process
 
 ---
 
@@ -204,9 +177,21 @@ Incident ticket:      __________
 
 1. Revert offending commit(s) on `main` via pull request
 2. Wait for CI green (`ci.yml` / `build.yml`)
-3. Cut patch release (e.g., `1.0.1`) via **Release Frontend** workflow
-4. Deploy new patch through standard [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+3. Cut patch or RC release (e.g., `1.0.0-rc.2`) via **Release Frontend** workflow
+4. Deploy new version through standard [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
 5. Do **not** redeploy the failed version tag
+
+---
+
+## Prevention measures
+
+- Always deploy validated GitHub Release artifacts, never ad-hoc builds
+- Keep release pointer updated after each successful deploy
+- Run full smoke tests before marking deploy complete
+- Require GitHub Environment approval for production
+- Resolve CI blockers before cutting release tags
+- Maintain staging deploy parity with production process
+- Restrict RC1 to network-controlled environments
 
 ---
 

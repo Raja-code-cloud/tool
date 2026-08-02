@@ -1,26 +1,27 @@
 # Cloud Content Hub AI — Production Release Checklist
 
-**Target release:** Frontend v1.0.0  
+**Target release:** Frontend v1.0.0-rc.1  
 **Current package version:** 0.1.0  
 **Assessment date:** 2026-08-02  
-**Release engineer:** Senior Release Readiness Engineer
+**Release manager:** Senior Release Change Manager
 
 ---
 
 ## Release blockers
 
-These items must pass before production deployment. A single blocker is sufficient for **No-Go**.
+These items must pass before production deployment. A single blocker is sufficient for **No-Go** on automated release workflow.
 
-| #   | Gate                           | Command / Source                | Status           | Notes                                                                                                                                                                    |
-| --- | ------------------------------ | ------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| B1  | TypeScript                     | `npm run typecheck`             | **FAIL**         | 10 errors across `publishing-calendar-panel.tsx`, `use-wizard-state.ts`, `constants/scheduler.ts`, `constants/social-accounts.ts`, `lib/api/client.ts`                   |
-| B2  | ESLint                         | `npm run lint`                  | **FAIL**         | 2 unused-import warnings; `--max-warnings=0` policy fails the job                                                                                                        |
-| B3  | Prettier                       | `npm run format:check`          | **FAIL**         | 272 files reported with formatting drift                                                                                                                                 |
-| B4  | Unit / integration tests       | `npm run test:run`              | **FAIL**         | Vitest worker startup timeout on Windows runner; 3 test files present but none executed                                                                                  |
-| B5  | Production build               | `npm run build`                 | **FAIL**         | Compilation succeeded; build aborted during page-data phase (`ENOTEMPTY` on `.next/export`) — likely local disk/filesystem contention; must re-verify on clean CI runner |
-| B6  | CI green on `main`             | GitHub Actions `build.yml`      | **NOT VERIFIED** | No recent CI run confirmed in this assessment; branch protection status unknown                                                                                          |
-| B7  | Production deployment pipeline | `.github/workflows/release.yml` | **INCOMPLETE**   | Release workflow packages artifacts and creates GitHub Releases; no hosting-provider deploy job exists                                                                   |
-| B8  | Root environment template      | `.env.example`                  | **MISSING**      | `lib/config/env.ts` validates `NEXT_PUBLIC_*` variables but no frontend `.env.example` is committed                                                                      |
+| #   | Gate                           | Command / Source                | Status (2026-08-02) | Notes                                                                                                      |
+| --- | ------------------------------ | ------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| B1  | TypeScript                     | `npm run typecheck`             | **PASS**            | Verified locally                                                                                           |
+| B2  | ESLint                         | `npm run lint`                  | **PASS**            | No warnings or errors                                                                                      |
+| B3  | Prettier                       | `npm run format:check`          | **FAIL**            | Script missing from `package.json`; 42 frontend files have formatting drift                                  |
+| B4  | Unit / integration tests       | `npm run test:run`              | **PASS**            | 42 files, 144 tests passed                                                                                 |
+| B5  | Production build               | `npm run build`                 | **PASS**            | 13 static routes compiled successfully                                                                     |
+| B6  | CI green on `main`             | GitHub Actions `build.yml`      | **NOT VERIFIED**    | Would fail on B3 until format script restored                                                              |
+| B7  | Production deployment pipeline | `.github/workflows/release.yml` | **INCOMPLETE**      | Release workflow packages artifacts; no hosting-provider deploy job                                        |
+| B8  | Root environment template      | `.env.example`                  | **MISSING**         | `lib/config/env.ts` validates `NEXT_PUBLIC_*` but no frontend template committed                           |
+| B9  | RC3 Principal Review           | Separate review track           | **PENDING**         | Required before GA sign-off                                                                                |
 
 ---
 
@@ -134,4 +135,4 @@ Aggregate shortcut: `npm run verify` (format + typecheck + lint + test; excludes
 | DevOps / Platform |      |      |            |
 | Security          |      |      |            |
 
-**Current recommendation:** **No-Go** — resolve blockers B1–B5 and confirm CI green before sign-off.
+**Current recommendation:** **GO WITH MINOR RISKS** — core build gates pass; resolve B3 (format script + Prettier drift) before release workflow; await RC3 Principal Review before GA.
