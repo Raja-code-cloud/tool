@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cloud-content-hub.dev/schemas/prompt-input.schema.json",
+  "title": "Prompt Input Schema Wrapper",
+  "description": "Canonical wrapper for per-prompt input.schema.json files. The 'properties' object defines template variables.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "type", "properties"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "$id": {
+      "type": "string",
+      "format": "uri"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "const": "object"
+    },
+    "additionalProperties": {
+      "type": "boolean",
+      "const": false
+    },
+    "required": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "uniqueItems": true
+    },
+    "properties": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/variable"
+      }
+    }
+  },
+  "$defs": {
+    "variable": {
+      "type": "object",
+      "required": ["type", "description"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["string", "integer", "number", "boolean", "array", "object"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minLength": { "type": "integer", "minimum": 0 },
+        "maxLength": { "type": "integer", "minimum": 1 },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "enum": {
+          "type": "array",
+          "minItems": 1
+        },
+        "items": {
+          "type": "object"
+        },
+        "default": {},
+        "examples": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

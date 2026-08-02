@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cloud-content-hub.dev/schemas/evaluation-case.schema.json",
+  "title": "Prompt Evaluation Case",
+  "description": "A single evaluation case for a prompt package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "inputs", "acceptance"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "description": "Unique case identifier within the prompt package"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable case name"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this case validates"
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Variable payload passed to the template renderer",
+      "additionalProperties": true
+    },
+    "expected_rendered": {
+      "type": "string",
+      "description": "Optional exact expected output after template rendering (pre-LLM)"
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criteria"],
+      "properties": {
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/criterion"
+          }
+        },
+        "fixture_output": {
+          "type": "string",
+          "description": "Pre-recorded LLM output for offline evaluation (no live API in CI)"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "weight": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 1,
+      "description": "Relative weight when aggregating suite scores"
+    }
+  },
+  "$defs": {
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "rendered_equals",
+            "rendered_contains",
+            "rendered_matches_regex",
+            "output_contains",
+            "output_not_contains",
+            "output_matches_regex",
+            "output_length_min",
+            "output_length_max",
+            "output_json_valid",
+            "output_json_schema"
+          ]
+        },
+        "value": {
+          "description": "Expected value for the criterion (type-dependent)"
+        },
+        "schema_file": {
+          "type": "string",
+          "description": "Relative path to JSON Schema for output_json_schema criterion"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "const": "output_json_schema" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["schema_file"]
+          }
+        }
+      ]
+    }
+  }
+}

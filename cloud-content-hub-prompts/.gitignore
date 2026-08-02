@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node (validation tooling only)
+node_modules/
+npm-debug.log*
+
+# Python (if used for local validation helpers)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Build / cache
+.cache/
+dist/
+coverage/
+
+# Secrets — never commit real API keys or workspace tokens
+.env
+.env.*
+!.env.example

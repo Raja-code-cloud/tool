@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cloud-content-hub.dev/schemas/prompt-metadata.schema.json",
+  "title": "Prompt Metadata",
+  "description": "Metadata for a Cloud Content Hub prompt package. Maps to backend AIPromptTemplate fields.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "purpose",
+    "domain",
+    "status",
+    "template",
+    "input_schema",
+    "authors",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "description": "Globally unique prompt identifier (kebab-case). Example: content-summary"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Human-readable display name"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$",
+      "description": "Semantic version (semver 2.0.0)"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "description": "One-line description of what the prompt accomplishes"
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "description": "Functional domain grouping (kebab-case). Example: content-generation"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "deprecated", "archived"],
+      "description": "Lifecycle status. Maps to backend is_active (active=true, others=false)"
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "format", "engine"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "pattern": "^template\\.(md|txt)$",
+          "description": "Relative path to template file within the prompt package"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["markdown", "text"],
+          "description": "Template file format"
+        },
+        "engine": {
+          "type": "string",
+          "enum": ["python-format"],
+          "description": "Template rendering engine. Must match backend render_prompt()"
+        },
+        "required_variables": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "uniqueItems": true,
+          "description": "Variables required even if not inferred from template placeholders"
+        }
+      }
+    },
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "const": "input.schema.json",
+          "description": "Relative path to JSON Schema for template variables"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "uniqueItems": true,
+      "description": "Searchable tags for discovery"
+    },
+    "authors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date (YYYY-MM-DD) when the prompt was first created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date (YYYY-MM-DD) of the latest version update"
+    },
+    "deprecated_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when status changed to deprecated"
+    },
+    "superseded_by": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "description": "ID of the prompt that replaces this one"
+    },
+    "backend_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional hints for backend import/sync tooling",
+      "properties": {
+        "template_version_field": {
+          "type": "string",
+          "const": "template_version",
+          "description": "Backend column populated from semver MAJOR*10000 + MINOR*100 + PATCH"
+        },
+        "workspace_scoped": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the prompt is deployed per-workspace"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_prompt_characters": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "supported_models": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temperature_range": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number", "minimum": 0, "maximum": 2 },
+            "max": { "type": "number", "minimum": 0, "maximum": 2 }
+          }
+        }
+      }
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "date", "summary"],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

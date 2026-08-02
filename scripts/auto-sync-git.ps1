@@ -31,6 +31,12 @@ while ($true) {
             Write-Log "Changes detected - committing..."
 
             git add -A -- . ":(exclude)cloud-content-hub-infra" 2>&1 | Out-Null
+            $staged = git diff --cached --name-only 2>&1
+
+            if (-not $staged) {
+                Write-Log "No committable changes (nested repos excluded)."
+            }
+            else {
             $commitMessage = "Auto-sync: update workspace $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
             git commit -m $commitMessage 2>&1 | ForEach-Object { Write-Log $_ }
 
@@ -47,6 +53,7 @@ while ($true) {
             }
             else {
                 Write-Log "ERROR: Commit failed."
+            }
             }
         }
         else {
