@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "clean": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\"",
+    "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('.next',{recursive:true,force:true});\"",
     "lint": "next lint",
     "lint:eslint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix --max-warnings=0",

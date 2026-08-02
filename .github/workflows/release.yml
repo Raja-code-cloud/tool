@@ -83,8 +83,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Run unit tests
-        run: npm run test:run
+      - name: Run unit tests with coverage gate
+        run: npm run test:coverage
 
       - name: Apply release version
         env:

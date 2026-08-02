@@ -21,8 +21,11 @@ The lockfile remains the source of truth; CI never updates dependencies.
 4. Run `npm run typecheck`.
 5. Run `npm run format:check`.
 6. Run `npm run lint`.
-7. Run `npm run test:run`.
+7. Run `npm run test:coverage` (Vitest with RC3 coverage gate; see [COVERAGE_STRATEGY.md](./COVERAGE_STRATEGY.md)).
 8. Run `npm run build`.
+
+A parallel **Playwright end-to-end** job runs `npm run test:e2e` with Chromium.
+See [CI_CD_GUIDE.md](./CI_CD_GUIDE.md) for artifact retention and branch protection requirements.
 
 New commits cancel obsolete runs for the same pull request.
 
@@ -31,7 +34,7 @@ New commits cancel obsolete runs for the same pull request.
 `build.yml` runs after pushes to `main` and supports manual dispatch:
 
 1. The quality job installs dependencies and runs `format:check`, type checking, linting, and
-   tests.
+   unit tests with the coverage gate (`npm run test:coverage`).
 2. The production-build job starts only after quality succeeds.
 3. The build job runs `npm run build`.
 4. GitHub stores `.next`, package metadata, and Next.js configuration

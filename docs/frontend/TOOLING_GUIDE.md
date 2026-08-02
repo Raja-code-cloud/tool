@@ -21,9 +21,11 @@
 - `npm run lint` / `lint:fix`: check or fix ESLint issues
 - `npm run typecheck`: run TypeScript without emitting files
 - `npm run format` / `format:check`: write or verify Prettier formatting
-- `npm run test`: run tests when a test command is configured
-- `npm run verify`: run the local quality gate
+- `npm run test:run` / `test:coverage`: run Vitest; coverage enforces RC3 thresholds in CI
+- `npm run test:e2e`: run Playwright browser tests (also enforced in PR CI)
+- `npm run verify`: run the local quality gate (format, typecheck, lint, unit tests)
 - `npm run storybook` / `build-storybook`: run or build Storybook
+- `npm run lint:eslint`: direct ESLint CLI (migration path; see ESLINT_MIGRATION.md)
 - `npm run clean`: remove generated frontend output
 
 ## VS Code

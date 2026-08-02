@@ -3,7 +3,7 @@
 ## Requirements
 
 - Windows, macOS, or Linux
-- Node.js `>=22.22.1` (matches `package.json#engines` and CI)
+- Node.js `>=22.22.1` (see `.nvmrc`, `package.json#engines`, and CI `NODE_VERSION`)
 - npm
 
 ## Install and run
@@ -33,14 +33,17 @@ Variables are validated in `lib/config/env.ts`. Do not copy backend secrets into
 npm run dev
 npm run typecheck
 npm run lint
+npm run format:check
 npm run test:run
+npm run test:coverage
+npm run test:e2e
 npm run verify
 npm run build
 npm run start
 npm run storybook
 ```
 
-`npm run verify` runs format check, TypeScript, ESLint, and Vitest — the same core gates as CI (excluding production build).
+`npm run verify` runs format check, TypeScript, ESLint, and Vitest. CI additionally enforces the coverage gate (`test:coverage`) and Playwright E2E. See [COVERAGE_STRATEGY.md](./COVERAGE_STRATEGY.md) and [CI_CD_GUIDE.md](./CI_CD_GUIDE.md).
 
 ## Troubleshooting
 
