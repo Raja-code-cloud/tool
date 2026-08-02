@@ -21,10 +21,15 @@ export type HttpAnalyticsRepository = {
   getDashboard(query: AnalyticsDashboardQuery): Promise<AnalyticsDashboardDto>;
   listPlatforms(query: AnalyticsPlatformsQuery): Promise<readonly PlatformAnalyticsDto[]>;
   listPosts(query: AnalyticsPostsQuery): Promise<AnalyticsPostsPage>;
-  getPost(contentId: string, query: Omit<AnalyticsPostsQuery, "cursor" | "limit" | "sort">): Promise<PostAnalyticsDto>;
+  getPost(
+    contentId: string,
+    query: Omit<AnalyticsPostsQuery, "cursor" | "limit" | "sort">,
+  ): Promise<PostAnalyticsDto>;
 };
 
-function buildQuery(params: Record<string, string | number | readonly string[] | undefined>): string {
+function buildQuery(
+  params: Record<string, string | number | readonly string[] | undefined>,
+): string {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined) return;

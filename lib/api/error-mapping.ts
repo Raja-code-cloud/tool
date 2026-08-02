@@ -1,5 +1,5 @@
-import { ApiError } from "@/lib/api/errors";
 import type { ProblemDetailDto } from "@/lib/api/asset-types";
+import { ApiError } from "@/lib/api/errors";
 
 function extractProblemMessage(body: unknown): string | undefined {
   if (!body || typeof body !== "object") return undefined;
@@ -37,12 +37,7 @@ export function mapStatusToError(status: number, body: unknown): ApiError {
   }
   if (status === 422) {
     if (problemCode === "unsupported_media_type" || problemCode === "unsupported_extension") {
-      return new ApiError(
-        message ?? "Unsupported media type",
-        "unsupported_media",
-        status,
-        body,
-      );
+      return new ApiError(message ?? "Unsupported media type", "unsupported_media", status, body);
     }
     return new ApiError(message ?? "Validation failed", "validation_error", status, body);
   }

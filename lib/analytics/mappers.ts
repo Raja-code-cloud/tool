@@ -1,15 +1,15 @@
-import type {
-  AnalyticsDashboardDto,
-  MetricValueDto,
-  PlatformAnalyticsDto,
-  PostAnalyticsDto,
-} from "@/lib/api/analytics-types";
 import { metricNumber } from "@/lib/analytics/metrics";
 import {
   isKnownPlatformCode,
   platformChartColor,
   platformLabel,
 } from "@/lib/analytics/platform-colors";
+import type {
+  AnalyticsDashboardDto,
+  MetricValueDto,
+  PlatformAnalyticsDto,
+  PostAnalyticsDto,
+} from "@/lib/api/analytics-types";
 import type {
   AnalyticsBaseSummary,
   AnalyticsInsight,
@@ -91,8 +91,7 @@ export function mapPlatformEngagement(
   return platforms.flatMap((platform) => {
     if (!isKnownPlatformCode(platform.platformCode)) return [];
     const engagement =
-      metricNumber(platform.metrics, "engagements") ??
-      sumPlatformEngagement(platform.metrics);
+      metricNumber(platform.metrics, "engagements") ?? sumPlatformEngagement(platform.metrics);
     return [
       {
         platform: platform.platformCode,
@@ -106,7 +105,8 @@ export function mapPlatformEngagement(
 export function mapPlatformReach(platforms: readonly PlatformAnalyticsDto[]): ReachByPlatform[] {
   return platforms.flatMap((platform) => {
     if (!isKnownPlatformCode(platform.platformCode)) return [];
-    const reach = metricNumber(platform.metrics, "reach") ?? metricNumber(platform.metrics, "impressions") ?? 0;
+    const reach =
+      metricNumber(platform.metrics, "reach") ?? metricNumber(platform.metrics, "impressions") ?? 0;
     return [
       {
         platform: platform.platformCode,
@@ -125,7 +125,8 @@ export function mapPlatformComparison(
   return platforms.flatMap((platform) => {
     if (!isKnownPlatformCode(platform.platformCode)) return [];
     const reach = metricNumber(platform.metrics, "reach") ?? 0;
-    const engagement = metricNumber(platform.metrics, "engagements") ?? sumPlatformEngagement(platform.metrics);
+    const engagement =
+      metricNumber(platform.metrics, "engagements") ?? sumPlatformEngagement(platform.metrics);
     const clicks = metricNumber(platform.metrics, "clicks") ?? 0;
     const impressions = metricNumber(platform.metrics, "impressions") ?? reach;
     const platformPosts = posts.filter((post) => post.platform === platform.platformCode);

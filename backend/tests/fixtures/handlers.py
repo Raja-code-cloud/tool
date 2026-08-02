@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 from unittest.mock import AsyncMock
+from uuid import uuid4
 
 from tests.fixtures.factories import (
     asset_dto,
@@ -78,6 +79,21 @@ def build_mock_handlers(*, asset_count: int = 1) -> dict[str, Any]:
         "get_schedule": _mock_handler(schedule),
         "update_schedule": _mock_handler(schedule),
         "cancel_schedule": _mock_handler(schedule),
+        "list_social_accounts": _mock_handler(empty_page()),
+        "list_social_platforms": _mock_handler(()),
+        "authorize_social_account": _mock_handler(
+            {
+                "authorizationUrl": "mock://social-oauth/authorize",
+                "state": "mock-state",
+                "codeVerifier": "mock-verifier",
+                "platformCode": "linkedin",
+            }
+        ),
+        "connect_social_account": _mock_handler({"id": str(uuid4()), "version": 1}),
+        "disconnect_social_account": _mock_handler({"id": str(uuid4()), "version": 1}),
+        "refresh_social_account": _mock_handler({"id": str(uuid4()), "version": 1}),
+        "update_social_account": _mock_handler({"id": str(uuid4()), "version": 1}),
+        "list_social_account_activity": _mock_handler(empty_page()),
         "get_analytics_dashboard": _mock_handler(dashboard_dto()),
         "list_analytics_posts": _mock_handler(post_page),
         "list_analytics_platforms": _mock_handler(single_page(platform_analytics_dto())),

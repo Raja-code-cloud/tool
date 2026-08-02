@@ -1,6 +1,6 @@
 import type { AuthProviderDto, SessionDto, UserDto } from "@/lib/api/auth-types";
-import type { AuthProvider, AuthSession, AuthTokens, AuthUser } from "@/lib/domain/auth";
 import { hasPermission } from "@/lib/auth/permissions";
+import type { AuthProvider, AuthSession, AuthTokens, AuthUser } from "@/lib/domain/auth";
 import type { WorkspaceUser } from "@/lib/domain/workspace";
 
 function mapUser(dto: UserDto): AuthUser {

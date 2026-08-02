@@ -1,8 +1,4 @@
-import type {
-  AssetDto,
-  PagedSuccessEnvelope,
-  SingleSuccessEnvelope,
-} from "@/lib/api/asset-types";
+import type { AssetDto, PagedSuccessEnvelope, SingleSuccessEnvelope } from "@/lib/api/asset-types";
 import type { ApiClient } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 import { mapAssetDtoToContentItem, mapStatusToLifecycle } from "@/lib/content/mappers";

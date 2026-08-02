@@ -5,23 +5,11 @@ import type { SuccessEnvelope } from "@/lib/api/auth-types";
 export type { SuccessEnvelope };
 
 export type GenerationScopeDto =
-  | "whole"
-  | "selection"
-  | "headline"
-  | "cta"
-  | "hashtags"
-  | "tone"
-  | "platform_variant";
+  "whole" | "selection" | "headline" | "cta" | "hashtags" | "tone" | "platform_variant";
 
 export type ContentLengthDto = "short" | "medium" | "long";
 
-export type ContentPlatformDto =
-  | "linkedin"
-  | "facebook"
-  | "instagram"
-  | "x"
-  | "medium"
-  | "youtube";
+export type ContentPlatformDto = "linkedin" | "facebook" | "instagram" | "x" | "medium" | "youtube";
 
 export type OperationStatusDto = "queued" | "running" | "succeeded" | "failed" | "cancelled";
 

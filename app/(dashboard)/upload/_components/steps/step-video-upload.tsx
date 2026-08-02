@@ -35,7 +35,7 @@ export function StepVideoUpload({
     <Card>
       <CardHeader
         title="Video upload"
-        description="Attach supporting video content. MP4 or MOV up to 500 MB."
+        description="Attach supporting video content. MP4, WEBM, or MOV up to 2 GB."
       />
       <div className="mb-4 flex items-center gap-2">
         <Checkbox
@@ -51,7 +51,7 @@ export function StepVideoUpload({
         <UploadZone
           accept={VIDEO_ACCEPT}
           maximumSize={VIDEO_MAX_BYTES}
-          supportedTypes="MP4, MOV"
+          supportedTypes="MP4, WEBM, MOV"
           prompt="Drag and drop your video here"
           onFiles={(files) => {
             const file = files[0];

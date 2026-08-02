@@ -75,7 +75,10 @@ function delay(ms: number, signal?: AbortSignal): Promise<void> {
   });
 }
 
-function resolveModelId(options: HttpAiStudioRepositoryOptions, requestModelId?: string | null): string {
+function resolveModelId(
+  options: HttpAiStudioRepositoryOptions,
+  requestModelId?: string | null,
+): string {
   const modelId = requestModelId ?? options.getModelId?.() ?? env.NEXT_PUBLIC_AI_MODEL_ID;
   if (!modelId) {
     throw new ApiError(
@@ -162,10 +165,7 @@ export function createHttpAiStudioRepository(
       const content = response.data.data;
       const platformContent = extractPlatformContent(content, platform);
 
-      if (
-        content.updatedAt !== baselineUpdatedAt &&
-        platformContent.content.trim().length > 0
-      ) {
+      if (content.updatedAt !== baselineUpdatedAt && platformContent.content.trim().length > 0) {
         return content;
       }
 
@@ -178,11 +178,7 @@ export function createHttpAiStudioRepository(
       await delay(POLL_INTERVAL_MS, signal);
     }
 
-    throw new ApiError(
-      "Generation timed out waiting for content updates.",
-      "timeout",
-      408,
-    );
+    throw new ApiError("Generation timed out waiting for content updates.", "timeout", 408);
   }
 
   async function submitGeneration(

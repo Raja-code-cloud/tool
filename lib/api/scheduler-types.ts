@@ -4,25 +4,14 @@ import type { SuccessEnvelope } from "@/lib/api/auth-types";
 export type { PagedSuccessEnvelope, SingleSuccessEnvelope, SuccessEnvelope };
 
 export type ScheduleStateDto =
-  | "draft"
-  | "scheduled"
-  | "paused"
-  | "dispatched"
-  | "completed"
-  | "cancelled"
-  | "failed";
+  "draft" | "scheduled" | "paused" | "dispatched" | "completed" | "cancelled" | "failed";
 
 export type SchedulePriorityDto = "low" | "normal" | "high";
 
 export type AmbiguityPolicyDto = "reject" | "earlier" | "later";
 
 export type PublicationStatusDto =
-  | "draft"
-  | "ready"
-  | "in_progress"
-  | "completed"
-  | "partially_failed"
-  | "cancelled";
+  "draft" | "ready" | "in_progress" | "completed" | "partially_failed" | "cancelled";
 
 export type ScheduleDto = {
   readonly id: string;

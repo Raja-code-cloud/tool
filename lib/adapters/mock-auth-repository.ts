@@ -1,10 +1,10 @@
 import { CURRENT_USER } from "@/constants/workspace";
 import { setAccessToken } from "@/lib/auth/token-store";
 import type {
+  AuthorizationFlow,
   AuthProvider,
   AuthSession,
   AuthTokens,
-  AuthorizationFlow,
   LoginCredentials,
 } from "@/lib/domain/auth";
 import type { AuthRepository } from "@/lib/domain/repositories";
@@ -21,7 +21,7 @@ const MOCK_PROVIDERS: readonly AuthProvider[] = [
 
 function buildMockSession(email?: string): AuthSession {
   const resolvedEmail = email ?? CURRENT_USER.email;
-  const displayName = email ? email.split("@")[0] ?? CURRENT_USER.name : CURRENT_USER.name;
+  const displayName = email ? (email.split("@")[0] ?? CURRENT_USER.name) : CURRENT_USER.name;
   return {
     user: {
       id: "mock-user-id",
@@ -51,7 +51,10 @@ export function createMockAuthRepository(): AuthRepository {
       return MOCK_PROVIDERS;
     },
 
-    async beginAuthorization(providerCode: string, redirectUri: string): Promise<AuthorizationFlow> {
+    async beginAuthorization(
+      providerCode: string,
+      redirectUri: string,
+    ): Promise<AuthorizationFlow> {
       return {
         authorizationUrl: `mock://authorize?redirect=${encodeURIComponent(redirectUri)}`,
         state: "mock-state",

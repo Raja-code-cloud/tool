@@ -40,6 +40,7 @@ import {
   SOCIAL_ACCOUNTS,
 } from "@/constants/social-accounts";
 import { CURRENT_USER, UNREAD_NOTIFICATION_COUNT, WORKSPACE } from "@/constants/workspace";
+import { createMockSocialAccountRepository } from "@/lib/adapters/http-social-account-repository";
 import { createMockContentRepository } from "@/lib/adapters/http-content-repository";
 import { createMockSchedulerRepository } from "@/lib/adapters/http-scheduler-repository";
 import type {
@@ -49,24 +50,23 @@ import type {
   DashboardRepository,
   SettingsRepository,
   SocialAccountRepository,
+  SocialAccountUpdateInput,
   WorkspaceRepository,
 } from "@/lib/domain/repositories";
-
-export const mockContentRepository: ContentRepository = createMockContentRepository(
-  CONTENT_LIBRARY_ITEMS,
-);
-
 import { applyExpand, applyShorten, applyToneTransform } from "@/lib/utils/ai-studio";
+
+export const mockContentRepository: ContentRepository =
+  createMockContentRepository(CONTENT_LIBRARY_ITEMS);
 
 export const mockSchedulerRepository = createMockSchedulerRepository(
   SCHEDULED_POSTS,
   INITIAL_NOTIFICATIONS,
 );
 
-export const mockSocialAccountRepository: SocialAccountRepository = {
-  listAccounts: () => [...SOCIAL_ACCOUNTS, ...COMING_SOON_ACCOUNTS],
-  listActivity: () => ACTIVITY_EVENTS,
-};
+export const mockSocialAccountRepository = createMockSocialAccountRepository(
+  [...SOCIAL_ACCOUNTS, ...COMING_SOON_ACCOUNTS],
+  ACTIVITY_EVENTS,
+);
 
 export const mockAiStudioRepository: AiStudioRepository = {
   getProject: () => AI_STUDIO_PROJECT,

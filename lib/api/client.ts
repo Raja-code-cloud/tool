@@ -1,8 +1,8 @@
-import { ApiError } from "@/lib/api/errors";
 import { mapStatusToError, mapTransportError } from "@/lib/api/error-mapping";
+import { ApiError } from "@/lib/api/errors";
 import type { ApiRequestConfig, ApiResponse } from "@/lib/api/types";
-import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { getAccessToken, getCsrfToken } from "@/lib/auth/token-store";
+import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 
 export interface ApiClient {
   request<T>(path: string, config?: ApiRequestConfig): Promise<ApiResponse<T>>;

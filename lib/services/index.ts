@@ -1,3 +1,4 @@
+import { createHttpSocialAccountRepository } from "@/lib/adapters/http-social-account-repository";
 import { createHttpAiStudioRepository } from "@/lib/adapters/http-ai-studio-repository";
 import { createHttpDashboardRepository } from "@/lib/adapters/http-dashboard-repository";
 import { createHttpSettingsRepository } from "@/lib/adapters/http-settings-repository";
@@ -39,6 +40,7 @@ import {
 export const isBackendAuthEnabled = Boolean(env.NEXT_PUBLIC_API_BASE_URL);
 export const isBackendAnalyticsEnabled = isBackendAuthEnabled;
 export const isBackendAiStudioEnabled = isBackendAuthEnabled;
+export const isBackendSocialAccountsEnabled = isBackendAuthEnabled;
 export const isBackendSchedulerEnabled = isBackendAuthEnabled;
 export const isBackendSettingsEnabled = isBackendAuthEnabled;
 export const isBackendWorkspaceEnabled = isBackendAuthEnabled;
@@ -93,7 +95,12 @@ const schedulerRepository = isBackendSchedulerEnabled
   : createMockSchedulerRepository(SCHEDULED_POSTS, INITIAL_NOTIFICATIONS);
 
 export const schedulerService = createSchedulerService(schedulerRepository);
-export const socialAccountService = createSocialAccountService(mockSocialAccountRepository);
+
+const socialAccountRepository = isBackendSocialAccountsEnabled
+  ? createHttpSocialAccountRepository(apiClient)
+  : mockSocialAccountRepository;
+
+export const socialAccountService = createSocialAccountService(socialAccountRepository);
 export const aiStudioService = createAiStudioService(aiStudioRepository);
 const httpAnalyticsRepository = isBackendAnalyticsEnabled
   ? createHttpAnalyticsRepository(apiClient)

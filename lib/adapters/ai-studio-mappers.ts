@@ -20,9 +20,9 @@ export function mapContentToProject(content: ContentDto): AiStudioProject {
   return {
     id: content.id,
     name: content.title,
-    description: typeof content.metadata.summary === "string" ? content.metadata.summary : content.title,
-    category:
-      typeof content.metadata.category === "string" ? content.metadata.category : "Content",
+    description:
+      typeof content.metadata.summary === "string" ? content.metadata.summary : content.title,
+    category: typeof content.metadata.category === "string" ? content.metadata.category : "Content",
     tags,
     status: content.lifecycleStatus === "draft" ? "draft" : "in_review",
     wordCount: words,
@@ -46,13 +46,8 @@ export function extractPlatformContent(
     if (platformEntry && typeof platformEntry === "object") {
       const entry = platformEntry as Record<string, unknown>;
       return {
-        content:
-          typeof entry.text === "string"
-            ? entry.text
-            : (content.bodyText ?? ""),
-        hashtags: Array.isArray(entry.hashtags)
-          ? (entry.hashtags as readonly string[])
-          : [],
+        content: typeof entry.text === "string" ? entry.text : (content.bodyText ?? ""),
+        hashtags: Array.isArray(entry.hashtags) ? (entry.hashtags as readonly string[]) : [],
         cta: typeof entry.cta === "string" ? entry.cta : "",
       };
     }

@@ -65,7 +65,9 @@ export function createHttpSchedulerRepository(client: ApiClient): SchedulerRepos
     },
 
     async getSchedule(id: string) {
-      const response = await client.get<SingleSuccessEnvelope<ScheduleDto>>(`/api/v1/schedule/${id}`);
+      const response = await client.get<SingleSuccessEnvelope<ScheduleDto>>(
+        `/api/v1/schedule/${id}`,
+      );
       return mapScheduleDto(response.data.data);
     },
 
@@ -111,7 +113,11 @@ export function createHttpSchedulerRepository(client: ApiClient): SchedulerRepos
       return mapScheduleDto(response.data.data);
     },
 
-    async dispatchPublication(publicationId: string, version: number, targetIds?: readonly string[]) {
+    async dispatchPublication(
+      publicationId: string,
+      version: number,
+      targetIds?: readonly string[],
+    ) {
       const body: DispatchPublicationRequestDto | undefined = targetIds?.length
         ? { targetIds }
         : undefined;

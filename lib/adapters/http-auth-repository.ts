@@ -1,8 +1,4 @@
-import type {
-  AuthorizeResponseDto,
-  SessionDto,
-  SuccessEnvelope,
-} from "@/lib/api/auth-types";
+import type { AuthorizeResponseDto, SessionDto, SuccessEnvelope } from "@/lib/api/auth-types";
 import type { ApiClient } from "@/lib/api/client";
 import { mapAuthProviderDto, mapSessionDto } from "@/lib/auth/mappers";
 import { setAccessToken } from "@/lib/auth/token-store";
@@ -22,9 +18,10 @@ function unwrapSession(envelope: SuccessEnvelope<SessionDto>): AuthSession {
 export function createHttpAuthRepository(client: ApiClient): AuthRepository {
   return {
     async listProviders(): Promise<readonly AuthProvider[]> {
-      const response = await client.get<SuccessEnvelope<readonly import("@/lib/api/auth-types").AuthProviderDto[]>>(
-        "/api/v1/auth/providers",
-      );
+      const response =
+        await client.get<
+          SuccessEnvelope<readonly import("@/lib/api/auth-types").AuthProviderDto[]>
+        >("/api/v1/auth/providers");
       return response.data.data.map(mapAuthProviderDto);
     },
 
@@ -58,11 +55,9 @@ export function createHttpAuthRepository(client: ApiClient): AuthRepository {
               redirectUri: credentials.redirectUri,
             };
 
-      const response = await client.post<SuccessEnvelope<SessionDto>>(
-        "/api/v1/auth/login",
-        body,
-        { credentials: "include" },
-      );
+      const response = await client.post<SuccessEnvelope<SessionDto>>("/api/v1/auth/login", body, {
+        credentials: "include",
+      });
       return unwrapSession(response.data);
     },
 

@@ -1,16 +1,10 @@
 import type { MetricValueDto } from "@/lib/api/analytics-types";
 
-export function metricValue(
-  metrics: readonly MetricValueDto[],
-  code: string,
-): string | undefined {
+export function metricValue(metrics: readonly MetricValueDto[], code: string): string | undefined {
   return metrics.find((metric) => metric.code === code)?.value;
 }
 
-export function metricNumber(
-  metrics: readonly MetricValueDto[],
-  code: string,
-): number | undefined {
+export function metricNumber(metrics: readonly MetricValueDto[], code: string): number | undefined {
   const raw = metricValue(metrics, code);
   if (raw === undefined) return undefined;
   const parsed = Number(raw);

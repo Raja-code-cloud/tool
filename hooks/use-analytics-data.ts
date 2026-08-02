@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { mockAnalyticsRepository } from "@/lib/adapters/mock-repositories";
 import { isApiError } from "@/lib/api/errors";
 import type {
   AiUsagePoint,
@@ -23,7 +24,6 @@ import {
   isBackendAnalyticsEnabled,
   mockAnalyticsService,
 } from "@/lib/services";
-import { mockAnalyticsRepository } from "@/lib/adapters/mock-repositories";
 import type { AnalyticsFilters } from "@/lib/services/workspace-services";
 
 export type AnalyticsTableControls = {
@@ -101,18 +101,16 @@ function mapApiError(error: unknown): string {
 
 function loadMockAnalytics(filters: AnalyticsFilters): AnalyticsDataState {
   const summary = mockAnalyticsService.computeSummary(filters);
-  const engagementByPlatform = mockAnalyticsService
-    .getEngagementByPlatform(filters)
-    .map((item) => {
-      const source = mockAnalyticsRepository
-        .getEngagementByPlatform()
-        .find((platform) => platform.label === item.label);
-      return {
-        platform: source?.platform ?? ("linkedin" as PlatformId),
-        label: item.label,
-        engagement: item.value,
-      };
-    });
+  const engagementByPlatform = mockAnalyticsService.getEngagementByPlatform(filters).map((item) => {
+    const source = mockAnalyticsRepository
+      .getEngagementByPlatform()
+      .find((platform) => platform.label === item.label);
+    return {
+      platform: source?.platform ?? ("linkedin" as PlatformId),
+      label: item.label,
+      engagement: item.value,
+    };
+  });
 
   return {
     summary,

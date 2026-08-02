@@ -10,6 +10,7 @@ export type ActivityType =
 
 export type SocialAccount = {
   readonly id: string;
+  readonly version?: number;
   readonly platformId: SocialPlatformId;
   readonly platformName: string;
   readonly connectionStatus: ConnectionStatus;

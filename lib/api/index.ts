@@ -4,7 +4,13 @@ export {
   type ApiClient,
   type ApiClientOptions,
 } from "@/lib/api/client";
-export { ApiError, isApiError, type ApiErrorCode } from "@/lib/api/errors";
+export { ApiError, isApiError, getApiErrorMessage, type ApiErrorCode } from "@/lib/api/errors";
+export type {
+  AssetDto,
+  OperationDto,
+  PagedSuccessEnvelope,
+  SingleSuccessEnvelope,
+} from "@/lib/api/asset-types";
 export type {
   AnalyticsPostDto,
   ApiRequestConfig,

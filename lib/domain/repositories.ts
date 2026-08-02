@@ -147,9 +147,47 @@ export type ListSchedulesFilters = {
   readonly sort?: string;
 };
 
+export type SocialAccountAuthorizationFlow = {
+  readonly authorizationUrl: string;
+  readonly state: string;
+  readonly codeVerifier: string;
+  readonly platformCode: string;
+};
+
+export type SocialAccountUpdateInput = {
+  readonly publishingEnabled?: boolean;
+  readonly defaultSettings?: Partial<SocialAccount["defaultSettings"]>;
+};
+
 export interface SocialAccountRepository {
-  listAccounts(): readonly SocialAccount[];
-  listActivity(): readonly ActivityEvent[];
+  listAccounts(): Promise<readonly SocialAccount[]>;
+  listPlatforms(): Promise<
+    readonly {
+      readonly id: import("@/lib/domain/platform").PlatformId | null;
+      readonly code: string;
+      readonly name: string;
+      readonly isComingSoon: boolean;
+    }[]
+  >;
+  listActivity(): Promise<readonly ActivityEvent[]>;
+  beginAuthorization(platformCode: string, redirectUri: string): Promise<SocialAccountAuthorizationFlow>;
+  connectAccount(input: {
+    readonly platformCode: string;
+    readonly authorizationCode: string;
+    readonly codeVerifier: string;
+    readonly redirectUri: string;
+    readonly state: string;
+  }): Promise<SocialAccount>;
+  disconnectAccount(accountId: string): Promise<SocialAccount>;
+  refreshAccount(accountId: string): Promise<SocialAccount>;
+  updateAccount(
+    accountId: string,
+    version: number,
+    input: SocialAccountUpdateInput,
+  ): Promise<SocialAccount>;
+  listPublicationHistory(socialAccountId?: string): Promise<
+    readonly import("@/lib/api/social-account-types").PublicationHistoryItemDto[]
+  >;
 }
 
 export interface DashboardRepository {

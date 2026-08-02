@@ -10,6 +10,7 @@ import type {
   SchedulerRepository,
   SettingsRepository,
   SocialAccountRepository,
+  SocialAccountUpdateInput,
   WorkspaceRepository,
 } from "@/lib/domain/repositories";
 
@@ -94,7 +95,21 @@ export function createSchedulerService(repository: SchedulerRepository) {
 export function createSocialAccountService(repository: SocialAccountRepository) {
   return {
     listAccounts: () => repository.listAccounts(),
+    listPlatforms: () => repository.listPlatforms(),
     listActivity: () => repository.listActivity(),
+    beginAuthorization: (platformCode: string, redirectUri: string) =>
+      repository.beginAuthorization(platformCode, redirectUri),
+    connectAccount: (input: Parameters<SocialAccountRepository["connectAccount"]>[0]) =>
+      repository.connectAccount(input),
+    disconnectAccount: (accountId: string) => repository.disconnectAccount(accountId),
+    refreshAccount: (accountId: string) => repository.refreshAccount(accountId),
+    updateAccount: (
+      accountId: string,
+      version: number,
+      input: SocialAccountUpdateInput,
+    ) => repository.updateAccount(accountId, version, input),
+    listPublicationHistory: (socialAccountId?: string) =>
+      repository.listPublicationHistory(socialAccountId),
   };
 }
 

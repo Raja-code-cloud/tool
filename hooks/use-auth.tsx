@@ -5,14 +5,14 @@ import * as React from "react";
 
 import { ROUTES } from "@/constants/navigation";
 import { CURRENT_USER } from "@/constants/workspace";
-import { hasPermission } from "@/lib/auth/permissions";
 import { sessionToWorkspaceUser } from "@/lib/auth/mappers";
+import { hasPermission } from "@/lib/auth/permissions";
 import { setActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { env } from "@/lib/config/env";
 import type { AuthSession } from "@/lib/domain/auth";
 import type { WorkspaceUser } from "@/lib/domain/workspace";
-import { authService, isBackendAuthEnabled } from "@/lib/services";
 import { clearSensitiveClientStorage } from "@/lib/security";
+import { authService, isBackendAuthEnabled } from "@/lib/services";
 
 export type AuthContextValue = {
   readonly session: AuthSession | null;

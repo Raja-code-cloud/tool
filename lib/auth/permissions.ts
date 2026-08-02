@@ -1,9 +1,6 @@
 /** Permission and role checks aligned with backend RBAC. */
 
-export function hasPermission(
-  permissions: readonly string[],
-  required: string,
-): boolean {
+export function hasPermission(permissions: readonly string[], required: string): boolean {
   return permissions.some((permission) => {
     if (permission === "*" || permission === required) return true;
     if (permission.endsWith(":*")) {

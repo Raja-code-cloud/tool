@@ -1,9 +1,9 @@
 import type { AssetDto, OperationDto, SingleSuccessEnvelope } from "@/lib/api/asset-types";
 import type { ApiClient } from "@/lib/api/client";
-import { ApiError, isApiError } from "@/lib/api/errors";
 import { mapStatusToError, mapTransportError } from "@/lib/api/error-mapping";
-import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
+import { ApiError, isApiError } from "@/lib/api/errors";
 import { getAccessToken } from "@/lib/auth/token-store";
+import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import type { ContentType } from "@/lib/domain/content";
 
 export type UploadAssetKind = ContentType;
@@ -128,7 +128,8 @@ export function uploadAssetMultipart(
     };
 
     xhr.onerror = () => reject(mapTransportError(new Error("Network error during upload")));
-    xhr.onabort = () => reject(mapTransportError(new DOMException("Upload cancelled", "AbortError")));
+    xhr.onabort = () =>
+      reject(mapTransportError(new DOMException("Upload cancelled", "AbortError")));
 
     if (params.signal) {
       if (params.signal.aborted) {
@@ -157,9 +158,12 @@ export async function pollAssetUntilReady(
       throw mapTransportError(new DOMException("Upload cancelled", "AbortError"));
     }
 
-    const response = await client.get<SingleSuccessEnvelope<AssetDto>>(`/api/v1/assets/${assetId}`, {
-      signal,
-    });
+    const response = await client.get<SingleSuccessEnvelope<AssetDto>>(
+      `/api/v1/assets/${assetId}`,
+      {
+        signal,
+      },
+    );
     const asset = response.data.data;
     const scanStatus = asset.media?.scanStatus;
 
@@ -176,7 +180,10 @@ export async function pollAssetUntilReady(
   throw new ApiError("Upload processing timed out", "timeout", 504);
 }
 
-export function createUploadClient(client: ApiClient, baseUrl: string): {
+export function createUploadClient(
+  client: ApiClient,
+  baseUrl: string,
+): {
   uploadAsset(params: UploadAssetParams): Promise<AssetDto>;
 } {
   const xhrOptions: UploadClientOptions = { baseUrl };
