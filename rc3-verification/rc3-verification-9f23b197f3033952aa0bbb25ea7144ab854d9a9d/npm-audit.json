@@ -5,33 +5,20 @@
       "name": "@storybook/nextjs-vite",
       "severity": "moderate",
       "isDirect": true,
-      "via": [
-        "next",
-        "vite-plugin-storybook-nextjs"
-      ],
+      "via": ["next", "vite-plugin-storybook-nextjs"],
       "effects": [],
       "range": "*",
-      "nodes": [
-        "node_modules/@storybook/nextjs-vite"
-      ],
+      "nodes": ["node_modules/@storybook/nextjs-vite"],
       "fixAvailable": false
     },
     "next": {
       "name": "next",
       "severity": "high",
       "isDirect": true,
-      "via": [
-        "postcss",
-        "sharp"
-      ],
-      "effects": [
-        "@storybook/nextjs-vite",
-        "vite-plugin-storybook-nextjs"
-      ],
+      "via": ["postcss", "sharp"],
+      "effects": ["@storybook/nextjs-vite", "vite-plugin-storybook-nextjs"],
       "range": "9.3.4-canary.0 - 16.3.0-preview.7",
-      "nodes": [
-        "node_modules/next"
-      ],
+      "nodes": ["node_modules/next"],
       "fixAvailable": false
     },
     "postcss": {
@@ -46,9 +33,7 @@
           "title": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
           "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
           "severity": "moderate",
-          "cwe": [
-            "CWE-79"
-          ],
+          "cwe": ["CWE-79"],
           "cvss": {
             "score": 6.1,
             "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
@@ -62,10 +47,7 @@
           "title": "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
           "url": "https://github.com/advisories/GHSA-6g55-p6wh-862q",
           "severity": "high",
-          "cwe": [
-            "CWE-22",
-            "CWE-200"
-          ],
+          "cwe": ["CWE-22", "CWE-200"],
           "cvss": {
             "score": 7.5,
             "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
@@ -79,9 +61,7 @@
           "title": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
           "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849",
           "severity": "high",
-          "cwe": [
-            "CWE-22"
-          ],
+          "cwe": ["CWE-22"],
           "cvss": {
             "score": 7.5,
             "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
@@ -89,13 +69,9 @@
           "range": "<=8.5.17"
         }
       ],
-      "effects": [
-        "next"
-      ],
+      "effects": ["next"],
       "range": "<=8.5.17",
-      "nodes": [
-        "node_modules/next/node_modules/postcss"
-      ],
+      "nodes": ["node_modules/next/node_modules/postcss"],
       "fixAvailable": false
     },
     "sharp": {
@@ -110,9 +86,7 @@
           "title": "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591",
           "url": "https://github.com/advisories/GHSA-f88m-g3jw-g9cj",
           "severity": "high",
-          "cwe": [
-            "CWE-1395"
-          ],
+          "cwe": ["CWE-1395"],
           "cvss": {
             "score": 0,
             "vectorString": null
@@ -120,27 +94,19 @@
           "range": "<0.35.0"
         }
       ],
-      "effects": [
-        "next"
-      ],
+      "effects": ["next"],
       "range": "<0.35.0",
-      "nodes": [
-        "node_modules/next/node_modules/sharp"
-      ],
+      "nodes": ["node_modules/next/node_modules/sharp"],
       "fixAvailable": false
     },
     "vite-plugin-storybook-nextjs": {
       "name": "vite-plugin-storybook-nextjs",
       "severity": "moderate",
       "isDirect": false,
-      "via": [
-        "next"
-      ],
+      "via": ["next"],
       "effects": [],
       "range": "*",
-      "nodes": [
-        "node_modules/vite-plugin-storybook-nextjs"
-      ],
+      "nodes": ["node_modules/vite-plugin-storybook-nextjs"],
       "fixAvailable": true
     }
   },

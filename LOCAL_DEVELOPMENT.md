@@ -9,25 +9,25 @@
 
 ## Summary
 
-| Issue | Windows | Linux CI | Release blocker? |
-| ----- | ------- | -------- | ---------------- |
-| Node version below engine minimum | Yes (22.13.1) | No (22.22.1) | **No** |
-| Vitest worker crash (`use-theme.test.tsx`) | Observed | Not reproduced | **No** |
-| `node_modules` corruption after failed install | Observed | Not reproduced | **No** |
-| Slow full Vitest suite (~7+ min) | Yes | ~47s | **No** |
-| Prettier drift (138 files) | Was failing | Fixed at `9f23b19` | **No** (resolved) |
-| npm package extraction errors | Possible | Not observed | **No** unless reproduced on CI |
-| No WSL / Docker on audit host | Yes | N/A | **No** |
+| Issue                                          | Windows       | Linux CI           | Release blocker?               |
+| ---------------------------------------------- | ------------- | ------------------ | ------------------------------ |
+| Node version below engine minimum              | Yes (22.13.1) | No (22.22.1)       | **No**                         |
+| Vitest worker crash (`use-theme.test.tsx`)     | Observed      | Not reproduced     | **No**                         |
+| `node_modules` corruption after failed install | Observed      | Not reproduced     | **No**                         |
+| Slow full Vitest suite (~7+ min)               | Yes           | ~47s               | **No**                         |
+| Prettier drift (138 files)                     | Was failing   | Fixed at `9f23b19` | **No** (resolved)              |
+| npm package extraction errors                  | Possible      | Not observed       | **No** unless reproduced on CI |
+| No WSL / Docker on audit host                  | Yes           | N/A                | **No**                         |
 
 ---
 
 ## Required toolchain
 
-| Tool | Required | Typical Windows audit host | Action |
-| ---- | -------- | -------------------------- | ------ |
-| Node.js | `>=22.22.1` | v22.13.1 | Install 22.22.1 via [nvm-windows](https://github.com/coreybutler/nvm-windows) or official installer |
-| npm | Bundled with Node | 10.9.x | Use npm bundled with Node 22.22.1 |
-| Engine file | `.nvmrc` → `22.22.1` | — | Run `nvm use` or `fnm use` after installing |
+| Tool        | Required             | Typical Windows audit host | Action                                                                                              |
+| ----------- | -------------------- | -------------------------- | --------------------------------------------------------------------------------------------------- |
+| Node.js     | `>=22.22.1`          | v22.13.1                   | Install 22.22.1 via [nvm-windows](https://github.com/coreybutler/nvm-windows) or official installer |
+| npm         | Bundled with Node    | 10.9.x                     | Use npm bundled with Node 22.22.1                                                                   |
+| Engine file | `.nvmrc` → `22.22.1` | —                          | Run `nvm use` or `fnm use` after installing                                                         |
 
 ```powershell
 node --version   # Must report v22.22.1 or higher
@@ -171,13 +171,13 @@ Results: [FINAL_RELEASE_VERIFICATION.md](./FINAL_RELEASE_VERIFICATION.md)
 
 ## Related issues
 
-| ID | Document | Topic |
-| -- | -------- | ----- |
-| KI-041 | `docs/frontend/release/KNOWN_ISSUES.md` | Slow Vitest on Windows |
-| KI-070 | `docs/frontend/release/KNOWN_ISSUES.md` | Worker crash on Windows |
-| KI-071 | `docs/frontend/release/KNOWN_ISSUES.md` | node_modules corruption |
-| KL-032 | `docs/release/KNOWN_LIMITATIONS.md` | Windows test slowness accepted |
+| ID     | Document                                | Topic                          |
+| ------ | --------------------------------------- | ------------------------------ |
+| KI-041 | `docs/frontend/release/KNOWN_ISSUES.md` | Slow Vitest on Windows         |
+| KI-070 | `docs/frontend/release/KNOWN_ISSUES.md` | Worker crash on Windows        |
+| KI-071 | `docs/frontend/release/KNOWN_ISSUES.md` | node_modules corruption        |
+| KL-032 | `docs/release/KNOWN_LIMITATIONS.md`     | Windows test slowness accepted |
 
 ---
 
-*Windows issues documented here are for developer awareness only. They do not override Linux CI release decisions.*
+_Windows issues documented here are for developer awareness only. They do not override Linux CI release decisions._

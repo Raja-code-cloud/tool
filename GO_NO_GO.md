@@ -21,16 +21,16 @@ GA promotion remains blocked by dependency audit findings, product readiness gap
 
 ## Gate scorecard
 
-| Gate | Required | Linux result | Release impact |
-| ---- | -------- | ------------ | -------------- |
-| `npm ci` | Yes | **PASS** | — |
-| `npm run verify` | Yes | **PASS** | — |
-| `npm run build` | Yes | **PASS** | — |
-| `npm run test` | Yes | **PASS** (144/144) | — |
-| `npm run format:check` | Yes | **PASS** | — |
-| `npm audit` | Yes (verification) | **FAIL** (5 CVEs, no fix) | GA blocker; RC exception |
-| Coverage thresholds | Yes (CI) | **PASS** | — |
-| Playwright E2E | CI only | Not in RC3 workflow | Run separately via `ci.yml` |
+| Gate                   | Required           | Linux result              | Release impact              |
+| ---------------------- | ------------------ | ------------------------- | --------------------------- |
+| `npm ci`               | Yes                | **PASS**                  | —                           |
+| `npm run verify`       | Yes                | **PASS**                  | —                           |
+| `npm run build`        | Yes                | **PASS**                  | —                           |
+| `npm run test`         | Yes                | **PASS** (144/144)        | —                           |
+| `npm run format:check` | Yes                | **PASS**                  | —                           |
+| `npm audit`            | Yes (verification) | **FAIL** (5 CVEs, no fix) | GA blocker; RC exception    |
+| Coverage thresholds    | Yes (CI)           | **PASS**                  | —                           |
+| Playwright E2E         | CI only            | Not in RC3 workflow       | Run separately via `ci.yml` |
 
 **Score: 6/7 verification gates pass. 6/6 CI-blocking gates pass.**
 
@@ -56,27 +56,27 @@ GA promotion remains blocked by dependency audit findings, product readiness gap
 
 ## Conditions for RC3 GO
 
-| # | Condition | Owner | Status |
-| - | --------- | ----- | ------ |
-| 1 | Deploy to **staging / internal validation only** | DevOps | Required |
-| 2 | Deploy behind identity-aware proxy until auth ships | DevOps | Required |
-| 3 | Accept npm audit findings as upstream transitive risk until Next.js patch | Security | Required |
-| 4 | Complete RC3 Principal Review before GA | Architecture | Pending |
-| 5 | Re-run `npm audit` after any Next.js upgrade | Engineering | Ongoing |
-| 6 | Do not treat Windows-local dev failures as release blockers | All | Documented in LOCAL_DEVELOPMENT.md |
+| #   | Condition                                                                 | Owner        | Status                             |
+| --- | ------------------------------------------------------------------------- | ------------ | ---------------------------------- |
+| 1   | Deploy to **staging / internal validation only**                          | DevOps       | Required                           |
+| 2   | Deploy behind identity-aware proxy until auth ships                       | DevOps       | Required                           |
+| 3   | Accept npm audit findings as upstream transitive risk until Next.js patch | Security     | Required                           |
+| 4   | Complete RC3 Principal Review before GA                                   | Architecture | Pending                            |
+| 5   | Re-run `npm audit` after any Next.js upgrade                              | Engineering  | Ongoing                            |
+| 6   | Do not treat Windows-local dev failures as release blockers               | All          | Documented in LOCAL_DEVELOPMENT.md |
 
 ---
 
 ## Blocker disposition
 
-| ID | Issue | Linux CI | RC3 blocker? | GA blocker? |
-| -- | ----- | -------- | ------------ | ----------- |
-| KI-003 | Prettier drift | **Resolved** | No | No |
-| KI-070 | Vitest worker crash (Windows) | **Not reproduced** | No | No |
-| KI-071 | node_modules corruption (Windows) | **Not reproduced** | No | No |
-| KI-072 | npm audit (5 CVEs) | **FAIL** | No (exception) | **Yes** |
-| KI-020 | No authentication | N/A | No (accepted) | **Yes** |
-| — | RC3 Principal Review | Pending | No | **Yes** |
+| ID     | Issue                             | Linux CI           | RC3 blocker?   | GA blocker? |
+| ------ | --------------------------------- | ------------------ | -------------- | ----------- |
+| KI-003 | Prettier drift                    | **Resolved**       | No             | No          |
+| KI-070 | Vitest worker crash (Windows)     | **Not reproduced** | No             | No          |
+| KI-071 | node_modules corruption (Windows) | **Not reproduced** | No             | No          |
+| KI-072 | npm audit (5 CVEs)                | **FAIL**           | No (exception) | **Yes**     |
+| KI-020 | No authentication                 | N/A                | No (accepted)  | **Yes**     |
+| —      | RC3 Principal Review              | Pending            | No             | **Yes**     |
 
 ---
 
@@ -106,13 +106,13 @@ GA promotion remains blocked by dependency audit findings, product readiness gap
 
 ## Approvals
 
-| Role | Name | Decision | Date |
-| ---- | ---- | -------- | ---- |
-| Release verification (automated) | RC3 workflow #30764784803 | **GO (RC3 staging)** | 2026-08-03 |
-| Release manager | | Pending | |
-| Security | | Pending (audit waiver) | |
-| Architecture (RC3 review) | | Pending | |
+| Role                             | Name                      | Decision               | Date       |
+| -------------------------------- | ------------------------- | ---------------------- | ---------- |
+| Release verification (automated) | RC3 workflow #30764784803 | **GO (RC3 staging)**   | 2026-08-03 |
+| Release manager                  |                           | Pending                |            |
+| Security                         |                           | Pending (audit waiver) |            |
+| Architecture (RC3 review)        |                           | Pending                |            |
 
 ---
 
-*This decision is based exclusively on Linux CI results. Windows-local failures are documented separately and are not classified as release blockers.*
+_This decision is based exclusively on Linux CI results. Windows-local failures are documented separately and are not classified as release blockers._

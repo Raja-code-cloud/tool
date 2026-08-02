@@ -1,39 +1,231 @@
-{"total": {"lines":{"total":694,"covered":498,"skipped":0,"pct":71.75},"statements":{"total":797,"covered":566,"skipped":0,"pct":71.01},"functions":{"total":318,"covered":204,"skipped":0,"pct":64.15},"branches":{"total":715,"covered":403,"skipped":0,"pct":56.36},"branchesTrue":{"total":0,"covered":0,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/app/(dashboard)/upload/_components/wizard-types.ts": {"lines":{"total":52,"covered":35,"skipped":0,"pct":67.3},"functions":{"total":10,"covered":7,"skipped":0,"pct":70},"statements":{"total":61,"covered":40,"skipped":0,"pct":65.57},"branches":{"total":57,"covered":25,"skipped":0,"pct":43.85}}
-,"/home/runner/work/tool/tool/components/buttons/buttons.tsx": {"lines":{"total":14,"covered":14,"skipped":0,"pct":100},"functions":{"total":10,"covered":9,"skipped":0,"pct":90},"statements":{"total":15,"covered":14,"skipped":0,"pct":93.33},"branches":{"total":9,"covered":8,"skipped":0,"pct":88.88}}
-,"/home/runner/work/tool/tool/components/calendar/calendar.tsx": {"lines":{"total":11,"covered":0,"skipped":0,"pct":0},"functions":{"total":8,"covered":0,"skipped":0,"pct":0},"statements":{"total":12,"covered":0,"skipped":0,"pct":0},"branches":{"total":10,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/cards/cards.tsx": {"lines":{"total":9,"covered":9,"skipped":0,"pct":100},"functions":{"total":5,"covered":5,"skipped":0,"pct":100},"statements":{"total":9,"covered":9,"skipped":0,"pct":100},"branches":{"total":11,"covered":8,"skipped":0,"pct":72.72}}
-,"/home/runner/work/tool/tool/components/charts/charts.tsx": {"lines":{"total":11,"covered":0,"skipped":0,"pct":0},"functions":{"total":10,"covered":0,"skipped":0,"pct":0},"statements":{"total":11,"covered":0,"skipped":0,"pct":0},"branches":{"total":11,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/common/common.tsx": {"lines":{"total":9,"covered":0,"skipped":0,"pct":0},"functions":{"total":7,"covered":0,"skipped":0,"pct":0},"statements":{"total":9,"covered":0,"skipped":0,"pct":0},"branches":{"total":5,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/dialogs/dialogs.tsx": {"lines":{"total":14,"covered":0,"skipped":0,"pct":0},"functions":{"total":3,"covered":0,"skipped":0,"pct":0},"statements":{"total":14,"covered":0,"skipped":0,"pct":0},"branches":{"total":8,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/feedback/feedback.tsx": {"lines":{"total":22,"covered":21,"skipped":0,"pct":95.45},"functions":{"total":19,"covered":18,"skipped":0,"pct":94.73},"statements":{"total":23,"covered":21,"skipped":0,"pct":91.3},"branches":{"total":51,"covered":45,"skipped":0,"pct":88.23}}
-,"/home/runner/work/tool/tool/components/filters/filters.tsx": {"lines":{"total":7,"covered":5,"skipped":0,"pct":71.42},"functions":{"total":6,"covered":4,"skipped":0,"pct":66.66},"statements":{"total":7,"covered":5,"skipped":0,"pct":71.42},"branches":{"total":8,"covered":7,"skipped":0,"pct":87.5}}
-,"/home/runner/work/tool/tool/components/forms/forms.tsx": {"lines":{"total":9,"covered":9,"skipped":0,"pct":100},"functions":{"total":4,"covered":4,"skipped":0,"pct":100},"statements":{"total":10,"covered":10,"skipped":0,"pct":100},"branches":{"total":27,"covered":21,"skipped":0,"pct":77.77}}
-,"/home/runner/work/tool/tool/components/forms/search-field.tsx": {"lines":{"total":3,"covered":3,"skipped":0,"pct":100},"functions":{"total":1,"covered":1,"skipped":0,"pct":100},"statements":{"total":3,"covered":3,"skipped":0,"pct":100},"branches":{"total":1,"covered":1,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/components/layout/layout.tsx": {"lines":{"total":9,"covered":0,"skipped":0,"pct":0},"functions":{"total":8,"covered":0,"skipped":0,"pct":0},"statements":{"total":9,"covered":0,"skipped":0,"pct":0},"branches":{"total":22,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/layout/page-transition.tsx": {"lines":{"total":3,"covered":0,"skipped":0,"pct":0},"functions":{"total":1,"covered":0,"skipped":0,"pct":0},"statements":{"total":3,"covered":0,"skipped":0,"pct":0},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/components/layout/workspace-shell.tsx": {"lines":{"total":22,"covered":0,"skipped":0,"pct":0},"functions":{"total":11,"covered":0,"skipped":0,"pct":0},"statements":{"total":25,"covered":0,"skipped":0,"pct":0},"branches":{"total":12,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/navigation/navigation.tsx": {"lines":{"total":58,"covered":41,"skipped":0,"pct":70.68},"functions":{"total":27,"covered":20,"skipped":0,"pct":74.07},"statements":{"total":62,"covered":44,"skipped":0,"pct":70.96},"branches":{"total":86,"covered":58,"skipped":0,"pct":67.44}}
-,"/home/runner/work/tool/tool/components/platform/platform.tsx": {"lines":{"total":20,"covered":13,"skipped":0,"pct":65},"functions":{"total":12,"covered":7,"skipped":0,"pct":58.33},"statements":{"total":24,"covered":16,"skipped":0,"pct":66.66},"branches":{"total":17,"covered":11,"skipped":0,"pct":64.7}}
-,"/home/runner/work/tool/tool/components/shared/select-field.tsx": {"lines":{"total":4,"covered":0,"skipped":0,"pct":0},"functions":{"total":2,"covered":0,"skipped":0,"pct":0},"statements":{"total":4,"covered":0,"skipped":0,"pct":0},"branches":{"total":9,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/tables/data-table.tsx": {"lines":{"total":9,"covered":0,"skipped":0,"pct":0},"functions":{"total":7,"covered":0,"skipped":0,"pct":0},"statements":{"total":9,"covered":0,"skipped":0,"pct":0},"branches":{"total":25,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/theme/theme-provider.tsx": {"lines":{"total":35,"covered":32,"skipped":0,"pct":91.42},"functions":{"total":10,"covered":10,"skipped":0,"pct":100},"statements":{"total":38,"covered":35,"skipped":0,"pct":92.1},"branches":{"total":20,"covered":18,"skipped":0,"pct":90}}
-,"/home/runner/work/tool/tool/components/theme/theme-toggle.tsx": {"lines":{"total":5,"covered":5,"skipped":0,"pct":100},"functions":{"total":2,"covered":2,"skipped":0,"pct":100},"statements":{"total":5,"covered":5,"skipped":0,"pct":100},"branches":{"total":6,"covered":6,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/components/ui/overlays.tsx": {"lines":{"total":18,"covered":13,"skipped":0,"pct":72.22},"functions":{"total":5,"covered":0,"skipped":0,"pct":0},"statements":{"total":18,"covered":13,"skipped":0,"pct":72.22},"branches":{"total":6,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/components/ui/primitives.tsx": {"lines":{"total":40,"covered":34,"skipped":0,"pct":85},"functions":{"total":13,"covered":7,"skipped":0,"pct":53.84},"statements":{"total":40,"covered":34,"skipped":0,"pct":85},"branches":{"total":24,"covered":9,"skipped":0,"pct":37.5}}
-,"/home/runner/work/tool/tool/components/upload/upload.tsx": {"lines":{"total":8,"covered":0,"skipped":0,"pct":0},"functions":{"total":3,"covered":0,"skipped":0,"pct":0},"statements":{"total":8,"covered":0,"skipped":0,"pct":0},"branches":{"total":29,"covered":0,"skipped":0,"pct":0}}
-,"/home/runner/work/tool/tool/hooks/use-pagination.ts": {"lines":{"total":10,"covered":10,"skipped":0,"pct":100},"functions":{"total":6,"covered":6,"skipped":0,"pct":100},"statements":{"total":11,"covered":11,"skipped":0,"pct":100},"branches":{"total":1,"covered":1,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/hooks/use-sidebar.tsx": {"lines":{"total":13,"covered":13,"skipped":0,"pct":100},"functions":{"total":8,"covered":8,"skipped":0,"pct":100},"statements":{"total":16,"covered":16,"skipped":0,"pct":100},"branches":{"total":3,"covered":3,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/hooks/use-theme.ts": {"lines":{"total":1,"covered":1,"skipped":0,"pct":100},"functions":{"total":0,"covered":0,"skipped":0,"pct":100},"statements":{"total":1,"covered":1,"skipped":0,"pct":100},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/hooks/use-toast.tsx": {"lines":{"total":8,"covered":8,"skipped":0,"pct":100},"functions":{"total":3,"covered":3,"skipped":0,"pct":100},"statements":{"total":10,"covered":10,"skipped":0,"pct":100},"branches":{"total":10,"covered":8,"skipped":0,"pct":80}}
-,"/home/runner/work/tool/tool/lib/utils/ai-studio.ts": {"lines":{"total":49,"covered":39,"skipped":0,"pct":79.59},"functions":{"total":19,"covered":12,"skipped":0,"pct":63.15},"statements":{"total":68,"covered":49,"skipped":0,"pct":72.05},"branches":{"total":57,"covered":31,"skipped":0,"pct":54.38}}
-,"/home/runner/work/tool/tool/lib/utils/analytics.ts": {"lines":{"total":2,"covered":2,"skipped":0,"pct":100},"functions":{"total":2,"covered":2,"skipped":0,"pct":100},"statements":{"total":2,"covered":2,"skipped":0,"pct":100},"branches":{"total":2,"covered":2,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/lib/utils/cn.ts": {"lines":{"total":1,"covered":1,"skipped":0,"pct":100},"functions":{"total":1,"covered":1,"skipped":0,"pct":100},"statements":{"total":1,"covered":1,"skipped":0,"pct":100},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/lib/utils/content-display.ts": {"lines":{"total":9,"covered":9,"skipped":0,"pct":100},"functions":{"total":5,"covered":5,"skipped":0,"pct":100},"statements":{"total":9,"covered":9,"skipped":0,"pct":100},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/lib/utils/content-library.ts": {"lines":{"total":48,"covered":39,"skipped":0,"pct":81.25},"functions":{"total":26,"covered":20,"skipped":0,"pct":76.92},"statements":{"total":68,"covered":53,"skipped":0,"pct":77.94},"branches":{"total":39,"covered":24,"skipped":0,"pct":61.53}}
-,"/home/runner/work/tool/tool/lib/utils/formatting.ts": {"lines":{"total":18,"covered":18,"skipped":0,"pct":100},"functions":{"total":10,"covered":10,"skipped":0,"pct":100},"statements":{"total":20,"covered":20,"skipped":0,"pct":100},"branches":{"total":32,"covered":25,"skipped":0,"pct":78.12}}
-,"/home/runner/work/tool/tool/lib/utils/navigation.ts": {"lines":{"total":14,"covered":14,"skipped":0,"pct":100},"functions":{"total":6,"covered":6,"skipped":0,"pct":100},"statements":{"total":17,"covered":17,"skipped":0,"pct":100},"branches":{"total":10,"covered":10,"skipped":0,"pct":100}}
-,"/home/runner/work/tool/tool/lib/utils/scheduler.ts": {"lines":{"total":91,"covered":76,"skipped":0,"pct":83.51},"functions":{"total":31,"covered":21,"skipped":0,"pct":67.74},"statements":{"total":112,"covered":93,"skipped":0,"pct":83.03},"branches":{"total":70,"covered":58,"skipped":0,"pct":82.85}}
-,"/home/runner/work/tool/tool/lib/utils/social-accounts.ts": {"lines":{"total":24,"covered":22,"skipped":0,"pct":91.66},"functions":{"total":11,"covered":11,"skipped":0,"pct":100},"statements":{"total":29,"covered":23,"skipped":0,"pct":79.31},"branches":{"total":37,"covered":24,"skipped":0,"pct":64.86}}
-,"/home/runner/work/tool/tool/lib/utils/upload-wizard.ts": {"lines":{"total":14,"covered":12,"skipped":0,"pct":85.71},"functions":{"total":6,"covered":5,"skipped":0,"pct":83.33},"statements":{"total":14,"covered":12,"skipped":0,"pct":85.71},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
+{
+  "total": {
+    "lines": { "total": 694, "covered": 498, "skipped": 0, "pct": 71.75 },
+    "statements": { "total": 797, "covered": 566, "skipped": 0, "pct": 71.01 },
+    "functions": { "total": 318, "covered": 204, "skipped": 0, "pct": 64.15 },
+    "branches": { "total": 715, "covered": 403, "skipped": 0, "pct": 56.36 },
+    "branchesTrue": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/app/(dashboard)/upload/_components/wizard-types.ts": {
+    "lines": { "total": 52, "covered": 35, "skipped": 0, "pct": 67.3 },
+    "functions": { "total": 10, "covered": 7, "skipped": 0, "pct": 70 },
+    "statements": { "total": 61, "covered": 40, "skipped": 0, "pct": 65.57 },
+    "branches": { "total": 57, "covered": 25, "skipped": 0, "pct": 43.85 }
+  },
+  "/home/runner/work/tool/tool/components/buttons/buttons.tsx": {
+    "lines": { "total": 14, "covered": 14, "skipped": 0, "pct": 100 },
+    "functions": { "total": 10, "covered": 9, "skipped": 0, "pct": 90 },
+    "statements": { "total": 15, "covered": 14, "skipped": 0, "pct": 93.33 },
+    "branches": { "total": 9, "covered": 8, "skipped": 0, "pct": 88.88 }
+  },
+  "/home/runner/work/tool/tool/components/calendar/calendar.tsx": {
+    "lines": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 12, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 10, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/cards/cards.tsx": {
+    "lines": { "total": 9, "covered": 9, "skipped": 0, "pct": 100 },
+    "functions": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "statements": { "total": 9, "covered": 9, "skipped": 0, "pct": 100 },
+    "branches": { "total": 11, "covered": 8, "skipped": 0, "pct": 72.72 }
+  },
+  "/home/runner/work/tool/tool/components/charts/charts.tsx": {
+    "lines": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 10, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/common/common.tsx": {
+    "lines": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 7, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 5, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/dialogs/dialogs.tsx": {
+    "lines": { "total": 14, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 3, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 14, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/feedback/feedback.tsx": {
+    "lines": { "total": 22, "covered": 21, "skipped": 0, "pct": 95.45 },
+    "functions": { "total": 19, "covered": 18, "skipped": 0, "pct": 94.73 },
+    "statements": { "total": 23, "covered": 21, "skipped": 0, "pct": 91.3 },
+    "branches": { "total": 51, "covered": 45, "skipped": 0, "pct": 88.23 }
+  },
+  "/home/runner/work/tool/tool/components/filters/filters.tsx": {
+    "lines": { "total": 7, "covered": 5, "skipped": 0, "pct": 71.42 },
+    "functions": { "total": 6, "covered": 4, "skipped": 0, "pct": 66.66 },
+    "statements": { "total": 7, "covered": 5, "skipped": 0, "pct": 71.42 },
+    "branches": { "total": 8, "covered": 7, "skipped": 0, "pct": 87.5 }
+  },
+  "/home/runner/work/tool/tool/components/forms/forms.tsx": {
+    "lines": { "total": 9, "covered": 9, "skipped": 0, "pct": 100 },
+    "functions": { "total": 4, "covered": 4, "skipped": 0, "pct": 100 },
+    "statements": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 },
+    "branches": { "total": 27, "covered": 21, "skipped": 0, "pct": 77.77 }
+  },
+  "/home/runner/work/tool/tool/components/forms/search-field.tsx": {
+    "lines": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "functions": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "statements": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "branches": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/components/layout/layout.tsx": {
+    "lines": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 22, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/layout/page-transition.tsx": {
+    "lines": { "total": 3, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 3, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/components/layout/workspace-shell.tsx": {
+    "lines": { "total": 22, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 25, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 12, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/navigation/navigation.tsx": {
+    "lines": { "total": 58, "covered": 41, "skipped": 0, "pct": 70.68 },
+    "functions": { "total": 27, "covered": 20, "skipped": 0, "pct": 74.07 },
+    "statements": { "total": 62, "covered": 44, "skipped": 0, "pct": 70.96 },
+    "branches": { "total": 86, "covered": 58, "skipped": 0, "pct": 67.44 }
+  },
+  "/home/runner/work/tool/tool/components/platform/platform.tsx": {
+    "lines": { "total": 20, "covered": 13, "skipped": 0, "pct": 65 },
+    "functions": { "total": 12, "covered": 7, "skipped": 0, "pct": 58.33 },
+    "statements": { "total": 24, "covered": 16, "skipped": 0, "pct": 66.66 },
+    "branches": { "total": 17, "covered": 11, "skipped": 0, "pct": 64.7 }
+  },
+  "/home/runner/work/tool/tool/components/shared/select-field.tsx": {
+    "lines": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/tables/data-table.tsx": {
+    "lines": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 7, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 25, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/theme/theme-provider.tsx": {
+    "lines": { "total": 35, "covered": 32, "skipped": 0, "pct": 91.42 },
+    "functions": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 },
+    "statements": { "total": 38, "covered": 35, "skipped": 0, "pct": 92.1 },
+    "branches": { "total": 20, "covered": 18, "skipped": 0, "pct": 90 }
+  },
+  "/home/runner/work/tool/tool/components/theme/theme-toggle.tsx": {
+    "lines": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "branches": { "total": 6, "covered": 6, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/components/ui/overlays.tsx": {
+    "lines": { "total": 18, "covered": 13, "skipped": 0, "pct": 72.22 },
+    "functions": { "total": 5, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 18, "covered": 13, "skipped": 0, "pct": 72.22 },
+    "branches": { "total": 6, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/components/ui/primitives.tsx": {
+    "lines": { "total": 40, "covered": 34, "skipped": 0, "pct": 85 },
+    "functions": { "total": 13, "covered": 7, "skipped": 0, "pct": 53.84 },
+    "statements": { "total": 40, "covered": 34, "skipped": 0, "pct": 85 },
+    "branches": { "total": 24, "covered": 9, "skipped": 0, "pct": 37.5 }
+  },
+  "/home/runner/work/tool/tool/components/upload/upload.tsx": {
+    "lines": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 3, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 29, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/runner/work/tool/tool/hooks/use-pagination.ts": {
+    "lines": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 },
+    "functions": { "total": 6, "covered": 6, "skipped": 0, "pct": 100 },
+    "statements": { "total": 11, "covered": 11, "skipped": 0, "pct": 100 },
+    "branches": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/hooks/use-sidebar.tsx": {
+    "lines": { "total": 13, "covered": 13, "skipped": 0, "pct": 100 },
+    "functions": { "total": 8, "covered": 8, "skipped": 0, "pct": 100 },
+    "statements": { "total": 16, "covered": 16, "skipped": 0, "pct": 100 },
+    "branches": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/hooks/use-theme.ts": {
+    "lines": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "functions": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 },
+    "statements": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/hooks/use-toast.tsx": {
+    "lines": { "total": 8, "covered": 8, "skipped": 0, "pct": 100 },
+    "functions": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "statements": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 },
+    "branches": { "total": 10, "covered": 8, "skipped": 0, "pct": 80 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/ai-studio.ts": {
+    "lines": { "total": 49, "covered": 39, "skipped": 0, "pct": 79.59 },
+    "functions": { "total": 19, "covered": 12, "skipped": 0, "pct": 63.15 },
+    "statements": { "total": 68, "covered": 49, "skipped": 0, "pct": 72.05 },
+    "branches": { "total": 57, "covered": 31, "skipped": 0, "pct": 54.38 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/analytics.ts": {
+    "lines": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "branches": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/cn.ts": {
+    "lines": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "functions": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "statements": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/content-display.ts": {
+    "lines": { "total": 9, "covered": 9, "skipped": 0, "pct": 100 },
+    "functions": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "statements": { "total": 9, "covered": 9, "skipped": 0, "pct": 100 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/content-library.ts": {
+    "lines": { "total": 48, "covered": 39, "skipped": 0, "pct": 81.25 },
+    "functions": { "total": 26, "covered": 20, "skipped": 0, "pct": 76.92 },
+    "statements": { "total": 68, "covered": 53, "skipped": 0, "pct": 77.94 },
+    "branches": { "total": 39, "covered": 24, "skipped": 0, "pct": 61.53 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/formatting.ts": {
+    "lines": { "total": 18, "covered": 18, "skipped": 0, "pct": 100 },
+    "functions": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 },
+    "statements": { "total": 20, "covered": 20, "skipped": 0, "pct": 100 },
+    "branches": { "total": 32, "covered": 25, "skipped": 0, "pct": 78.12 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/navigation.ts": {
+    "lines": { "total": 14, "covered": 14, "skipped": 0, "pct": 100 },
+    "functions": { "total": 6, "covered": 6, "skipped": 0, "pct": 100 },
+    "statements": { "total": 17, "covered": 17, "skipped": 0, "pct": 100 },
+    "branches": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/scheduler.ts": {
+    "lines": { "total": 91, "covered": 76, "skipped": 0, "pct": 83.51 },
+    "functions": { "total": 31, "covered": 21, "skipped": 0, "pct": 67.74 },
+    "statements": { "total": 112, "covered": 93, "skipped": 0, "pct": 83.03 },
+    "branches": { "total": 70, "covered": 58, "skipped": 0, "pct": 82.85 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/social-accounts.ts": {
+    "lines": { "total": 24, "covered": 22, "skipped": 0, "pct": 91.66 },
+    "functions": { "total": 11, "covered": 11, "skipped": 0, "pct": 100 },
+    "statements": { "total": 29, "covered": 23, "skipped": 0, "pct": 79.31 },
+    "branches": { "total": 37, "covered": 24, "skipped": 0, "pct": 64.86 }
+  },
+  "/home/runner/work/tool/tool/lib/utils/upload-wizard.ts": {
+    "lines": { "total": 14, "covered": 12, "skipped": 0, "pct": 85.71 },
+    "functions": { "total": 6, "covered": 5, "skipped": 0, "pct": 83.33 },
+    "statements": { "total": 14, "covered": 12, "skipped": 0, "pct": 85.71 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  }
 }
