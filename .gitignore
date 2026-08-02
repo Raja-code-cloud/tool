@@ -35,6 +35,9 @@ pnpm-debug.log*
 test-results/
 playwright-report/
 storybook-static/
+
+# Separate infrastructure repository (see cloud-content-hub-infra on GitHub)
+cloud-content-hub-infra/
 .idea/
 .vscode/*
 !.vscode/extensions.json
