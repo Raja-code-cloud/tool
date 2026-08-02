@@ -1,7 +1,7 @@
 import { Construction } from "lucide-react";
 
-import { PageContainer, PageHeader, Stack } from "@/components/layout";
 import { EmptyState } from "@/components/feedback";
+import { PageContainer, PageHeader, Stack } from "@/components/layout";
 import { Badge } from "@/components/ui";
 import { findRouteByHref } from "@/constants/navigation";
 
@@ -19,7 +19,11 @@ export function FeaturePlaceholder({ href }: FeaturePlaceholderProps): React.JSX
   return (
     <PageContainer>
       <Stack gap="lg">
-        <PageHeader title={route.label} description={route.description} actions={<Badge variant="neutral">Planned</Badge>} />
+        <PageHeader
+          title={route.label}
+          description={route.description}
+          actions={<Badge variant="neutral">Planned</Badge>}
+        />
         <EmptyState
           icon={<Construction aria-hidden="true" />}
           title={`${route.label} is not built yet`}
