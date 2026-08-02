@@ -16,7 +16,8 @@ Cloud Content Hub AI is a Next.js workspace UI for content, upload, AI-studio, s
 ## How to Run
 
 ```sh
-npm install
+npm ci
+cp .env.example .env.local   # optional; mock data works without backend
 npm run dev
 ```
 
@@ -25,12 +26,10 @@ Open the URL printed by Next.js (normally `http://localhost:3000`).
 ## How to Build
 
 ```sh
-npm run typecheck
+npm run verify    # format, typecheck, lint, tests
 npm run build
 npm run start
 ```
-
-`npm run lint` is declared, but verify it against the installed Next.js version before relying on it in automation.
 
 ## Project Structure
 
@@ -38,15 +37,17 @@ Routes and route-local feature implementations live in `app/`, with feature UI c
 
 ## Development Workflow
 
-1. Start from the route and its feature view.
+1. Start from the route and its `_components/` feature view.
 2. Reuse category exports from `components/`.
 3. Keep browser state in client components/hooks and data access behind services.
-4. Run type-check and a production build before review.
+4. Run `npm run verify` and `npm run build` before review.
 
 ## Documentation
 
+- [Developer guide (root)](../DEVELOPER_GUIDE.md)
 - [Frontend overview](FRONTEND_OVERVIEW.md)
 - [Developer guide](DEVELOPER_GUIDE.md)
+- [Testing guide](TESTING_GUIDE.md)
 - [Component guide](COMPONENT_GUIDE.md)
 - [Folder structure](FOLDER_STRUCTURE.md)
 - [State management](STATE_MANAGEMENT.md)

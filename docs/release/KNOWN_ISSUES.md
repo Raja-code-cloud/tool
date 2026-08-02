@@ -1,21 +1,30 @@
-# Known Issues — Cloud Content Hub AI Frontend RC1
+# Known Issues — Cloud Content Hub AI Frontend RC3
 
-This document records **verified remaining issues** at RC1 assessment (2026-08-02). Issues marked **Blocker** must be resolved before stable `1.0.0` or automated release workflow execution. Issues marked **Accepted** are documented for customer and support awareness.
+This document records **verified remaining issues** at RC3 assessment (2026-08-03). Issues marked **Accepted** are documented for customer and support awareness.
 
 **Related:** [KNOWN_LIMITATIONS.md](./KNOWN_LIMITATIONS.md) (extended reference)
 
 ---
 
-## Release engineering blockers
+## Release engineering (remaining)
 
 | ID     | Issue                                                                 | Severity | Impact                                              | Owner            | Mitigation                                              | Target release |
 | ------ | --------------------------------------------------------------------- | -------- | --------------------------------------------------- | ---------------- | ------------------------------------------------------- | -------------- |
-| KI-001 | `npm run format:check` script missing from `package.json`             | **High** | CI workflows fail immediately on format step        | Release Engineering | Add `format:check` script mapping to Prettier        | RC1 → stable   |
-| KI-002 | Prettier formatting drift in 42 frontend source files                 | **Medium** | Release validation fails once format script restored | Engineering      | Run Prettier write on frontend paths                    | RC1 → stable   |
-| KI-003 | No frontend `.env.example` committed                                  | **Medium** | Operators lack template for `NEXT_PUBLIC_*` variables | DevOps           | Add `.env.example` with safe defaults                   | RC1 → stable   |
-| KI-004 | `package.json` `engines` declares `>=20.11.0`; CI uses `22.22.1`      | **Low**  | Local/CI version mismatch risk                      | Release Engineering | Align `engines` with `.nvmrc` and CI                    | RC1 → stable   |
-| KI-005 | `package.json` lacks `repository`, `license`, and `author` metadata   | **Low**  | Incomplete package provenance for release artifacts | Release Engineering | Add metadata fields per org policy                        | RC1 → stable   |
-| KI-006 | RC3 Principal Review results pending                                  | **High** | Final production sign-off incomplete                | Architecture     | Wait for RC3 review; update RELEASE_SIGNOFF.md          | Before GA      |
+| KI-001 | No hosting-provider deploy job in GitHub Actions                      | **Medium** | Release produces tarball only; manual deploy required | DevOps           | Add provider deploy job after target selected           | v1.1.0         |
+| KI-002 | `package.json` lacks `repository`, `license`, and `author` metadata  | **Low**  | Incomplete package provenance for release artifacts | Release Engineering | Add metadata fields per org policy                    | v1.1.0         |
+
+---
+
+## Resolved in RC3 (removed from active blockers)
+
+| ID     | Issue (was)                                                         | Resolution |
+| ------ | ------------------------------------------------------------------- | ---------- |
+| —      | `format:check` script missing                                       | Present in `package.json`; CI runs it |
+| —      | Prettier formatting drift                                           | `format:check` passes on assessment |
+| —      | No frontend `.env.example`                                          | Created at repository root |
+| —      | TypeScript / ESLint blockers                                        | `typecheck` and `lint` pass |
+| —      | Vitest suite unverified                                             | 47 test files; `test:run` passes |
+| —      | RC3 Principal Review documentation findings                         | F-003, F-007, F-015, F-016 addressed |
 
 ---
 
@@ -24,8 +33,8 @@ This document records **verified remaining issues** at RC1 assessment (2026-08-0
 | ID     | Issue                                                                 | Severity | Impact                                                     | Owner   | Mitigation                                      | Target release |
 | ------ | --------------------------------------------------------------------- | -------- | ---------------------------------------------------------- | ------- | ----------------------------------------------- | -------------- |
 | KI-010 | All product data originates from static constants and mock services   | **High** | No server-side persistence; refresh resets most state      | Product | Document in release notes; backend integration  | v1.1.0+        |
-| KI-011 | Upload wizard drafts persist only in browser `localStorage`           | **Medium** | Drafts are device-specific                                 | Product | Accepted for RC1; backend draft sync later      | v1.1.0+        |
-| KI-012 | `NEXT_PUBLIC_API_BASE_URL` optional; HTTP adapters inactive           | **Medium** | Backend connectivity has no effect                         | Backend | Wire repositories when API available            | v1.1.0+        |
+| KI-011 | Upload wizard drafts persist only in browser `localStorage`           | **Medium** | Drafts are device-specific                                 | Product | Accepted for v1.0; backend draft sync later     | v1.1.0+        |
+| KI-012 | `NEXT_PUBLIC_API_BASE_URL` optional; HTTP adapters inactive           | **Medium** | Backend connectivity has no effect until URL configured    | Backend | Wire repositories when API available            | v1.1.0+        |
 
 ---
 
@@ -57,7 +66,7 @@ This document records **verified remaining issues** at RC1 assessment (2026-08-0
 | ------ | --------------------------------------------------------------------- | -------- | --------------------------------------------------- | ----------- | --------------------------------------- | -------------- |
 | KI-040 | Playwright E2E tests excluded from CI pipelines                       | **Medium** | No automated browser regression in release path     | QA          | Add dedicated E2E job when policy set   | v1.1.0         |
 | KI-041 | Vitest full suite slow on Windows (~7 min); passes on assessment host | **Low**  | Local developer friction                            | Engineering | Document Linux CI as source of truth    | Accepted       |
-| KI-042 | Coverage thresholds configured but not enforced in CI                 | **Low**  | No minimum coverage gate in pipelines               | QA          | Add coverage job when baseline stable     | v1.1.0         |
+| KI-042 | Coverage thresholds not enforced in CI                                | **Low**  | No minimum coverage gate in pipelines               | QA          | Add coverage job when baseline stable   | v1.1.0         |
 
 ---
 
@@ -65,10 +74,9 @@ This document records **verified remaining issues** at RC1 assessment (2026-08-0
 
 | ID     | Issue                                                   | Severity | Impact                                                            | Owner  | Mitigation                              | Target release |
 | ------ | ------------------------------------------------------- | -------- | ----------------------------------------------------------------- | ------ | --------------------------------------- | -------------- |
-| KI-050 | No hosting-provider deploy job in GitHub Actions        | **Medium** | Release produces tarball only; manual deploy required             | DevOps | Add provider deploy job after target selected | v1.1.0   |
-| KI-051 | Release tarball is not `output: "standalone"`           | **Low**  | Deploy host needs `npm ci --omit=dev` after extract               | DevOps | Document in deployment guide              | Accepted       |
-| KI-052 | Release artifact may contain source maps and server bundles | **Medium** | Potential information disclosure on public artifact hosting   | Security | Review `.next` contents; restrict access | RC1 → stable |
-| KI-053 | On-call escalation contacts not defined in rollback plan  | **Low**  | Incident response delay                                           | SRE    | Populate contact table before GA        | Before GA      |
+| KI-050 | Release tarball is not `output: "standalone"`             | **Low**  | Deploy host needs `npm ci --omit=dev` after extract               | DevOps | Document in deployment guide            | Accepted       |
+| KI-051 | Release artifact may contain source maps and server bundles | **Medium** | Potential information disclosure on public artifact hosting   | Security | Review `.next` contents; restrict access | v1.0.0 |
+| KI-052 | On-call escalation contacts not defined in rollback plan  | **Low**  | Incident response delay                                           | SRE    | Populate contact table before GA        | Before GA      |
 
 ---
 
@@ -84,15 +92,14 @@ This document records **verified remaining issues** at RC1 assessment (2026-08-0
 
 ## Issue summary
 
-| Category              | Blockers | Accepted | Total |
-| --------------------- | -------- | -------- | ----- |
-| Release engineering   | 2        | 4        | 6     |
-| Data / auth           | 0        | 5        | 5     |
-| Feature completeness  | 0        | 6        | 6     |
-| Testing / CI          | 0        | 3        | 3     |
-| Deployment / ops      | 0        | 4        | 4     |
-| Accessibility         | 0        | 3        | 3     |
-| **Total**             | **2**    | **25**   | **27**|
+| Category              | Open engineering | Accepted | Total |
+| --------------------- | ---------------- | -------- | ----- |
+| Release engineering   | 2                | 0        | 2     |
+| Data / auth           | 0                | 5        | 5     |
+| Feature completeness  | 0                | 6        | 6     |
+| Testing / CI          | 0                | 3        | 3     |
+| Deployment / ops      | 0                | 3        | 3     |
+| Accessibility         | 0                | 3        | 3     |
+| **Total**             | **2**            | **20**   | **22**|
 
-**Blockers for automated release workflow:** KI-001, KI-002  
-**Blocker for GA sign-off:** KI-006 (RC3 Principal Review pending)
+**Remaining engineering items:** KI-001 (hosting deploy job), KI-002 (package metadata)

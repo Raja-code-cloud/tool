@@ -16,8 +16,9 @@ Create a hook when stateful React behavior is reused, when a complex interaction
 
 ## Recommended ownership
 
-- `hooks/`: generic browser and application-shell behavior.
-- `features/<feature>/hooks/`: domain behavior.
+- `hooks/`: generic browser and application-shell behavior (sidebar, toast, pagination, theme).
+- `app/(dashboard)/<route>/_components/`: route-local domain hooks such as `use-wizard-state.ts` (**current implementation**).
+- `features/<feature>/hooks/`: target convention for domain behavior in greenfield modules.
 - Component-local file: behavior used by one component only.
 
 ## Planned hook boundaries

@@ -1,0 +1,21 @@
+{
+  "name": "cloud-content-hub-prompts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prompt library for Cloud Content Hub AI — templates, metadata, schemas, and evaluations",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "eval": "node scripts/eval.mjs",
+    "check": "npm run validate && npm run eval"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "glob": "^13.0.0",
+    "yaml": "^2.7.0"
+  }
+}

@@ -2,7 +2,7 @@ id: greeting
 name: Greeting
 version: "1.0.0"
 purpose: Generate a concise greeting instruction for a named recipient
-domain: _examples
+domain: examples
 status: draft
 
 template:

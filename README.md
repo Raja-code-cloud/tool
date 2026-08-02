@@ -1,19 +1,48 @@
-# Frontend foundation
+# Cloud Content Hub AI — Frontend
 
-A production-oriented Next.js 15 App Router foundation with React 19, Tailwind CSS v4, semantic light/dark tokens, Inter, accessible Radix primitives, and reusable application-shell components.
+A production-oriented Next.js 15 App Router workspace UI with React 19, Tailwind CSS v4, semantic light/dark tokens, accessible Radix primitives, and mock-backed product workflows.
 
-## Run
+## Quick start
 
 ```sh
+npm ci
+cp .env.example .env.local   # optional
 npm run dev
-npm run typecheck
-npm run lint
+```
+
+Open `http://localhost:3000` (redirects to `/dashboard`).
+
+## Verify
+
+```sh
+npm run verify    # format, typecheck, lint, tests
 npm run build
 ```
 
+## Documentation
+
+- [Developer guide](docs/DEVELOPER_GUIDE.md) — architecture, env vars, testing, backend integration
+- [Frontend docs index](docs/frontend/README.md)
+- [Testing guide](docs/frontend/TESTING_GUIDE.md)
+- [Release checklist](docs/release/RELEASE_CHECKLIST.md)
+- [Environment template](.env.example)
+
+## Environment variables
+
+| Variable | Required | Default |
+| -------- | -------- | ------- |
+| `NEXT_PUBLIC_APP_ENV` | No | `development` |
+| `NEXT_PUBLIC_API_BASE_URL` | No | unset (mock repositories) |
+
+See `.env.example` for details.
+
+## Architecture note
+
+Feature UI is colocated under `app/(dashboard)/*/_components/`. Shared components export from `components/` by category. Data flows through mock repositories and services until `NEXT_PUBLIC_API_BASE_URL` activates HTTP adapters.
+
 ## Consumption
 
-Import from the intentional category exports:
+Import from intentional category exports:
 
 ```tsx
 import { PageContainer, PageHeader } from "@/components/layout";

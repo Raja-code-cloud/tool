@@ -2,7 +2,7 @@
 
 ## Architecture
 
-App Router pages compose feature views; feature hooks coordinate view state and call services; services depend on mock repositories. Shared components stay domain-neutral. Root and dashboard layouts own cross-cutting providers and shell composition.
+App Router pages compose feature views; route-local hooks coordinate view state and call services; services depend on mock repositories. Shared components stay domain-neutral. Root and dashboard layouts own cross-cutting providers and shell composition.
 
 ## Folders
 
@@ -13,8 +13,10 @@ App Router pages compose feature views; feature hooks coordinate view state and 
 - `constants/`: stable values and mock feature data
 - `lib/services/`, `lib/adapters/`: use-case and mock data-source boundaries
 - `lib/domain/`: repository contracts and domain types
-- `lib/`: configuration, formatting, class-name, feature, and motion utilities
+- `lib/config/env.ts`: validated frontend environment variables
+- `lib/`: formatting, class-name, feature, and motion utilities
 - `styles/`: global Tailwind theme and utilities
+- `tests/`: Vitest unit/integration, Playwright E2E, MSW mocks, and test utilities
 
 See [Folder structure](FOLDER_STRUCTURE.md) for route details.
 
@@ -36,6 +38,24 @@ Import from category entry points such as `@/components/layout` and `@/component
 
 Compose pages from `PageContainer`, `PageHeader`, cards, and feature-local sections. Use controlled Radix primitives for complex inputs. Put reusable behavior in hooks, domain operations in services, and data-source details in repositories. Treat mock behavior as current implementation—not as an API guarantee.
 
+## Environment
+
+Copy `.env.example` to `.env.local`. See [Environment setup](ENVIRONMENT_SETUP.md) for install steps and variable detail.
+
+## Testing
+
+The project uses **Vitest** (unit + integration), **Playwright** (E2E), **MSW** (HTTP mocking), **vitest-axe** and **@axe-core/playwright** (accessibility), and **Storybook 10** (component isolation).
+
+```sh
+npm run test:run       # CI-style Vitest run
+npm run test:coverage  # with coverage thresholds
+npm run test:e2e       # Playwright (local; not in CI)
+npm run storybook      # component development
+npm run verify         # format + typecheck + lint + test:run
+```
+
+See [Testing guide](TESTING_GUIDE.md) for folder structure, mock strategy, and CI behavior.
+
 ## Validation
 
-Run `npm run typecheck` and `npm run build`. No test suite is currently present. `npm run lint` exists in `package.json`; validate compatibility before making it a release gate.
+Run `npm run verify` before opening a pull request. Run `npm run build` when build behavior or routing changed. Pre-push hook runs `verify` automatically.

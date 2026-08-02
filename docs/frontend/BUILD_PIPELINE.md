@@ -30,7 +30,7 @@ New commits cancel obsolete runs for the same pull request.
 
 `build.yml` runs after pushes to `main` and supports manual dispatch:
 
-1. The quality job installs dependencies and runs type checking, linting, and
+1. The quality job installs dependencies and runs `format:check`, type checking, linting, and
    tests.
 2. The production-build job starts only after quality succeeds.
 3. The build job runs `npm run build`.

@@ -18,7 +18,7 @@ components/
   common/       # cross-domain compositions with proven reuse
 ```
 
-Feature-specific components belong under `features/<feature>/components`, not in `common/`.
+Feature-specific components belong under `app/(dashboard)/<route>/_components/` in the current implementation. A top-level `features/<feature>/components` layout is a target convention for future greenfield modules—not a requirement to reorganize existing routes.
 
 ## Component layers
 

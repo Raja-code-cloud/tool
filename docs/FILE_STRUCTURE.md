@@ -4,6 +4,9 @@
 app/
   (auth)/
   (dashboard)/
+    <route>/
+      page.tsx
+      _components/     # current implementation: route-local feature UI
   api/
   layout.tsx
   loading.tsx
@@ -21,7 +24,7 @@ components/
   analytics/
   feedback/
   common/
-features/
+features/              # target convention; not used in current frontend
   <feature>/
     api/
     components/
@@ -32,23 +35,36 @@ features/
 hooks/
 lib/
   api/
-  env/
+  config/
+  domain/
+  services/
+  adapters/
   utils/
 constants/
 types/
 public/
 styles/
 tests/
+  unit/
+  integration/
+  e2e/
+  mocks/
+  setup/
+  utils/
+  fixtures/
+.storybook/
+stories/
 ```
 
-This is a target convention, not permission to reorganize an existing repository. Adopt folders incrementally and preserve established architecture.
+This describes both the **current implementation** and target conventions. The live frontend colocates feature UI under `app/(dashboard)/*/_components/` rather than a top-level `features/` directory. Adopt new folders incrementally without reorganizing working code.
 
 ## Placement rules
 
 - `app`: routing, metadata, layouts, and route boundaries; keep business implementation thin.
+- `app/(dashboard)/*/_components/`: route-local feature views, hooks, and components (**current implementation**).
 - `components/ui`: owned shadcn primitives and variants.
 - `components/*`: cross-feature compositions with demonstrated reuse.
-- `features`: cohesive domain implementation.
+- `features/`: target convention for cohesive domain implementation; the current frontend colocates feature code under route `_components/` instead.
 - `hooks`: framework-level reusable hooks only.
 - `lib`: infrastructure and dependency adapters.
 - `constants`: shared stable values, grouped by domain.

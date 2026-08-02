@@ -60,13 +60,12 @@ cases:
     expected_rendered: |
       Compose a formal greeting for Alex.
     acceptance:
+      fixture_output: "Dear Alex, it is a pleasure to make your acquaintance."
       criteria:
         - type: rendered_contains
           value: "Alex"
         - type: rendered_contains
           value: "formal"
-      fixture_output: "Dear Alex, it is a pleasure to make your acquaintance."
-      criteria:
         - type: output_contains
           value: "Alex"
 ```

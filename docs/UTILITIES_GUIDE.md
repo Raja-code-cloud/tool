@@ -30,7 +30,7 @@ Do not create a miscellaneous `helpers.ts`. Split modules by stable responsibili
 
 ## Constants
 
-Colocate feature constants under `features/<feature>/constants.ts`. Put only cross-feature values in the root `constants/` directory. Use immutable objects with `as const` where literal unions are useful. Avoid numeric or string literals whose meaning is not evident.
+Colocate feature constants under `app/(dashboard)/<route>/_components/` or route-adjacent modules in the current implementation. A `features/<feature>/constants.ts` layout is a target convention for greenfield modules. Put only cross-feature values in the root `constants/` directory. Use immutable objects with `as const` where literal unions are useful. Avoid numeric or string literals whose meaning is not evident.
 
 ## API and backend integration
 

@@ -11,7 +11,7 @@ Use React Hook Form for client forms and Zod as the validation contract. Infer f
 
 ## API layer
 
-Keep transport under `lib/api` and feature contracts under `features/<feature>/api`.
+Keep transport under `lib/adapters/` and domain contracts under `lib/domain/`. Route-local API helpers may live under `app/(dashboard)/<route>/_components/` in the current implementation. A `features/<feature>/api` layout is a target convention for greenfield modules.
 
 - A base client handles URL resolution, headers, serialization, cancellation, and normalized errors.
 - Feature functions expose domain operations, not raw endpoint mechanics.

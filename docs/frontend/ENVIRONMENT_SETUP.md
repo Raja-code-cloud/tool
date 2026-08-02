@@ -3,7 +3,7 @@
 ## Requirements
 
 - Windows, macOS, or Linux
-- Node.js `>=22.22.1`
+- Node.js `>=22.22.1` (matches `package.json#engines` and CI)
 - npm
 
 ## Install and run
@@ -18,19 +18,36 @@ Use `npm install` when intentionally updating dependencies; commit the resulting
 
 ## Configuration
 
-The frontend currently consumes no environment variables, and there is no root `.env.example`. Do not copy backend variables into frontend documentation or expose secrets with `NEXT_PUBLIC_` names. If frontend configuration is added later, document its owner, validation, build/runtime scope, and safe example value at the same time.
+Copy `.env.example` to `.env.local` and adjust values as needed:
+
+| Variable | Required | Default | Purpose |
+| -------- | -------- | ------- | ------- |
+| `NEXT_PUBLIC_APP_ENV` | No | `development` | Logical environment exposed to the browser |
+| `NEXT_PUBLIC_API_BASE_URL` | No | unset | Future HTTP API origin; unset keeps mock repositories |
+
+Variables are validated in `lib/config/env.ts`. Do not copy backend secrets into frontend documentation or expose credentials with `NEXT_PUBLIC_` names.
 
 ## Useful commands
 
 ```sh
 npm run dev
 npm run typecheck
+npm run lint
+npm run test:run
+npm run verify
 npm run build
 npm run start
+npm run storybook
 ```
 
-`npm run lint` and `npm run verify` are declared; verify the lint command works with the installed Next.js release. There is no test command or test suite at present.
+`npm run verify` runs format check, TypeScript, ESLint, and Vitest — the same core gates as CI (excluding production build).
 
 ## Troubleshooting
 
-Delete generated output only when diagnosing stale builds; reinstall with `npm ci` when the lockfile changes. Browser-only theme and upload-draft behavior requires local storage. No backend service, credentials, auth provider, or API base URL is needed for the current mock-backed frontend.
+Delete generated output with `npm run clean` when diagnosing stale builds; reinstall with `npm ci` when the lockfile changes. Browser-only theme and upload-draft behavior requires local storage. No backend service or credentials are required while mock repositories are active.
+
+## Related documentation
+
+- [Testing guide](./TESTING_GUIDE.md)
+- [Developer guide](./DEVELOPER_GUIDE.md)
+- Root `.env.example`
