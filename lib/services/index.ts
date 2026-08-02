@@ -1,6 +1,7 @@
 import { createHttpAiStudioRepository } from "@/lib/adapters/http-ai-studio-repository";
 import { createHttpAnalyticsRepository } from "@/lib/adapters/http-analytics-repository";
 import { createHttpAuthRepository } from "@/lib/adapters/http-auth-repository";
+import { createHttpContentRepository } from "@/lib/adapters/http-content-repository";
 import { createMockAuthRepository } from "@/lib/adapters/mock-auth-repository";
 import {
   mockAiStudioRepository,
@@ -13,10 +14,12 @@ import {
   mockWorkspaceRepository,
 } from "@/lib/adapters/mock-repositories";
 import { createApiClient, createDisabledApiClient } from "@/lib/api";
+import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { getAccessToken } from "@/lib/auth/token-store";
 import { env } from "@/lib/config/env";
 import { createAnalyticsApiService } from "@/lib/services/analytics-api-service";
 import { createAuthService, type AuthService } from "@/lib/services/auth-service";
+import { createUploadRepository, createUploadService } from "@/lib/services/upload-service";
 import {
   createAiStudioService,
   createAnalyticsService,
@@ -49,6 +52,8 @@ export const apiClient = isBackendAuthEnabled
   ? createApiClient({
       baseUrl: env.NEXT_PUBLIC_API_BASE_URL!,
       getAccessToken,
+      getWorkspaceId: () =>
+        getActiveWorkspaceId() ?? env.NEXT_PUBLIC_WORKSPACE_ID ?? null,
       onUnauthorized: handleUnauthorized,
     })
   : createDisabledApiClient();
@@ -66,7 +71,13 @@ const aiStudioRepository = isBackendAiStudioEnabled
     })
   : mockAiStudioRepository;
 
-export const contentService = createContentService(mockContentRepository);
+export const contentService = createContentService(
+  isBackendAuthEnabled ? createHttpContentRepository(apiClient) : mockContentRepository,
+);
+
+export const uploadService = isBackendAuthEnabled
+  ? createUploadService(createUploadRepository(apiClient, env.NEXT_PUBLIC_API_BASE_URL!))
+  : null;
 export const schedulerService = createSchedulerService(mockSchedulerRepository);
 export const socialAccountService = createSocialAccountService(mockSocialAccountRepository);
 export const aiStudioService = createAiStudioService(aiStudioRepository);

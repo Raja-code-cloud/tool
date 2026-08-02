@@ -50,7 +50,18 @@ function scaleTrendData<T extends Record<string, number | string>>(
 }
 
 export function createContentService(repository: ContentRepository) {
-  return { list: () => repository.list() };
+  return {
+    list: (params?: import("@/lib/domain/repositories").ContentListParams) =>
+      repository.list(params),
+    getById: (id: string) => repository.getById(id),
+    delete: (id: string, version: number) => repository.delete(id, version),
+    archive: (id: string, version: number) => repository.archive(id, version),
+    update: (
+      id: string,
+      version: number,
+      input: import("@/lib/domain/repositories").ContentUpdateInput,
+    ) => repository.update(id, version, input),
+  };
 }
 
 export function createSchedulerService(repository: SchedulerRepository) {

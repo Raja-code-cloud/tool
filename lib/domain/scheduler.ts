@@ -1,7 +1,15 @@
 import type { PlatformId } from "@/lib/domain/platform";
 
 export type ScheduleStatus =
-  "draft" | "scheduled" | "ready" | "publishing" | "published" | "failed" | "cancelled";
+  | "draft"
+  | "scheduled"
+  | "ready"
+  | "queued"
+  | "publishing"
+  | "published"
+  | "failed"
+  | "cancelled"
+  | "expired";
 export type SchedulePriority = "low" | "normal" | "high";
 export type CalendarView = "month" | "week" | "day" | "agenda";
 export type QueueSection =
@@ -9,6 +17,9 @@ export type QueueSection =
 
 export type ScheduledPost = {
   readonly id: string;
+  readonly version: number;
+  readonly publicationTargetId: string;
+  readonly publicationId?: string;
   readonly title: string;
   readonly platforms: readonly PlatformId[];
   readonly scheduledAt: string;

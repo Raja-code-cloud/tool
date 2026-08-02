@@ -25,6 +25,7 @@ export type ContentGridProps = {
   onToggleSelect: (id: string, checked: boolean) => void;
   onSelect: (item: ContentItem) => void;
   onToggleFavorite: (id: string) => void;
+  onDelete: (item: ContentItem) => void;
 };
 
 const containerVariants = {
@@ -50,6 +51,7 @@ export function ContentGrid({
   onToggleSelect,
   onSelect,
   onToggleFavorite,
+  onDelete,
 }: ContentGridProps): React.JSX.Element {
   return (
     <motion.ul
@@ -171,7 +173,7 @@ export function ContentGrid({
                     description="This removes the asset from your library. Scheduled posts using it will fail."
                     confirmLabel="Delete"
                     isDestructive
-                    onConfirm={() => undefined}
+                    onConfirm={() => onDelete(item)}
                   />
                 </div>
               </div>

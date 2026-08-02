@@ -11,6 +11,7 @@ import type { AiStudioSettings } from "./types";
 
 export type AiSettingsPanelProps = {
   settings: AiStudioSettings;
+  providers: readonly import("@/lib/domain/ai-studio-generation").AiStudioProviderOption[];
   onChange: (patch: Partial<AiStudioSettings>) => void;
   isOpen: boolean;
   onToggle: () => void;
@@ -18,6 +19,7 @@ export type AiSettingsPanelProps = {
 
 export function AiSettingsPanel({
   settings,
+  providers,
   onChange,
   isOpen,
   onToggle,
@@ -41,6 +43,34 @@ export function AiSettingsPanel({
         )}
       </button>
       <div className={cn("grid gap-4 border-t px-4 pb-4", !isOpen && "hidden")}>
+        {providers.length > 0 && (
+          <section aria-labelledby="provider-settings">
+            <h3
+              id="provider-settings"
+              className="text-muted-foreground text-xs font-semibold tracking-wide uppercase"
+            >
+              AI provider
+            </h3>
+            <RadioGroup
+              value={settings.modelId ?? providers[0]?.modelId ?? ""}
+              onValueChange={(value) => onChange({ modelId: value })}
+              className="mt-2 grid gap-1.5"
+            >
+              {providers.map((provider) => (
+                <label
+                  key={provider.id}
+                  className="flex items-center gap-2 rounded-md border px-2.5 py-2 text-sm"
+                >
+                  <RadioGroupItem value={provider.modelId} id={`ai-provider-${provider.id}`} />
+                  <span>
+                    {provider.name}
+                    {provider.status !== "enabled" ? ` (${provider.status})` : ""}
+                  </span>
+                </label>
+              ))}
+            </RadioGroup>
+          </section>
+        )}
         <section aria-labelledby="tone-settings">
           <h3
             id="tone-settings"

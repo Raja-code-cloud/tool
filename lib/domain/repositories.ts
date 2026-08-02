@@ -98,9 +98,52 @@ export interface ContentRepository {
 }
 
 export interface SchedulerRepository {
-  listPosts(): readonly ScheduledPost[];
+  listPosts(filters?: ListSchedulesFilters): Promise<readonly ScheduledPost[]>;
   listNotifications(): readonly SchedulerNotification[];
+  getSchedule(id: string): Promise<ScheduledPost>;
+  createSchedule(input: CreateScheduleInput): Promise<ScheduledPost>;
+  updateSchedule(id: string, version: number, input: UpdateScheduleInput): Promise<ScheduledPost>;
+  cancelSchedule(id: string, version: number): Promise<ScheduledPost>;
+  dispatchPublication(
+    publicationId: string,
+    version: number,
+    targetIds?: readonly string[],
+  ): Promise<void>;
+  cancelPublication(publicationId: string, version: number): Promise<void>;
+  retryPublication(
+    publicationId: string,
+    version: number,
+    targetIds?: readonly string[],
+  ): Promise<void>;
 }
+
+export type CreateScheduleInput = {
+  readonly publicationTargetId: string;
+  readonly requestedLocalAt: string;
+  readonly timeZone: string;
+  readonly priority?: "low" | "normal" | "high";
+  readonly ambiguityPolicy?: "reject" | "earlier" | "later";
+  readonly fold?: 0 | 1;
+};
+
+export type UpdateScheduleInput = {
+  readonly requestedLocalAt?: string;
+  readonly timeZone?: string;
+  readonly priority?: "low" | "normal" | "high";
+  readonly ambiguityPolicy?: "reject" | "earlier" | "later";
+  readonly fold?: 0 | 1;
+  readonly state?: "scheduled" | "paused";
+};
+
+export type ListSchedulesFilters = {
+  readonly cursor?: string;
+  readonly limit?: number;
+  readonly state?: readonly string[];
+  readonly priority?: readonly string[];
+  readonly scheduledAfter?: string;
+  readonly scheduledBefore?: string;
+  readonly sort?: string;
+};
 
 export interface SocialAccountRepository {
   listAccounts(): readonly SocialAccount[];

@@ -43,11 +43,22 @@ describe("workspace services", () => {
     expect(service.listActivity().length).toBeGreaterThan(0);
   });
 
-  it("returns ai studio project and suggestions", () => {
+  it("returns ai studio project and suggestions", async () => {
     const service = createAiStudioService(mockAiStudioRepository);
-    expect(service.getProject().name).toBeTruthy();
-    expect(service.listSuggestions().length).toBeGreaterThan(0);
-    expect(service.getPlatformContent("linkedin").content).toBeTruthy();
+    const project = await service.getProject();
+    const suggestions = await service.listSuggestions();
+    const generated = await service.generate({
+      platform: "linkedin",
+      tone: "professional",
+      length: "medium",
+      audience: "architects",
+      generateHashtags: true,
+      generateCta: true,
+    });
+
+    expect(project.name).toBeTruthy();
+    expect(suggestions.length).toBeGreaterThan(0);
+    expect(generated.content).toBeTruthy();
   });
 
   it("returns dashboard overview datasets", () => {

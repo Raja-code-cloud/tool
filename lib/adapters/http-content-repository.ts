@@ -70,22 +70,20 @@ export function createHttpContentRepository(client: ApiClient): ContentRepositor
       });
     },
 
-    async archive(id: string, version: number) {
-      const response = await client.post<SingleSuccessEnvelope<AssetDto>>(
-        `/api/v1/content/${id}/archive`,
-        undefined,
-        { headers: { "If-Match": String(version) } },
+    async archive(_id: string, _version: number) {
+      throw new ApiError(
+        "Asset archive is not yet available via the backend API. Use delete or contact support.",
+        "unknown",
+        501,
       );
-      return mapAssetDtoToContentItem(response.data.data as unknown as AssetDto);
     },
 
-    async update(id: string, version: number, input: ContentUpdateInput) {
-      const response = await client.patch<SingleSuccessEnvelope<AssetDto>>(
-        `/api/v1/content/${id}`,
-        mapUpdateInput(input),
-        { headers: { "If-Match": String(version) } },
+    async update(_id: string, _version: number, _input: ContentUpdateInput) {
+      throw new ApiError(
+        "Asset metadata edit is not yet available via the backend API.",
+        "unknown",
+        501,
       );
-      return mapAssetDtoToContentItem(response.data.data as unknown as AssetDto);
     },
   };
 }

@@ -4,6 +4,7 @@ import {
   Redo2,
   RefreshCw,
   Sparkles,
+  Square,
   ThumbsDown,
   ThumbsUp,
   Undo2,
@@ -37,6 +38,11 @@ export function WorkspaceActionToolbars({
         >
           <RefreshCw className="size-4" aria-hidden="true" /> Regenerate
         </SecondaryButton>
+        {data.isLoading && (
+          <OutlineButton type="button" onClick={actions.onCancelGeneration}>
+            <Square className="size-4" aria-hidden="true" /> Cancel
+          </OutlineButton>
+        )}
         <SecondaryButton
           type="button"
           onClick={() => actions.onTransform("improve")}

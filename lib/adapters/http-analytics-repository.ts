@@ -9,8 +9,6 @@ import type {
   PostAnalyticsDto,
 } from "@/lib/api/analytics-types";
 import type { ApiClient } from "@/lib/api/client";
-import { getWorkspaceId } from "@/lib/auth/workspace-store";
-import { ApiError } from "@/lib/api/errors";
 
 export type AnalyticsPostsPage = {
   readonly items: readonly PostAnalyticsDto[];
@@ -40,18 +38,6 @@ function buildQuery(params: Record<string, string | number | readonly string[] |
   return query ? `?${query}` : "";
 }
 
-function workspaceHeaders(): Record<string, string> {
-  const workspaceId = getWorkspaceId();
-  if (!workspaceId) {
-    throw new ApiError(
-      "Workspace context is required for analytics requests.",
-      "validation_error",
-      422,
-    );
-  }
-  return { "X-Workspace-ID": workspaceId };
-}
-
 export function createHttpAnalyticsRepository(client: ApiClient): HttpAnalyticsRepository {
   return {
     async getDashboard(query) {
@@ -63,7 +49,6 @@ export function createHttpAnalyticsRepository(client: ApiClient): HttpAnalyticsR
           metric: query.metric,
           platformId: query.platformId,
         })}`,
-        { headers: workspaceHeaders() },
       );
       return response.data.data;
     },
@@ -77,7 +62,6 @@ export function createHttpAnalyticsRepository(client: ApiClient): HttpAnalyticsR
           metric: query.metric,
           sort: query.sort,
         })}`,
-        { headers: workspaceHeaders() },
       );
       return response.data.data;
     },
@@ -93,7 +77,6 @@ export function createHttpAnalyticsRepository(client: ApiClient): HttpAnalyticsR
           limit: query.limit,
           sort: query.sort,
         })}`,
-        { headers: workspaceHeaders() },
       );
       const page = response.data.meta?.page;
       return {
@@ -111,7 +94,6 @@ export function createHttpAnalyticsRepository(client: ApiClient): HttpAnalyticsR
           periodEnd: query.periodEnd,
           platformId: query.platformId,
         })}`,
-        { headers: workspaceHeaders() },
       );
       return response.data.data;
     },

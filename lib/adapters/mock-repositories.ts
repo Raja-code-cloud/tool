@@ -39,6 +39,7 @@ import {
   SOCIAL_ACCOUNTS,
 } from "@/constants/social-accounts";
 import { CURRENT_USER, UNREAD_NOTIFICATION_COUNT, WORKSPACE } from "@/constants/workspace";
+import { createMockContentRepository } from "@/lib/adapters/http-content-repository";
 import type {
   AiStudioRepository,
   AnalyticsRepository,

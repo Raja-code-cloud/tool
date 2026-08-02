@@ -4,11 +4,12 @@ import { SecondaryButton } from "@/components/buttons";
 import { Dialog, DrawerContent } from "@/components/dialogs";
 import { Alert } from "@/components/feedback";
 import { Badge } from "@/components/ui";
-import { aiStudioService } from "@/lib/services";
+import type { AiSuggestion } from "@/lib/domain/ai-studio";
 
 export type SuggestionsDrawerProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  suggestions: readonly AiSuggestion[];
 };
 
 const CATEGORY_LABELS = {
@@ -32,8 +33,8 @@ const CATEGORY_VARIANT = {
 export function SuggestionsDrawer({
   open,
   onOpenChange,
+  suggestions,
 }: SuggestionsDrawerProps): React.JSX.Element {
-  const suggestions = aiStudioService.listSuggestions();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DrawerContent
@@ -42,36 +43,37 @@ export function SuggestionsDrawer({
         description="Improvements for grammar, SEO, engagement, and platform fit."
         className="max-w-md"
       >
-        <ul className="grid gap-3">
-          {suggestions.map((suggestion) => (
-            <li key={suggestion.id}>
-              <Alert
-                variant={
-                  CATEGORY_VARIANT[suggestion.category] === "danger"
-                    ? "danger"
-                    : CATEGORY_VARIANT[suggestion.category] === "warning"
-                      ? "warning"
-                      : CATEGORY_VARIANT[suggestion.category] === "success"
-                        ? "success"
-                        : "info"
-                }
-                title={suggestion.title}
-                action={
-                  suggestion.action ? (
-                    <SecondaryButton type="button" size="compact">
-                      {suggestion.action}
-                    </SecondaryButton>
-                  ) : undefined
-                }
-              >
-                <Badge variant="neutral" className="mb-2">
+        {suggestions.length === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            No suggestions yet. Generate content to receive AI-powered recommendations.
+          </p>
+        ) : (
+          <ul className="grid gap-3">
+            {suggestions.map((suggestion) => (
+              <li key={suggestion.id}>
+                <Alert
+                  variant={
+                    CATEGORY_VARIANT[suggestion.category] === "danger"
+                      ? "destructive"
+                      : CATEGORY_VARIANT[suggestion.category]
+                  }
+                  title={suggestion.title}
+                  description={suggestion.description}
+                  action={
+                    suggestion.action ? (
+                      <SecondaryButton type="button" size="compact">
+                        {suggestion.action}
+                      </SecondaryButton>
+                    ) : undefined
+                  }
+                />
+                <Badge variant="neutral" className="mt-2">
                   {CATEGORY_LABELS[suggestion.category]}
                 </Badge>
-                {suggestion.description}
-              </Alert>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        )}
       </DrawerContent>
     </Dialog>
   );

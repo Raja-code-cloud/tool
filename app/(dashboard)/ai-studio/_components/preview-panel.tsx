@@ -7,6 +7,7 @@ import { Card, CardHeader } from "@/components/cards";
 import { Avatar, Badge } from "@/components/ui";
 import type { AiStudioProject } from "@/lib/domain/ai-studio";
 import type { PlatformId } from "@/lib/domain/platform";
+import { MOTION_DURATION, MOTION_EASING } from "@/lib/motion";
 import { splitThreadTweets } from "@/lib/utils/ai-studio";
 import { thumbnailGradient } from "@/lib/utils/content-display";
 
@@ -210,4 +211,6 @@ function PlatformPreview({
         </article>
       );
     default:
-      return <p className="text-muted-foreground text-sm
+      return <p className="text-muted-foreground text-sm">{content}</p>;
+  }
+}

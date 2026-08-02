@@ -51,6 +51,7 @@ export function WorkspacePanel({
       </Card>
       <AiSettingsPanel
         settings={data.settings}
+        providers={data.providers}
         onChange={actions.onSettingsChange}
         isOpen={panelState.settingsOpen}
         onToggle={actions.onSettingsToggle}

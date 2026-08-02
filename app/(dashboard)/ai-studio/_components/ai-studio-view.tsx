@@ -43,6 +43,7 @@ export function AiStudioView(): React.JSX.Element {
     <PageContainer className="pb-8">
       <div className="grid gap-5">
         <AiStudioHeader
+          project={state.project}
           lastSavedAt={state.lastSavedAt}
           onSaveDraft={state.saveDraft}
           onOpenSuggestions={() => state.setSuggestionsOpen(true)}
@@ -78,7 +79,7 @@ export function AiStudioView(): React.JSX.Element {
               state.mobilePanel !== "assets" && "hidden lg:block",
             )}
           >
-            <AssetsPanel />
+            <AssetsPanel project={state.project} />
           </div>
 
           <div className={cn("min-w-0", state.mobilePanel !== "workspace" && "hidden lg:block")}>
@@ -88,6 +89,7 @@ export function AiStudioView(): React.JSX.Element {
                 current: state.current,
                 displayContent: state.displayContent,
                 settings: state.settings,
+                providers: state.providers,
                 loadingPhase: state.loadingPhase,
                 isLoading: state.isLoading,
               }}
@@ -108,6 +110,7 @@ export function AiStudioView(): React.JSX.Element {
                 onContentChange: state.updateContent,
                 onGenerate: state.generate,
                 onRegenerate: state.regenerate,
+                onCancelGeneration: state.cancelGeneration,
                 onTransform: state.transformContent,
                 onApprove: state.approve,
                 onReject: state.reject,
@@ -120,6 +123,7 @@ export function AiStudioView(): React.JSX.Element {
 
           <div className={cn("min-w-0", state.mobilePanel !== "preview" && "hidden lg:block")}>
             <PreviewPanel
+              project={state.project}
               platform={state.activePlatform}
               current={state.current}
               displayContent={state.displayContent}
@@ -135,7 +139,13 @@ export function AiStudioView(): React.JSX.Element {
           : `Editing ${state.activePlatform}`}
       </LiveRegion>
 
-      {state.suggestionsOpen && <SuggestionsDrawer open onOpenChange={state.setSuggestionsOpen} />}
+      {state.suggestionsOpen && (
+        <SuggestionsDrawer
+          open
+          onOpenChange={state.setSuggestionsOpen}
+          suggestions={state.suggestions}
+        />
+      )}
     </PageContainer>
   );
 }

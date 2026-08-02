@@ -1,3 +1,4 @@
+import { getActiveWorkspaceId, setActiveWorkspaceId } from "@/lib/api/workspace-context";
 import {
   readVersionedStorage,
   removeStorageKey,
@@ -12,16 +13,22 @@ function isWorkspaceId(value: unknown): value is string {
 
 let memoryWorkspaceId: string | null = null;
 
+export { getActiveWorkspaceId };
+
 export function getWorkspaceId(): string | null {
+  const active = getActiveWorkspaceId();
+  if (active) return active;
   if (memoryWorkspaceId) return memoryWorkspaceId;
   const stored = readVersionedStorage(WORKSPACE_ID_KEY, isWorkspaceId);
   if (!stored.ok) return null;
   memoryWorkspaceId = stored.data;
+  setActiveWorkspaceId(stored.data);
   return stored.data;
 }
 
 export function setWorkspaceId(workspaceId: string | null): void {
   memoryWorkspaceId = workspaceId;
+  setActiveWorkspaceId(workspaceId);
   if (!workspaceId) {
     removeStorageKey(WORKSPACE_ID_KEY);
     return;

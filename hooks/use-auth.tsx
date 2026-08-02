@@ -6,6 +6,8 @@ import * as React from "react";
 import { ROUTES } from "@/constants/navigation";
 import { hasPermission } from "@/lib/auth/permissions";
 import { sessionToWorkspaceUser } from "@/lib/auth/mappers";
+import { setActiveWorkspaceId } from "@/lib/auth/workspace-store";
+import { env } from "@/lib/config/env";
 import type { AuthSession } from "@/lib/domain/auth";
 import type { WorkspaceUser } from "@/lib/domain/workspace";
 import { authService, isBackendAuthEnabled } from "@/lib/services";
@@ -35,6 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
 
   const loadSession = React.useCallback(async () => {
     if (!isBackendAuthEnabled) {
+      setActiveWorkspaceId(null);
       setSession(await authService.getSession());
       setIsLoading(false);
       return;
@@ -43,8 +46,11 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
     try {
       const next = await authService.getSession();
       setSession(next);
+      const workspaceId = next.workspaceIds[0] ?? env.NEXT_PUBLIC_WORKSPACE_ID ?? null;
+      setActiveWorkspaceId(workspaceId);
     } catch {
       setSession(null);
+      setActiveWorkspaceId(env.NEXT_PUBLIC_WORKSPACE_ID ?? null);
     } finally {
       setIsLoading(false);
     }

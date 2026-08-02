@@ -1,7 +1,7 @@
 import type { AssetDto, OperationDto, SingleSuccessEnvelope } from "@/lib/api/asset-types";
 import type { ApiClient } from "@/lib/api/client";
 import { ApiError, isApiError } from "@/lib/api/errors";
-import { mapTransportError } from "@/lib/api/error-mapping";
+import { mapStatusToError, mapTransportError } from "@/lib/api/error-mapping";
 import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { getAccessToken } from "@/lib/auth/token-store";
 import type { ContentType } from "@/lib/domain/content";
@@ -124,7 +124,7 @@ export function uploadAssetMultipart(
       } catch {
         // keep raw text
       }
-      reject(mapTransportError(new ApiError("Upload failed", "unknown", xhr.status, body)));
+      reject(mapStatusToError(xhr.status, body));
     };
 
     xhr.onerror = () => reject(mapTransportError(new Error("Network error during upload")));

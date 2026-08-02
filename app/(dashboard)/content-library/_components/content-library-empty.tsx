@@ -7,15 +7,20 @@ import { Toolbar } from "@/components/common";
 import { NoContent, NoResults } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants/navigation";
+import type { ContentItem } from "@/lib/domain/content";
 
 export type BulkActionBarProps = {
   selectedCount: number;
   onClear: () => void;
+  onArchive?: () => void;
+  onDelete?: () => void;
 };
 
 export function BulkActionBar({
   selectedCount,
   onClear,
+  onArchive,
+  onDelete,
 }: BulkActionBarProps): React.JSX.Element | null {
   if (selectedCount === 0) return null;
 
@@ -34,11 +39,11 @@ export function BulkActionBar({
         <CalendarPlus className="size-4" aria-hidden="true" />
         Schedule
       </Button>
-      <Button type="button" variant="secondary" size="compact">
+      <Button type="button" variant="secondary" size="compact" onClick={onArchive}>
         <Archive className="size-4" aria-hidden="true" />
         Archive
       </Button>
-      <Button type="button" variant="destructive" size="compact">
+      <Button type="button" variant="destructive" size="compact" onClick={onDelete}>
         <Trash2 className="size-4" aria-hidden="true" />
         Delete
       </Button>
