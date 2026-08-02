@@ -1,3 +1,6 @@
+import { metricNumber } from "@/lib/analytics/metrics";
+import { isKnownPlatformCode, platformLabel } from "@/lib/analytics/platform-colors";
+import type { AnalyticsDashboardDto } from "@/lib/api/analytics-types";
 import type { AssetDto } from "@/lib/api/asset-types";
 import type {
   NotificationDto,
@@ -7,18 +10,15 @@ import type {
   SystemStatusDto,
 } from "@/lib/api/dashboard-types";
 import type { ScheduleCalendarDto } from "@/lib/api/scheduler-types";
-import { platformLabel, isKnownPlatformCode } from "@/lib/analytics/platform-colors";
-import { metricNumber } from "@/lib/analytics/metrics";
-import type { AnalyticsDashboardDto } from "@/lib/api/analytics-types";
 import type {
   ActivityItem,
   AgendaEntry,
+  DashboardStatData,
   DashboardStorage,
   DashboardSuggestion,
   PlatformHealth,
   RecentContentRow,
 } from "@/lib/domain/dashboard";
-import type { DashboardStatData } from "@/lib/domain/dashboard";
 import { mapScheduleStateToStatus } from "@/lib/scheduler/mappers";
 
 export type ContentCountResult = {
@@ -53,14 +53,8 @@ export function mapDashboardStats(input: DashboardSummaryInput): readonly Dashbo
     ? metricNumber(input.analyticsDashboard.metrics, "scheduledPosts")
     : undefined;
 
-  const publishedCount = Math.max(
-    input.publishedContent.count,
-    publishedFromAnalytics ?? 0,
-  );
-  const scheduledCount = Math.max(
-    input.scheduledContent.count,
-    scheduledFromAnalytics ?? 0,
-  );
+  const publishedCount = Math.max(input.publishedContent.count, publishedFromAnalytics ?? 0);
+  const scheduledCount = Math.max(input.scheduledContent.count, scheduledFromAnalytics ?? 0);
 
   const partialCounts =
     input.totalContent.partial ||
@@ -156,7 +150,9 @@ function mapAssetStatus(asset: AssetDto): RecentContentRow["status"] {
   }
 }
 
-function extractPlatforms(metadata: Readonly<Record<string, unknown>> | undefined): readonly string[] {
+function extractPlatforms(
+  metadata: Readonly<Record<string, unknown>> | undefined,
+): readonly string[] {
   if (!metadata) return [];
   const platforms = metadata.platforms;
   if (Array.isArray(platforms)) {
@@ -251,7 +247,9 @@ const SUGGESTION_TYPE_CODES = new Set([
 
 const SUGGESTION_SEVERITIES = new Set<NotificationDto["severity"]>(["warning", "error"]);
 
-export function mapNotificationToSuggestion(notification: NotificationDto): DashboardSuggestion | null {
+export function mapNotificationToSuggestion(
+  notification: NotificationDto,
+): DashboardSuggestion | null {
   const isSuggestion =
     SUGGESTION_TYPE_CODES.has(notification.typeCode) ||
     notification.typeCode.includes("suggestion") ||
@@ -328,9 +326,7 @@ export function buildHealthSummary(input: {
   }
 
   const unhealthyProviders = input.providers.filter((provider) => provider.status !== "enabled");
-  const queueIssues = input.queues.filter(
-    (queue) => queue.failed > 0 || queue.deadLettered > 0,
-  );
+  const queueIssues = input.queues.filter((queue) => queue.failed > 0 || queue.deadLettered > 0);
 
   if (unhealthyProviders.length > 0) {
     const label = unhealthyProviders.length === 1 ? "account needs" : "accounts need";

@@ -1,5 +1,5 @@
-import type { WorkspaceEnvelope } from "@/lib/api/workspace-types";
 import type { ApiClient } from "@/lib/api/client";
+import type { WorkspaceEnvelope } from "@/lib/api/workspace-types";
 import type { WorkspaceRepository } from "@/lib/domain/repositories";
 import { mapWorkspaceDto } from "@/lib/settings/mappers";
 import type { ProfileState } from "@/lib/settings/mappers";
@@ -35,9 +35,9 @@ export function createHttpWorkspaceRepository(
       if (options.getUnreadCount) {
         return options.getUnreadCount();
       }
-      const response = await client.get<import("@/lib/api/asset-types").PagedSuccessEnvelope<unknown>>(
-        "/api/v1/notifications?read=false&limit=100",
-      );
+      const response = await client.get<
+        import("@/lib/api/asset-types").PagedSuccessEnvelope<unknown>
+      >("/api/v1/notifications?read=false&limit=100");
       return response.data.data.length;
     },
   };

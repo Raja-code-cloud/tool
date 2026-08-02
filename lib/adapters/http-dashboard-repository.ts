@@ -1,5 +1,6 @@
 import type { HttpAnalyticsRepository } from "@/lib/adapters/http-analytics-repository";
 import type { ApiClient } from "@/lib/api/client";
+import { fetchDashboardOverview } from "@/lib/dashboard/fetch-overview";
 import type {
   ActivityItem,
   AgendaEntry,
@@ -10,7 +11,6 @@ import type {
   RecentContentRow,
 } from "@/lib/domain/dashboard";
 import type { DashboardRepository, SchedulerRepository } from "@/lib/domain/repositories";
-import { fetchDashboardOverview } from "@/lib/dashboard/fetch-overview";
 
 export function createHttpDashboardRepository(deps: {
   readonly client: ApiClient;

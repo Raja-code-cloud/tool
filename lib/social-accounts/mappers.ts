@@ -96,12 +96,12 @@ export function mapSocialPlatformDto(dto: SocialPlatformDto): {
 export function mapDefaultSettingsUpdate(
   settings: Partial<SocialAccount["defaultSettings"]>,
 ): import("@/lib/api/social-account-types").DefaultSettingsUpdateDto {
-  const update: import("@/lib/api/social-account-types").DefaultSettingsUpdateDto = {};
-  if (settings.visibility !== undefined) update.visibility = settings.visibility;
-  if (settings.hashtags !== undefined) update.hashtags = settings.hashtags;
-  if (settings.autoPublish !== undefined) update.autoPublish = settings.autoPublish;
-  if (settings.aiOptimization !== undefined) update.aiOptimization = settings.aiOptimization;
-  if (settings.autoSchedule !== undefined) update.autoSchedule = settings.autoSchedule;
-  if (settings.urlTracking !== undefined) update.urlTracking = settings.urlTracking;
-  return update;
+  return {
+    ...(settings.visibility !== undefined ? { visibility: settings.visibility } : {}),
+    ...(settings.hashtags !== undefined ? { hashtags: settings.hashtags } : {}),
+    ...(settings.autoPublish !== undefined ? { autoPublish: settings.autoPublish } : {}),
+    ...(settings.aiOptimization !== undefined ? { aiOptimization: settings.aiOptimization } : {}),
+    ...(settings.autoSchedule !== undefined ? { autoSchedule: settings.autoSchedule } : {}),
+    ...(settings.urlTracking !== undefined ? { urlTracking: settings.urlTracking } : {}),
+  };
 }

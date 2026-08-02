@@ -1,6 +1,7 @@
 import type { HttpAnalyticsRepository } from "@/lib/adapters/http-analytics-repository";
-import type { PagedSuccessEnvelope } from "@/lib/api/asset-types";
-import type { AssetDto } from "@/lib/api/asset-types";
+import { resolveAnalyticsPeriod } from "@/lib/analytics/date-range";
+import type { AssetDto, PagedSuccessEnvelope } from "@/lib/api/asset-types";
+import type { ApiClient } from "@/lib/api/client";
 import type {
   HealthDto,
   ListSuccessEnvelope,
@@ -12,19 +13,6 @@ import type {
   SystemStatusDto,
 } from "@/lib/api/dashboard-types";
 import type { ScheduleCalendarDto } from "@/lib/api/scheduler-types";
-import type { ApiClient } from "@/lib/api/client";
-import { resolveAnalyticsPeriod } from "@/lib/analytics/date-range";
-import { toUtcRangeEnd, toUtcRangeStart } from "@/lib/scheduler/mappers";
-import type {
-  ActivityItem,
-  AgendaEntry,
-  DashboardStatData,
-  DashboardStorage,
-  DashboardSuggestion,
-  PlatformHealth,
-  RecentContentRow,
-} from "@/lib/domain/dashboard";
-import type { SchedulerRepository } from "@/lib/domain/repositories";
 import {
   buildHealthSummary,
   computeStorageFromAssets,
@@ -37,6 +25,17 @@ import {
   mapPublicationHistoryToActivity,
   mapScheduleToAgendaEntry,
 } from "@/lib/dashboard/mappers";
+import type {
+  ActivityItem,
+  AgendaEntry,
+  DashboardStatData,
+  DashboardStorage,
+  DashboardSuggestion,
+  PlatformHealth,
+  RecentContentRow,
+} from "@/lib/domain/dashboard";
+import type { SchedulerRepository } from "@/lib/domain/repositories";
+import { toUtcRangeEnd, toUtcRangeStart } from "@/lib/scheduler/mappers";
 
 export type DashboardOverview = {
   readonly stats: readonly DashboardStatData[];
@@ -284,7 +283,9 @@ export async function fetchDashboardOverview(deps: {
   }
 
   if (suggestions.length === 0 && notifications.length > 0) {
-    warnings.push("AI suggestions are derived from notifications until a dedicated endpoint is available.");
+    warnings.push(
+      "AI suggestions are derived from notifications until a dedicated endpoint is available.",
+    );
   }
 
   if (activityFromHistory.length === 0 && historyResult.status === "rejected") {

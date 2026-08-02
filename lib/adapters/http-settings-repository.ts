@@ -1,19 +1,20 @@
+import type { PagedSuccessEnvelope } from "@/lib/api/asset-types";
+import type { ApiClient } from "@/lib/api/client";
 import type {
   PreferencesEnvelope,
   ProfileEnvelope,
   ProvidersEnvelope,
   UpdateNotificationPreferencesRequestDto,
 } from "@/lib/api/settings-types";
-import type { ApiClient } from "@/lib/api/client";
-import type { PagedSuccessEnvelope } from "@/lib/api/asset-types";
+import type { ProfileUpdateInput, SettingsRepository } from "@/lib/domain/repositories";
 import type {
   AiProvider,
   ApiKeyRecord,
+  NotificationChannelId,
   PublishingDefaults,
   SessionRecord,
   StorageUsage,
 } from "@/lib/domain/settings";
-import type { ProfileUpdateInput, SettingsRepository } from "@/lib/domain/repositories";
 import {
   mapNotificationPreferences,
   mapProviderStatusToAiProvider,
@@ -21,7 +22,6 @@ import {
   toPreferenceUpdateRequests,
   type ProfileState,
 } from "@/lib/settings/mappers";
-import type { NotificationChannelId } from "@/lib/domain/settings";
 
 function etag(version: number): Record<string, string> {
   return { "If-Match": `"${version}"` };

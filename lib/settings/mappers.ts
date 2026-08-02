@@ -49,7 +49,13 @@ export function mapUserProfileDto(dto: UserProfileDto): ProfileState {
 }
 
 export function mapWorkspaceDto(dto: WorkspaceDto): WorkspaceInfo {
-  const shortName = dto.name.trim().split(/\s+/).slice(0, 2).map((part) => part[0]?.toUpperCase() ?? "").join("") || dto.slug.slice(0, 2).toUpperCase();
+  const shortName =
+    dto.name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("") || dto.slug.slice(0, 2).toUpperCase();
   return {
     id: dto.id,
     version: dto.version,
@@ -87,13 +93,15 @@ export function toPreferenceUpdateRequests(
   preferences: Readonly<Record<NotificationChannelId, { email: boolean; inApp: boolean }>>,
 ): readonly import("@/lib/api/settings-types").NotificationPreferenceItemRequestDto[] {
   const items: import("@/lib/api/settings-types").NotificationPreferenceItemRequestDto[] = [];
-  (Object.entries(preferences) as Array<[NotificationChannelId, { email: boolean; inApp: boolean }]>).forEach(
-    ([channelId, state]) => {
-      const typeCode = CHANNEL_ID_TO_TYPE_CODE[channelId];
-      items.push({ typeCode, channel: "email", enabled: state.email, timeZone: "UTC" });
-      items.push({ typeCode, channel: "in_app", enabled: state.inApp, timeZone: "UTC" });
-    },
-  );
+  (
+    Object.entries(preferences) as Array<
+      [NotificationChannelId, { email: boolean; inApp: boolean }]
+    >
+  ).forEach(([channelId, state]) => {
+    const typeCode = CHANNEL_ID_TO_TYPE_CODE[channelId];
+    items.push({ typeCode, channel: "email", enabled: state.email, timeZone: "UTC" });
+    items.push({ typeCode, channel: "in_app", enabled: state.inApp, timeZone: "UTC" });
+  });
   return items;
 }
 

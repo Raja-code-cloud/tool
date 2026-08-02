@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { mockDashboardRepository } from "@/lib/adapters/mock-repositories";
 import type { DashboardStatData } from "@/lib/domain/dashboard";
-import type { DashboardLoadResult } from "@/lib/services/dashboard-api-service";
 import {
   DASHBOARD_POLL_INTERVAL_MS,
   dashboardApiService,
   isBackendDashboardEnabled,
 } from "@/lib/services";
-import { mockDashboardRepository } from "@/lib/adapters/mock-repositories";
+import type { DashboardLoadResult } from "@/lib/services/dashboard-api-service";
 import { createDashboardApiService } from "@/lib/services/dashboard-api-service";
 
 const mockDashboardApiService = createDashboardApiService(mockDashboardRepository);

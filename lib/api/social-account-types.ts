@@ -1,23 +1,15 @@
-import type { SuccessEnvelope } from "@/lib/api/auth-types";
 import type { PagedSuccessEnvelope, SingleSuccessEnvelope } from "@/lib/api/asset-types";
+import type { SuccessEnvelope } from "@/lib/api/auth-types";
 
 export type { PagedSuccessEnvelope, SingleSuccessEnvelope, SuccessEnvelope };
 
 export type ConnectionStatusDto = "connected" | "disconnected";
 export type HealthStatusDto = "healthy" | "warning" | "error" | "needs_reauth";
 export type OAuthTokenStatusDto =
-  | "active"
-  | "expiring_soon"
-  | "expired"
-  | "renew_required"
-  | "revoked";
+  "active" | "expiring_soon" | "expired" | "renew_required" | "revoked";
 export type PlatformStatusDto = "enabled" | "disabled" | "coming_soon";
 export type ActivityTypeDto =
-  | "connected"
-  | "disconnected"
-  | "publish_success"
-  | "publish_failed"
-  | "permission_changed";
+  "connected" | "disconnected" | "publish_success" | "publish_failed" | "permission_changed";
 
 export type DefaultSettingsDto = {
   readonly visibility: string | null;

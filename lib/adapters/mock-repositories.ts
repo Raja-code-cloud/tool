@@ -40,9 +40,9 @@ import {
   SOCIAL_ACCOUNTS,
 } from "@/constants/social-accounts";
 import { CURRENT_USER, UNREAD_NOTIFICATION_COUNT, WORKSPACE } from "@/constants/workspace";
-import { createMockSocialAccountRepository } from "@/lib/adapters/http-social-account-repository";
 import { createMockContentRepository } from "@/lib/adapters/http-content-repository";
 import { createMockSchedulerRepository } from "@/lib/adapters/http-scheduler-repository";
+import { createMockSocialAccountRepository } from "@/lib/adapters/http-social-account-repository";
 import type {
   AiStudioRepository,
   AnalyticsRepository,

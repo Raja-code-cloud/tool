@@ -1,3 +1,4 @@
+import type { ApiClient } from "@/lib/api/client";
 import type {
   ActivityEventDto,
   AuthorizeSocialAccountResponseDto,
@@ -10,9 +11,8 @@ import type {
   SuccessEnvelope,
   UpdateSocialAccountRequestDto,
 } from "@/lib/api/social-account-types";
-import type { ApiClient } from "@/lib/api/client";
-import type { ActivityEvent, SocialAccount } from "@/lib/domain/social-account";
 import type { SocialAccountRepository } from "@/lib/domain/repositories";
+import type { SocialAccount } from "@/lib/domain/social-account";
 import {
   mapActivityEventDto,
   mapDefaultSettingsUpdate,
@@ -125,12 +125,14 @@ export function createHttpSocialAccountRepository(client: ApiClient): SocialAcco
     },
 
     async updateAccount(accountId, version, input) {
-      const body: UpdateSocialAccountRequestDto = {};
+      const body = {} as UpdateSocialAccountRequestDto;
       if (input.publishingEnabled !== undefined) {
-        body.publishingEnabled = input.publishingEnabled;
+        Object.assign(body, { publishingEnabled: input.publishingEnabled });
       }
       if (input.defaultSettings) {
-        body.defaultSettings = mapDefaultSettingsUpdate(input.defaultSettings);
+        Object.assign(body, {
+          defaultSettings: mapDefaultSettingsUpdate(input.defaultSettings),
+        });
       }
       const response = await client.patch<SingleSuccessEnvelope<SocialAccountDto>>(
         `/api/v1/social-accounts/${accountId}`,

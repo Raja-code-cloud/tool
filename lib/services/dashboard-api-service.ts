@@ -64,7 +64,7 @@ export function createDashboardApiService(repository: DashboardRepository) {
         return {
           ...overview,
           offline: false,
-          error: overview.partial ? overview.warnings[0] ?? null : null,
+          error: overview.partial ? (overview.warnings[0] ?? null) : null,
         };
       } catch (error) {
         const message = mapDashboardError(error);
