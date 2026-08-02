@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from fastapi.testclient import TestClient
+
 from cloud_content_hub.security.headers import SecurityHeadersPolicy, validate_response_headers
 
 
@@ -20,7 +22,9 @@ def test_validate_response_headers_accepts_complete_set() -> None:
     assert missing_recommended == []
 
 
-def test_health_endpoint_documents_missing_security_headers(security_client) -> None:
+def test_health_endpoint_documents_missing_security_headers(
+    security_client: TestClient,
+) -> None:
     """Regression guard: documents current gap until headers middleware is added."""
 
     response = security_client.get("/health")

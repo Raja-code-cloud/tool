@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 from cloud_content_hub.api.dependencies import HandlerRegistry
 from cloud_content_hub.bootstrap.api import create_app
 from cloud_content_hub.core.config import Environment, Settings
+from cloud_content_hub.infrastructure.identity.jwt import JwtService
 from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
 
 
@@ -19,5 +20,5 @@ def security_client() -> TestClient:
 
 
 @pytest.fixture
-def jwt_service():
+def jwt_service() -> JwtService:
     return identity_factory().jwt_service

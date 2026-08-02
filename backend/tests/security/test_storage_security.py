@@ -13,9 +13,15 @@ from cloud_content_hub.infrastructure.storage.exceptions import (
 )
 from cloud_content_hub.infrastructure.storage.utils import sanitize_metadata
 from cloud_content_hub.infrastructure.storage.validators.extension import validate_extension
-from cloud_content_hub.infrastructure.storage.validators.filename import validate_blob_name, validate_filename
+from cloud_content_hub.infrastructure.storage.validators.filename import (
+    validate_blob_name,
+    validate_filename,
+)
 from cloud_content_hub.infrastructure.storage.validators.mime import validate_mime_type
-from cloud_content_hub.infrastructure.storage.validators.size import validate_not_empty, validate_size
+from cloud_content_hub.infrastructure.storage.validators.size import (
+    validate_not_empty,
+    validate_size,
+)
 
 
 @pytest.mark.parametrize(

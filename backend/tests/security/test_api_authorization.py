@@ -28,7 +28,7 @@ def _principal(*permissions: str) -> Principal:
     )
 
 
-def test_unauthenticated_request_to_protected_route_returns_401(security_client: TestClient) -> None:
+def test_unauthenticated_protected_route_returns_401(security_client: TestClient) -> None:
     response = security_client.get(f"/api/v1/assets/{uuid4()}")
     assert response.status_code in {401, 422}
 

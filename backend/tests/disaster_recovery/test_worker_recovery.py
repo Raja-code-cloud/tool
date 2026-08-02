@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock
-
 import pytest
 
 from cloud_content_hub.infrastructure.observability.health import HealthChecker, HealthStatus

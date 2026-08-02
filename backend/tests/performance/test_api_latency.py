@@ -106,7 +106,7 @@ async def test_generate_content_acceptance_latency(
         **perf_headers,
         "Idempotency-Key": f"perf-gen-{uuid4().hex}",
     }
-    body = {
+    body: dict[str, object] = {
         "assetId": "01900000-0000-7000-8000-000000000301",
         "sourceVersionId": "01900000-0000-7000-8000-000000000302",
         "modelId": "01900000-0000-7000-8000-000000000303",

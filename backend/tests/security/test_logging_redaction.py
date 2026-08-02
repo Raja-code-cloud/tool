@@ -5,7 +5,7 @@ from __future__ import annotations
 from cloud_content_hub.infrastructure.identity.config import IdentitySettings
 from cloud_content_hub.infrastructure.observability.logging import redact_event
 from cloud_content_hub.infrastructure.observability.utils import redact_mapping
-from cloud_content_hub.infrastructure.storage.config import AzureStorageConfig, AzureCredentialMode
+from cloud_content_hub.infrastructure.storage.config import AzureCredentialMode, AzureStorageConfig
 
 
 def test_redact_mapping_masks_secret_keys() -> None:
@@ -42,7 +42,8 @@ def test_redact_event_processor_masks_nested_secrets() -> None:
 
 
 def test_identity_settings_hide_signing_key_from_repr() -> None:
-    settings = IdentitySettings(signing_key_pem="-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----")
+    pem = "-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----"
+    settings = IdentitySettings(signing_key_pem=pem)
     rendered = repr(settings)
     assert "PRIVATE KEY" not in rendered
     assert "abc" not in rendered

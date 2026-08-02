@@ -62,7 +62,10 @@ def default_risk_register() -> RiskRegister:
                     "API responses do not emit HSTS, CSP, X-Content-Type-Options, "
                     "X-Frame-Options, Referrer-Policy, or Permissions-Policy."
                 ),
-                evidence="bootstrap/api.py registers CORS and gzip only; no security header middleware.",
+                evidence=(
+                    "bootstrap/api.py registers CORS and gzip only; "
+                    "no security header middleware."
+                ),
                 remediation=(
                     "Add SecurityHeadersMiddleware or configure equivalent headers at Azure "
                     "Container Apps / Application Gateway."
@@ -79,7 +82,9 @@ def default_risk_register() -> RiskRegister:
                     "per-principal or per-workspace rate limits."
                 ),
                 evidence="RateLimitError exists but no middleware enforces limits.",
-                remediation="Implement Redis token-bucket limits keyed by principal and route class.",
+                remediation=(
+                    "Implement Redis token-bucket limits keyed by principal and route class."
+                ),
             ),
             RiskEntry(
                 id="R-003",
@@ -91,7 +96,9 @@ def default_risk_register() -> RiskRegister:
                     "X-Workspace-ID is required but active membership is not verified before "
                     "ActorContext construction."
                 ),
-                evidence="api/dependencies.py build_actor_context trusts header once authenticated.",
+                evidence=(
+                    "api/dependencies.py build_actor_context trusts header once authenticated."
+                ),
                 remediation=(
                     "Resolve membership in delivery dependencies and return 403/404 for "
                     "non-members."
@@ -104,7 +111,8 @@ def default_risk_register() -> RiskRegister:
                 status=RiskStatus.ACCEPTED,
                 category="Worker security",
                 description=(
-                    "Background workers receive permissions=frozenset({'*'}) via build_worker_actor."
+                    "Background workers receive permissions=frozenset({'*'}) "
+                    "via build_worker_actor."
                 ),
                 evidence="workers/base.py build_worker_actor grants wildcard permissions.",
                 remediation=(
@@ -121,7 +129,9 @@ def default_risk_register() -> RiskRegister:
                 description=(
                     "Row-level security is documented but not enabled in Alembic migrations."
                 ),
-                evidence="Initial schema migration contains no ENABLE ROW LEVEL SECURITY statements.",
+                evidence=(
+                    "Initial schema migration contains no ENABLE ROW LEVEL SECURITY statements."
+                ),
                 remediation=(
                     "Add RLS policies and set transaction-local tenant context after authorization."
                 ),
@@ -132,7 +142,9 @@ def default_risk_register() -> RiskRegister:
                 severity=RiskSeverity.MEDIUM,
                 status=RiskStatus.OPEN,
                 category="Upload security",
-                description="Uploaded content is validated for type/size but not scanned by default.",
+                description=(
+                    "Uploaded content is validated for type/size but not scanned by default."
+                ),
                 evidence="NoOpVirusScanHook is the default implementation.",
                 remediation="Integrate Azure Defender or ClamAV before marking uploads usable.",
             ),
@@ -162,7 +174,9 @@ def default_risk_register() -> RiskRegister:
                 severity=RiskSeverity.LOW,
                 status=RiskStatus.OPEN,
                 category="Session security",
-                description="CsrfProtector is defined but cookie-based auth routes are not implemented.",
+                description=(
+                    "CsrfProtector is defined but cookie-based auth routes are not implemented."
+                ),
                 evidence="permissions.py defines CsrfProtector protocol only.",
                 remediation="Implement CSRF validation when cookie refresh transport is added.",
             ),

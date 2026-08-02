@@ -11,7 +11,6 @@ from cloud_content_hub.api.dependencies import build_actor_context
 from cloud_content_hub.core.errors import AuthenticationError
 from cloud_content_hub.infrastructure.identity.principal import Principal
 
-
 WORKSPACE_A = UUID("01900000-0000-7000-8000-000000000001")
 WORKSPACE_B = UUID("01900000-0000-7000-8000-000000000002")
 USER_ID = UUID("01900000-0000-7000-8000-000000000010")

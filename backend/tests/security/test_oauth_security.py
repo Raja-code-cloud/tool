@@ -5,6 +5,10 @@ from __future__ import annotations
 import pytest
 
 from cloud_content_hub.infrastructure.identity.exceptions import OAuthValidationError
+from cloud_content_hub.infrastructure.identity.utils import (
+    generate_code_challenge,
+    generate_code_verifier,
+)
 from cloud_content_hub.infrastructure.identity.validators import (
     extract_bearer_token,
     validate_authorization_code,
@@ -13,7 +17,6 @@ from cloud_content_hub.infrastructure.identity.validators import (
     validate_redirect_uri,
     validate_state,
 )
-from cloud_content_hub.infrastructure.identity.utils import generate_code_challenge, generate_code_verifier
 
 
 def test_pkce_verifier_meets_length_requirements() -> None:
