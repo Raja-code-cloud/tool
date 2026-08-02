@@ -1,0 +1,44 @@
+{
+  "uid": "cch-storage",
+  "title": "Cloud Content Hub — Storage",
+  "tags": ["cch", "storage", "blob", "sre"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Blob Operations",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum by (operation, outcome) (rate(cloud_content_hub_blob_operations_total[5m]))",
+          "legendFormat": "{{operation}} {{outcome}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Blob Error Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [{ "expr": "cch:blob_errors:rate5m", "legendFormat": "errors/s" }]
+    },
+    {
+      "id": 3,
+      "title": "Bytes Transferred",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum by (direction) (rate(cloud_content_hub_blob_bytes_total[5m]))",
+          "legendFormat": "{{direction}}"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "Bps" } }
+    }
+  ]
+}

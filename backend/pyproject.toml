@@ -43,6 +43,7 @@ dev = [
   "pytest-asyncio>=0.25",
   "pytest-benchmark>=5.1",
   "pytest-cov>=6.0",
+  "pyyaml>=6.0",
   "ruff>=0.9",
   "types-psutil>=6.1",
 ]
@@ -81,14 +82,26 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 markers = [
   "integration: requires external infrastructure",
+  "e2e: end-to-end workflow validation",
   "contract: validates a public contract",
   "migration: validates database migrations",
+  "release: production release validation",
+  "smoke: end-to-end smoke test",
+  "deployment: deployment verification",
   "slow: long-running test",
   "external: calls an external service",
   "performance: measures latency and throughput",
   "benchmark: pytest-benchmark micro-benchmark",
   "load: load-test scenario (Locust/k6 or simulated concurrency)",
   "stress: stress-test scenario targeting saturation limits",
+  "disaster_recovery: validates disaster recovery behavior",
+  "backup: validates backup configuration and restore procedures",
+  "failover: validates failover and recovery simulations",
+  "regression: automated regression coverage",
+  "api: API automation and contract validation",
+  "automation: multi-step workflow automation",
+  "critical_path: business critical path regression",
+  "nightly: extended nightly regression pack",
 ]
 filterwarnings = [
   "ignore::pytest_benchmark.logger.PytestBenchmarkWarning",

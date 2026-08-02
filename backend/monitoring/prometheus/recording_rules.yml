@@ -1,0 +1,100 @@
+# SLI recording rules for Cloud Content Hub AI.
+# Namespace prefix: cloud_content_hub_
+
+groups:
+  - name: cch_sli_availability
+    interval: 30s
+    rules:
+      - record: cch:api_requests:rate5m
+        expr: sum(rate(cloud_content_hub_http_requests_total[5m]))
+
+      - record: cch:api_errors:rate5m
+        expr: sum(rate(cloud_content_hub_http_requests_total{status_class="5xx"}[5m]))
+
+      - record: cch:api_availability:ratio5m
+        expr: |
+          1 - (
+            sum(rate(cloud_content_hub_http_requests_total{status_class="5xx"}[5m]))
+            /
+            clamp_min(sum(rate(cloud_content_hub_http_requests_total[5m])), 1e-9)
+          )
+
+      - record: cch:api_latency:p95_5m
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(cloud_content_hub_http_request_duration_seconds_bucket[5m]))
+          )
+
+      - record: cch:api_latency:p99_5m
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum by (le) (rate(cloud_content_hub_http_request_duration_seconds_bucket[5m]))
+          )
+
+  - name: cch_sli_workers
+    interval: 30s
+    rules:
+      - record: cch:worker_success:ratio5m
+        expr: |
+          sum(rate(cloud_content_hub_worker_jobs_total{outcome="success"}[5m]))
+          /
+          clamp_min(sum(rate(cloud_content_hub_worker_jobs_total[5m])), 1e-9)
+
+      - record: cch:worker_failure:rate5m
+        expr: sum(rate(cloud_content_hub_worker_jobs_total{outcome="failure"}[5m]))
+
+      - record: cch:queue_depth:max
+        expr: max(cloud_content_hub_queue_depth)
+
+      - record: cch:queue_latency:p95_5m
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le, queue) (rate(cloud_content_hub_queue_latency_seconds_bucket[5m]))
+          )
+
+  - name: cch_sli_publishing
+    interval: 30s
+    rules:
+      - record: cch:outbox_retries:rate5m
+        expr: sum(rate(cloud_content_hub_retries_total{component="outbox"}[5m]))
+
+      - record: cch:scheduler_lag:max
+        expr: max(cloud_content_hub_scheduler_lag_seconds)
+
+      - record: cch:publish_success:ratio5m
+        expr: |
+          sum(rate(cloud_content_hub_scheduler_jobs_total{outcome="success"}[5m]))
+          /
+          clamp_min(sum(rate(cloud_content_hub_scheduler_jobs_total[5m])), 1e-9)
+
+  - name: cch_sli_dependencies
+    interval: 30s
+    rules:
+      - record: cch:database_errors:rate5m
+        expr: sum(rate(cloud_content_hub_database_operations_total{outcome="error"}[5m]))
+
+      - record: cch:cache_errors:rate5m
+        expr: sum(rate(cloud_content_hub_cache_operations_total{outcome="error"}[5m]))
+
+      - record: cch:blob_errors:rate5m
+        expr: sum(rate(cloud_content_hub_blob_operations_total{outcome="error"}[5m]))
+
+      - record: cch:ai_errors:rate5m
+        expr: sum(rate(cloud_content_hub_ai_requests_total{outcome="error"}[5m]))
+
+      - record: cch:auth_failures:rate5m
+        expr: sum(rate(cloud_content_hub_auth_events_total{outcome="failure"}[5m]))
+
+  - name: cch_slo_burn
+    interval: 30s
+    rules:
+      - record: cch:slo_availability:burn_rate_1h
+        expr: |
+          (1 - cch:api_availability:ratio5m) / (1 - 0.999)
+
+      - record: cch:slo_latency:burn_rate_1h
+        expr: |
+          (cch:api_latency:p95_5m > bool 0.5) * 1

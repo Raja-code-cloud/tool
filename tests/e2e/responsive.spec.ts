@@ -1,4 +1,4 @@
-import { devices, expect, test } from "@playwright/test";
+import { expect, test, devices } from "@playwright/test";
 
 import { ROUTES } from "../fixtures/routes";
 
@@ -23,9 +23,9 @@ test.describe("responsive behavior", () => {
     await expect(page.locator("main")).toBeVisible();
   });
 
-  test("collapses breadcrumb intermediates on narrow viewports", async ({ page }) => {
+  test("shows breadcrumbs on tablet viewports", async ({ page }) => {
+    await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto(ROUTES.contentLibrary);
-    const breadcrumb = page.getByRole("navigation", { name: "Breadcrumb" });
-    await expect(breadcrumb).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toBeVisible();
   });
 });

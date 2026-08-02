@@ -1,0 +1,34 @@
+# Alert severity routing matrix
+
+critical:
+  page: true
+  channels: [pagerduty, slack-critical]
+  response_sla_minutes: 15
+  examples:
+    - CchApiUnavailable
+    - CchApiHighErrorRate
+    - CchApiAvailabilitySLOBurn
+    - CchWorkerHighFailureRate
+    - CchSchedulerLag
+    - CchDatabaseErrors
+    - CchCacheErrors
+    - CchStorageFailures
+
+warning:
+  page: false
+  channels: [slack-platform]
+  response_sla_minutes: 60
+  examples:
+    - CchApiHighLatency
+    - CchWorkerSuccessRateLow
+    - CchQueueDepthHigh
+    - CchOutboxBacklog
+    - CchPublishSuccessRateLow
+    - CchDatabasePoolExhaustion
+    - CchAiProviderFailures
+    - CchSocialProviderFailures
+    - CchAuthFailureSpike
+
+inhibition:
+  - when: CchApiUnavailable
+    suppress: [CchApiHighLatency, CchApiHighErrorRate, CchWorkerSuccessRateLow]

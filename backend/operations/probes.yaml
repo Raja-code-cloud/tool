@@ -1,0 +1,104 @@
+# Cloud Content Hub AI — probe definitions for all runtime units.
+# Paths reflect implemented FastAPI routes (see api/routers/v1/health.py).
+
+api:
+  service: cloud-content-hub-api
+  port: 8000
+  probes:
+    liveness:
+      path: /live
+      method: GET
+      success_codes: [200]
+      timeout_seconds: 3
+      period_seconds: 10
+      failure_threshold: 3
+      description: Process is alive; no dependency checks.
+    readiness:
+      path: /ready
+      method: GET
+      success_codes: [200]
+      timeout_seconds: 5
+      period_seconds: 15
+      failure_threshold: 3
+      description: PostgreSQL and Redis must respond.
+    startup:
+      path: /ready
+      method: GET
+      success_codes: [200]
+      timeout_seconds: 5
+      period_seconds: 5
+      failure_threshold: 12
+      description: Allow up to 60s for dependency warmup on cold start.
+
+worker:
+  service: cloud-content-hub-worker
+  probes:
+    liveness:
+      type: exec
+      command:
+        - celery
+        - --app
+        - cloud_content_hub.workers.runtime:celery_app
+        - inspect
+        - ping
+        - --timeout
+        - "3"
+      timeout_seconds: 10
+      period_seconds: 30
+      failure_threshold: 3
+      description: Celery worker process responds to inspect ping.
+    readiness:
+      type: exec
+      command:
+        - python
+        - backend/operations/scripts/worker_readiness.py
+      timeout_seconds: 10
+      period_seconds: 30
+      failure_threshold: 3
+      description: Database, Redis, and outbox lag within thresholds.
+
+beat:
+  service: cloud-content-hub-beat
+  replicas: 1
+  probes:
+    liveness:
+      type: exec
+      command:
+        - test
+        - -f
+        - /tmp/celerybeat-schedule
+      timeout_seconds: 5
+      period_seconds: 60
+      failure_threshold: 3
+      description: Beat schedule file exists (process has started).
+    readiness:
+      type: exec
+      command:
+        - celery
+        - --app
+        - cloud_content_hub.workers.runtime:celery_app
+        - inspect
+        - scheduled
+        - --timeout
+        - "3"
+      timeout_seconds: 10
+      period_seconds: 60
+      failure_threshold: 3
+      description: Beat can communicate with broker.
+
+metrics:
+  api:
+    path: /metrics
+    port: 8000
+    scrape_interval: 30s
+    description: Prometheus text exposition (mount via ObservabilityBundle).
+  worker:
+    path: /metrics
+    port: 9100
+    scrape_interval: 30s
+    description: Optional sidecar or process metrics endpoint when enabled.
+
+admin_health:
+  path: /api/v1/admin/system
+  auth: required
+  description: Aggregate health including storage (degraded) and outbox lag (degraded).

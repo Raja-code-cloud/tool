@@ -1,0 +1,248 @@
+# Cloud Content Hub AI — Prometheus alert rules.
+# Each alert includes owner, severity, runbook reference, and recovery condition.
+
+groups:
+  - name: cch_api
+    rules:
+      - alert: CchApiUnavailable
+        expr: up{job=~"cch-api.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: api
+          owner: platform-oncall
+        annotations:
+          summary: "API metrics target is down"
+          description: "Prometheus cannot scrape the API /metrics endpoint for 2 minutes."
+          runbook: "docs/backend/sre/RUNBOOKS.md#api-unavailable"
+
+      - alert: CchApiHighErrorRate
+        expr: |
+          (
+            sum(rate(cloud_content_hub_http_requests_total{status_class="5xx"}[5m]))
+            /
+            clamp_min(sum(rate(cloud_content_hub_http_requests_total[5m])), 1e-9)
+          ) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: api
+          owner: platform-oncall
+        annotations:
+          summary: "API 5xx error rate above 1%"
+          description: "5xx ratio {{ $value | humanizePercentage }} over 5 minutes."
+          runbook: "docs/backend/sre/RUNBOOKS.md#api-unavailable"
+
+      - alert: CchApiHighLatency
+        expr: cch:api_latency:p95_5m > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: api
+          owner: platform-oncall
+        annotations:
+          summary: "API p95 latency above 500ms"
+          description: "p95 latency is {{ $value | humanizeDuration }}."
+          runbook: "docs/backend/sre/RUNBOOKS.md#high-latency"
+
+      - alert: CchApiAvailabilitySLOBurn
+        expr: cch:slo_availability:burn_rate_1h > 14.4
+        for: 5m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: api
+          owner: platform-oncall
+        annotations:
+          summary: "API availability SLO burn rate critical"
+          description: "Fast burn detected; investigate 5xx and dependency health."
+          runbook: "docs/backend/sre/SLOS.md#availability"
+
+  - name: cch_workers
+    rules:
+      - alert: CchWorkerHighFailureRate
+        expr: cch:worker_failure:rate5m > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: worker
+          owner: platform-oncall
+        annotations:
+          summary: "Worker failure rate elevated"
+          description: "Worker failures {{ $value }}/s over 5 minutes."
+          runbook: "docs/backend/sre/RUNBOOKS.md#worker-crash"
+
+      - alert: CchWorkerSuccessRateLow
+        expr: cch:worker_success:ratio5m < 0.95
+        for: 10m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: worker
+          owner: platform-oncall
+        annotations:
+          summary: "Worker success ratio below 95%"
+          description: "Success ratio {{ $value | humanizePercentage }}."
+          runbook: "docs/backend/sre/SLOS.md#worker-success-rate"
+
+      - alert: CchQueueDepthHigh
+        expr: cch:queue_depth:max > 1000
+        for: 10m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: worker
+          owner: platform-oncall
+        annotations:
+          summary: "Queue depth above 1000"
+          description: "At least one queue has depth {{ $value }}."
+          runbook: "docs/backend/sre/RUNBOOKS.md#worker-crash"
+
+  - name: cch_outbox_scheduler
+    rules:
+      - alert: CchOutboxBacklog
+        expr: cch:outbox_retries:rate5m > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: outbox
+          owner: platform-oncall
+        annotations:
+          summary: "Outbox retry rate elevated"
+          description: "Outbox retries {{ $value }}/s; dispatch may be lagging."
+          runbook: "docs/backend/sre/RUNBOOKS.md#outbox-backlog"
+
+      - alert: CchSchedulerLag
+        expr: cch:scheduler_lag:max > 300
+        for: 5m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: scheduler
+          owner: platform-oncall
+        annotations:
+          summary: "Scheduler lag above 5 minutes"
+          description: "Max scheduler lag is {{ $value | humanizeDuration }}."
+          runbook: "docs/backend/sre/RUNBOOKS.md#scheduler-failure"
+
+      - alert: CchPublishSuccessRateLow
+        expr: cch:publish_success:ratio5m < 0.95
+        for: 10m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: publishing
+          owner: platform-oncall
+        annotations:
+          summary: "Publish success ratio below 95%"
+          description: "Publish success {{ $value | humanizePercentage }}."
+          runbook: "docs/backend/sre/SLOS.md#publish-success-rate"
+
+  - name: cch_dependencies
+    rules:
+      - alert: CchDatabaseErrors
+        expr: cch:database_errors:rate5m > 0.5
+        for: 3m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: database
+          owner: platform-oncall
+        annotations:
+          summary: "Database error rate elevated"
+          description: "Database errors {{ $value }}/s."
+          runbook: "docs/backend/sre/RUNBOOKS.md#database-unavailable"
+
+      - alert: CchCacheErrors
+        expr: cch:cache_errors:rate5m > 0.5
+        for: 3m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: redis
+          owner: platform-oncall
+        annotations:
+          summary: "Redis/cache error rate elevated"
+          description: "Cache errors {{ $value }}/s."
+          runbook: "docs/backend/sre/RUNBOOKS.md#redis-unavailable"
+
+      - alert: CchDatabasePoolExhaustion
+        expr: |
+          sum(cloud_content_hub_database_pool_connections{state="checked_out"})
+          /
+          clamp_min(
+            sum(cloud_content_hub_database_pool_connections{state="pool_size"}),
+            1
+          ) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: database
+          owner: platform-oncall
+        annotations:
+          summary: "Database connection pool above 90% utilization"
+          description: "Pool saturation may cause readiness failures."
+          runbook: "docs/backend/sre/OPERATIONS_GUIDE.md#capacity"
+
+  - name: cch_providers
+    rules:
+      - alert: CchStorageFailures
+        expr: cch:blob_errors:rate5m > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          service: cloud-content-hub
+          component: storage
+          owner: platform-oncall
+        annotations:
+          summary: "Azure Blob storage error rate elevated"
+          description: "Blob errors {{ $value }}/s."
+          runbook: "docs/backend/sre/RUNBOOKS.md#blob-storage-failure"
+
+      - alert: CchAiProviderFailures
+        expr: cch:ai_errors:rate5m > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: ai
+          owner: platform-oncall
+        annotations:
+          summary: "AI provider error rate elevated"
+          description: "AI errors {{ $value }}/s."
+          runbook: "docs/backend/sre/RUNBOOKS.md#provider-outage"
+
+      - alert: CchSocialProviderFailures
+        expr: |
+          sum(rate(cloud_content_hub_errors_total{boundary="social",code=~"provider_.*"}[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: social
+          owner: platform-oncall
+        annotations:
+          summary: "Social provider error rate elevated"
+          description: "Social provider errors {{ $value }}/s."
+          runbook: "docs/backend/sre/RUNBOOKS.md#provider-outage"
+
+  - name: cch_auth
+    rules:
+      - alert: CchAuthFailureSpike
+        expr: cch:auth_failures:rate5m > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: cloud-content-hub
+          component: auth
+          owner: security-oncall
+        annotations:
+          summary: "Authentication failure rate spike"
+          description: "Auth failures {{ $value }}/s — may indicate attack or IdP issue."
+          runbook: "docs/backend/sre/RUNBOOKS.md#provider-outage"

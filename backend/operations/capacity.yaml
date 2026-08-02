@@ -1,0 +1,97 @@
+# Cloud Content Hub AI — capacity and sizing guidance.
+# Values align with core/config.py defaults and ACA Bicep parameters.
+
+database:
+  pool_size_per_process: 5
+  pool_size_max: 50
+  timeout_seconds: 5
+  sizing_notes: |
+    Each API replica and worker process opens its own pool.
+    Total connections ≈ (api_replicas + worker_replicas) × pool_size + migration overhead.
+    Size PostgreSQL max_connections accordingly; reserve 20% headroom.
+  recommended_max_connections:
+    dev: 50
+    qa: 100
+    prod: 300
+
+redis:
+  role: celery_broker_backend_cache
+  sizing_notes: |
+    Redis holds Celery broker queues, result backend, DLQ keys, and cache.
+    Monitor memory usage and evictions; scale vertically before horizontal split.
+  recommended_memory:
+    dev: 256Mi
+    qa: 512Mi
+    prod: 2Gi
+
+api:
+  cpu: "1"
+  memory: 2Gi
+  scaling:
+    metric: http_concurrent_requests
+    threshold: 100
+    min_replicas:
+      dev: 1
+      qa: 1
+      prod: 2
+    max_replicas:
+      dev: 3
+      qa: 5
+      prod: 20
+
+worker:
+  cpu: "1"
+  memory: 2Gi
+  celery_concurrency:
+    local: 2
+    aca: 4
+  scaling:
+    metric: cpu_utilization
+    threshold_percent: 70
+    min_replicas:
+      dev: 1
+      qa: 1
+      prod: 2
+    max_replicas:
+      dev: 3
+      qa: 10
+      prod: 30
+
+beat:
+  cpu: "0.5"
+  memory: 1Gi
+  replicas: 1
+  notes: Single replica only; do not scale horizontally.
+
+queues:
+  names: [media, ai, notification, maintenance]
+  outbox:
+    batch_size: 100
+    dispatch_lag_warning_seconds: 60
+    max_attempts: 10
+  worker_retry:
+    max_retries: 5
+    poison_message_threshold: 3
+    dead_letter_prefix: "cloud_content_hub:dlq"
+  sizing_notes: |
+    Scale workers when queue_depth or queue_latency SLOs burn.
+    maintenance queue carries outbox dispatch; prioritize if publishing lag grows.
+
+blob_storage:
+  provider: azure
+  notes: |
+    Throughput scales with Azure Storage account tier.
+    Monitor blob_operations_total failure rate and transfer bytes.
+
+ai_providers:
+  notes: |
+    Rate limits are provider-specific. Monitor ai_requests_total{outcome="error"}
+    and ai_request_duration_seconds p95. Circuit-break at provider level via
+    application retry policy; page on sustained failure rates.
+
+connection_budget_example_prod:
+  api_replicas: 10
+  worker_replicas: 15
+  pool_size: 5
+  estimated_app_connections: 125
+  recommended_postgres_max_connections: 200

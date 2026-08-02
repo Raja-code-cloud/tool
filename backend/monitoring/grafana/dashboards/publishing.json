@@ -1,0 +1,63 @@
+{
+  "uid": "cch-publishing",
+  "title": "Cloud Content Hub — Publishing",
+  "tags": ["cch", "publishing", "outbox", "sre"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Publish Success Ratio",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "cch:publish_success:ratio5m" }],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 0.95 },
+              { "color": "green", "value": 0.99 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Outbox Retries",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 18, "x": 6, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum by (operation, reason) (rate(cloud_content_hub_retries_total{component=\"outbox\"}[5m]))",
+          "legendFormat": "{{operation}}/{{reason}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Outbox Retry Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "targets": [{ "expr": "cch:outbox_retries:rate5m", "legendFormat": "retries/s" }]
+    },
+    {
+      "id": 4,
+      "title": "Maintenance Queue Depth",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "targets": [
+        {
+          "expr": "cloud_content_hub_queue_depth{queue=\"maintenance\"}",
+          "legendFormat": "maintenance"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+# Local Prometheus + Grafana stack for SRE validation and dashboard development.
+# Usage:
+#   docker compose -f backend/operations/compose/monitoring-stack.yml up -d
+# Requires the API to expose /metrics on the host network (port 8000).
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/prometheus/recording_rules.yml:/etc/prometheus/recording_rules.yml:ro
+      - ../../alerts/prometheus/alert_rules.yml:/etc/prometheus/alerts/alert_rules.yml:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    networks:
+      - monitoring
+
+  alertmanager:
+    image: prom/alertmanager:v0.28.0
+    ports:
+      - "9093:9093"
+    volumes:
+      - ../../alerts/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge

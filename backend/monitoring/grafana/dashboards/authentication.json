@@ -1,0 +1,43 @@
+{
+  "uid": "cch-authentication",
+  "title": "Cloud Content Hub — Authentication",
+  "tags": ["cch", "auth", "sre"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Auth Events",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum by (method, outcome) (rate(cloud_content_hub_auth_events_total[5m]))",
+          "legendFormat": "{{method}} {{outcome}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Auth Failure Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [{ "expr": "cch:auth_failures:rate5m", "legendFormat": "failures/s" }]
+    },
+    {
+      "id": 3,
+      "title": "Failure Ratio",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(cloud_content_hub_auth_events_total{outcome=\"failure\"}[5m])) / clamp_min(sum(rate(cloud_content_hub_auth_events_total[5m])), 1e-9)"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percentunit" } }
+    }
+  ]
+}

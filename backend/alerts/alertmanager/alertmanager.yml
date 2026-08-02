@@ -1,0 +1,42 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: default
+  group_by: ["alertname", "service", "component"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - matchers:
+        - severity = critical
+      receiver: critical
+      repeat_interval: 1h
+    - matchers:
+        - severity = warning
+      receiver: warning
+      repeat_interval: 4h
+    - matchers:
+        - component = auth
+      receiver: security
+
+receivers:
+  - name: default
+    # Configure webhook, email, or PagerDuty in production.
+    # Example: webhook_configs: [{ url: 'https://hooks.example/oncall' }]
+
+  - name: critical
+    # PagerDuty / Opsgenie integration for critical pages.
+
+  - name: warning
+    # Slack / Teams channel for warnings.
+
+  - name: security
+    # Security team channel for auth-related alerts.
+
+inhibit_rules:
+  - source_matchers:
+      - alertname = CchApiUnavailable
+    target_matchers:
+      - severity =~ warning|critical
+    equal: ["service"]

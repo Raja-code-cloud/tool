@@ -1,0 +1,57 @@
+{
+  "uid": "cch-scheduler",
+  "title": "Cloud Content Hub — Scheduler",
+  "tags": ["cch", "scheduler", "beat", "sre"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Scheduler Job Outcomes",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum by (job, outcome) (rate(cloud_content_hub_scheduler_jobs_total[5m]))",
+          "legendFormat": "{{job}} {{outcome}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Scheduler Lag (max)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "cloud_content_hub_scheduler_lag_seconds",
+          "legendFormat": "{{job}}"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 3,
+      "title": "Max Scheduler Lag",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 8 },
+      "targets": [{ "expr": "cch:scheduler_lag:max" }],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 60 },
+              { "color": "red", "value": 300 }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

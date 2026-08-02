@@ -1,0 +1,88 @@
+{
+  "uid": "cch-infrastructure",
+  "title": "Cloud Content Hub — Infrastructure",
+  "tags": ["cch", "infrastructure", "postgres", "redis", "sre"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Database Pool Connections",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "cloud_content_hub_database_pool_connections",
+          "legendFormat": "{{pool}} {{state}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Database Errors",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [{ "expr": "cch:database_errors:rate5m", "legendFormat": "db errors/s" }]
+    },
+    {
+      "id": 3,
+      "title": "Cache Operations",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum by (operation, outcome) (rate(cloud_content_hub_cache_operations_total[5m]))",
+          "legendFormat": "{{operation}} {{outcome}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Cache Error Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [{ "expr": "cch:cache_errors:rate5m", "legendFormat": "cache errors/s" }]
+    },
+    {
+      "id": 5,
+      "title": "Process CPU %",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+      "targets": [
+        {
+          "expr": "cloud_content_hub_process_cpu_percent",
+          "legendFormat": "{{instance}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Process Memory",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 16 },
+      "targets": [
+        {
+          "expr": "cloud_content_hub_process_resident_memory_bytes",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 7,
+      "title": "Process Uptime",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 16 },
+      "targets": [
+        {
+          "expr": "cloud_content_hub_process_uptime_seconds",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    }
+  ]
+}
