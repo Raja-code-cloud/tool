@@ -1,15 +1,17 @@
 "use client";
 
-import * as React from "react";
 import { Plus } from "lucide-react";
+import * as React from "react";
 
-import { DataTable, type DataTableColumn } from "@/components/tables";
-import { ConfirmationDialog } from "@/components/dialogs";
 import { CopyButton } from "@/components/buttons";
+import { ConfirmationDialog } from "@/components/dialogs";
+import { DataTable, type DataTableColumn } from "@/components/tables";
 import { Badge, Button } from "@/components/ui";
 import { useToast } from "@/hooks/use-toast";
+import type { ApiKeyRecord, ApiKeyScope } from "@/lib/domain/settings";
+import { settingsService } from "@/lib/services";
 import { formatDate } from "@/lib/utils/formatting";
-import { API_KEYS, type ApiKeyRecord, type ApiKeyScope } from "@/constants/settings";
+
 import { SettingsSection } from "./settings-section";
 
 const SCOPE_VARIANT: Record<ApiKeyScope, "neutral" | "info" | "warning"> = {
@@ -20,7 +22,9 @@ const SCOPE_VARIANT: Record<ApiKeyScope, "neutral" | "info" | "warning"> = {
 
 export function ApiKeysSection(): React.JSX.Element {
   const { toast } = useToast();
-  const [keys, setKeys] = React.useState<readonly ApiKeyRecord[]>(API_KEYS);
+  const [keys, setKeys] = React.useState<readonly ApiKeyRecord[]>(() =>
+    settingsService.listApiKeys(),
+  );
 
   const revoke = React.useCallback(
     (id: string, label: string): void => {
@@ -39,7 +43,7 @@ export function ApiKeysSection(): React.JSX.Element {
         cell: (row) => (
           <div className="min-w-0">
             <p className="font-medium">{row.label}</p>
-            <p className="text-xs text-muted-foreground">Created {formatDate(row.createdAt)}</p>
+            <p className="text-muted-foreground text-xs">Created {formatDate(row.createdAt)}</p>
           </div>
         ),
       },
@@ -61,7 +65,12 @@ export function ApiKeysSection(): React.JSX.Element {
       {
         id: "lastUsed",
         header: "Last used",
-        cell: (row) => (row.lastUsedAt ? formatDate(row.lastUsedAt) : <span className="text-muted-foreground">Never</span>),
+        cell: (row) =>
+          row.lastUsedAt ? (
+            formatDate(row.lastUsedAt)
+          ) : (
+            <span className="text-muted-foreground">Never</span>
+          ),
       },
       {
         id: "actions",
@@ -69,7 +78,11 @@ export function ApiKeysSection(): React.JSX.Element {
         align: "right",
         cell: (row) => (
           <ConfirmationDialog
-            trigger={<Button variant="ghost" size="compact">Revoke</Button>}
+            trigger={
+              <Button variant="ghost" size="compact">
+                Revoke
+              </Button>
+            }
             title={`Revoke “${row.label}”?`}
             description="Any integration using this key will start failing immediately. This cannot be undone."
             confirmLabel="Revoke key"
@@ -89,7 +102,8 @@ export function ApiKeysSection(): React.JSX.Element {
       description="Keys authenticate server-to-server requests to the Cloud Content Hub API."
       action={
         <Button variant="secondary" size="compact">
-          <Plus className="size-4" aria-hidden="true" />Create key
+          <Plus className="size-4" aria-hidden="true" />
+          Create key
         </Button>
       }
     >
@@ -101,7 +115,7 @@ export function ApiKeysSection(): React.JSX.Element {
         density="compact"
         empty="No API keys yet. Create one to start using the API."
       />
-      <p className="mt-3 text-xs text-muted-foreground">
+      <p className="text-muted-foreground mt-3 text-xs">
         Secret values are shown once at creation time and cannot be retrieved later.
       </p>
     </SettingsSection>

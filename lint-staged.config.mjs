@@ -19,8 +19,7 @@ const lintStagedConfig = {
     ...batchCommands(files, "eslint --fix --max-warnings=0"),
     ...batchCommands(files, "prettier --write"),
   ],
-  "*.{css,md,mdx,json,jsonc,yaml,yml}": (files) =>
-    batchCommands(files, "prettier --write"),
+  "*.{css,md,mdx,json,jsonc,yaml,yml}": (files) => batchCommands(files, "prettier --write"),
 };
 
 export default lintStagedConfig;

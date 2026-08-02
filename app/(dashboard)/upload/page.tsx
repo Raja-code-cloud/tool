@@ -1,9 +1,10 @@
 import { ROUTES } from "@/constants/navigation";
 import { buildRouteMetadata } from "@/lib/utils/navigation";
-import { FeaturePlaceholder } from "../_components/feature-placeholder";
+
+import { UploadWizardView } from "./_components/upload-wizard-view";
 
 export const metadata = buildRouteMetadata(ROUTES.upload);
 
 export default function UploadPage(): React.JSX.Element {
-  return <FeaturePlaceholder href={ROUTES.upload} />;
+  return <UploadWizardView />;
 }

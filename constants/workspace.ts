@@ -1,13 +1,12 @@
-export const WORKSPACE = {
+import type { WorkspaceInfo, WorkspaceUser } from "@/lib/domain/workspace";
+
+export type { WorkspaceInfo, WorkspaceUser } from "@/lib/domain/workspace";
+
+export const WORKSPACE: WorkspaceInfo = {
   name: "Cloud Content Hub AI",
   shortName: "CCH AI",
-  description: "Plan, generate, schedule, and analyse omni-channel content from a single AI-native workspace.",
-} as const;
-
-export type WorkspaceUser = {
-  readonly name: string;
-  readonly email: string;
-  readonly role: string;
+  description:
+    "Plan, generate, schedule, and analyse omni-channel content from a single AI-native workspace.",
 };
 
 /** Mock session. Replaced by the auth provider in a later milestone. */

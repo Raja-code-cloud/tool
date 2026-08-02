@@ -4,16 +4,20 @@ import * as React from "react";
 
 import { Button, Checkbox, Label } from "@/components/ui";
 import { useToast } from "@/hooks/use-toast";
-import { NOTIFICATION_PREFERENCES, type NotificationChannelId } from "@/constants/settings";
+import type { NotificationChannelId } from "@/lib/domain/settings";
+import { settingsService } from "@/lib/services";
+
 import { SettingsSection } from "./settings-section";
 
 type ChannelState = Record<NotificationChannelId, { email: boolean; inApp: boolean }>;
 
 function buildInitialState(): ChannelState {
-  return NOTIFICATION_PREFERENCES.reduce<ChannelState>((accumulator, preference) => {
-    accumulator[preference.id] = { email: preference.email, inApp: preference.inApp };
-    return accumulator;
-  }, {} as ChannelState);
+  return settingsService
+    .listNotificationPreferences()
+    .reduce<ChannelState>((accumulator, preference) => {
+      accumulator[preference.id] = { email: preference.email, inApp: preference.inApp };
+      return accumulator;
+    }, {} as ChannelState);
 }
 
 export function NotificationsSection(): React.JSX.Element {
@@ -29,27 +33,50 @@ export function NotificationsSection(): React.JSX.Element {
       id="notifications"
       title="Notifications"
       description="Choose which events reach you, and where."
-      footer={<Button size="compact" onClick={() => toast({ title: "Notification preferences saved" })}>Save preferences</Button>}
+      footer={
+        <Button size="compact" onClick={() => toast({ title: "Notification preferences saved" })}>
+          Save preferences
+        </Button>
+      }
     >
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <caption className="sr-only">Notification preferences by channel</caption>
           <thead>
             <tr className="border-b">
-              <th scope="col" className="pb-2 text-left text-xs font-semibold text-muted-foreground">Event</th>
-              <th scope="col" className="w-24 pb-2 text-center text-xs font-semibold text-muted-foreground">Email</th>
-              <th scope="col" className="w-24 pb-2 text-center text-xs font-semibold text-muted-foreground">In-app</th>
+              <th
+                scope="col"
+                className="text-muted-foreground pb-2 text-left text-xs font-semibold"
+              >
+                Event
+              </th>
+              <th
+                scope="col"
+                className="text-muted-foreground w-24 pb-2 text-center text-xs font-semibold"
+              >
+                Email
+              </th>
+              <th
+                scope="col"
+                className="text-muted-foreground w-24 pb-2 text-center text-xs font-semibold"
+              >
+                In-app
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y">
-            {NOTIFICATION_PREFERENCES.map((preference) => (
+            {settingsService.listNotificationPreferences().map((preference) => (
               <tr key={preference.id}>
                 <th scope="row" className="py-3.5 pr-4 text-left font-normal">
                   <span className="block text-sm font-semibold">{preference.label}</span>
-                  <span className="mt-1 block text-sm text-muted-foreground">{preference.description}</span>
+                  <span className="text-muted-foreground mt-1 block text-sm">
+                    {preference.description}
+                  </span>
                 </th>
                 <td className="py-3.5 text-center">
-                  <Label htmlFor={`${preference.id}-email`} className="sr-only">{preference.label} by email</Label>
+                  <Label htmlFor={`${preference.id}-email`} className="sr-only">
+                    {preference.label} by email
+                  </Label>
                   <Checkbox
                     id={`${preference.id}-email`}
                     checked={state[preference.id].email}
@@ -58,7 +85,9 @@ export function NotificationsSection(): React.JSX.Element {
                   />
                 </td>
                 <td className="py-3.5 text-center">
-                  <Label htmlFor={`${preference.id}-inapp`} className="sr-only">{preference.label} in app</Label>
+                  <Label htmlFor={`${preference.id}-inapp`} className="sr-only">
+                    {preference.label} in app
+                  </Label>
                   <Checkbox
                     id={`${preference.id}-inapp`}
                     checked={state[preference.id].inApp}

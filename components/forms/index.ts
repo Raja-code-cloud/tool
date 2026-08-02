@@ -1,8 +1,9 @@
-export { CharacterCount, FormErrorSummary, FormField, SearchInput } from "./forms";
+export { CharacterCount, FormErrorSummary, FormField } from "./forms";
+export { SearchBar, SearchField, SearchInput } from "./search-field";
 export type {
   CharacterCountProps,
   FormError,
   FormErrorSummaryProps,
   FormFieldProps,
-  SearchInputProps,
 } from "./forms";
+export type { SearchBarProps, SearchFieldProps, SearchInputProps } from "./search-field";

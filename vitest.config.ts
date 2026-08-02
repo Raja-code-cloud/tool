@@ -29,11 +29,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "html", "lcov", "json-summary"],
       reportsDirectory: "./coverage",
-      include: [
-        "components/**/*.{ts,tsx}",
-        "hooks/**/*.{ts,tsx}",
-        "lib/utils/**/*.{ts,tsx}",
-      ],
+      include: ["components/**/*.{ts,tsx}", "hooks/**/*.{ts,tsx}", "lib/utils/**/*.{ts,tsx}"],
       exclude: ["**/*.d.ts", "**/index.ts"],
       thresholds: {
         lines: 80,
