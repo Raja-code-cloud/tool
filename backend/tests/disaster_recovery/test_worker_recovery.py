@@ -54,25 +54,35 @@ def test_permanent_worker_errors_are_not_retried(worker_retry_policy: WorkerRetr
 
 
 @pytest.mark.asyncio
-async def test_worker_health_service_includes_outbox_probe() -> None:
+async def test_worker_health_service_builds_from_container() -> None:
+    from cloud_content_hub.infrastructure.observability.health import create_ping_health_check
+
+    async def ok_ping() -> bool:
+        return True
+
     container = MagicMock()
-    container.health_checker = HealthChecker([], timeout_seconds=1.0)
+    container.health_checker = HealthChecker(
+        [create_ping_health_check("database", ok_ping)],
+        timeout_seconds=1.0,
+    )
     container.events = MagicMock()
     container.session_factory = MagicMock()
-    config = WorkerRuntimeConfig(
-        retry=WorkerRetryConfig(),
-        health_timeout_seconds=1.0,
-    )
 
     with pytest.MonkeyPatch.context() as patcher:
+        mock_outbox_check = MagicMock()
+        mock_outbox_check.name = "outbox_dispatch"
         patcher.setattr(
             "cloud_content_hub.workers.health.create_outbox_health_check",
-            lambda *_args, **_kwargs: MagicMock(name="outbox_dispatch", check=AsyncMock()),
+            lambda *_args, **_kwargs: mock_outbox_check,
+        )
+        config = WorkerRuntimeConfig(
+            retry=WorkerRetryConfig(),
+            health_timeout_seconds=1.0,
         )
         service = WorkerHealthService.from_container(container, config)
 
-    check_names = {check.name for check in service.checker.checks}
-    assert "outbox_dispatch" in check_names or len(service.checker.checks) >= 0
+    check_names = {check.name for check in service.checker._checks}
+    assert "outbox_dispatch" in check_names
 
 
 @pytest.mark.asyncio

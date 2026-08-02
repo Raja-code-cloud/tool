@@ -22,7 +22,7 @@ Cloud Content Hub backend is **Tier 1** (business-critical):
 
 | Component | RPO | RTO | Notes |
 | --------- | --- | --- | ----- |
-| PostgreSQL (prod) | ≤ 5 minutes | ≤ 4 hours | Azure PITR; HA failover ≤ 60 seconds for server failure |
+| PostgreSQL (prod) | ≤ 5 minutes | ≤ 4 hours | Azure PITR (35-day retention); HA failover ≤ 60 seconds for server failure |
 | PostgreSQL (dev/qa) | ≤ 24 hours | ≤ 8 hours | Lower retention acceptable |
 | Blob storage (GRS) | ≤ 15 minutes | ≤ 4 hours | GRS replication lag; account failover adds time |
 | Redis (default) | Best effort (queue) | ≤ 30 minutes | Outbox compensates for lost Celery messages |

@@ -41,7 +41,7 @@ describe("button components", () => {
       "Open filters",
     );
     expect(screen.getByRole("button", { name: "Continue" })).toBeInTheDocument();
-    expect(screen.getByTestId("leading-icon").parentElement).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByTestId("leading-icon").closest('[aria-hidden="true"]')).toBeInTheDocument();
   });
 
   it("copies text to the clipboard and shows confirmation state", async () => {

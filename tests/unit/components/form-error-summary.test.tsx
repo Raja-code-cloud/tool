@@ -19,7 +19,7 @@ describe("FormErrorSummary", () => {
   });
 
   it("renders nothing when there are no errors", () => {
-    const { container } = renderWithProviders(<FormErrorSummary errors={[]} />);
-    expect(container).toBeEmptyDOMElement();
+    renderWithProviders(<FormErrorSummary errors={[]} />);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 });

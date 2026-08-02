@@ -82,24 +82,24 @@ async def test_event_replay_schedules_retry_on_transient_provider_outage(
         deliverer=deliverer,
         config=config,
     )
-    envelope = envelope_from_record(
-        OutboxDispatchRecord(
-            id=uuid4(),
-            workspace_id=uuid4(),
-            organization_id=None,
-            aggregate_type="notification",
-            aggregate_id=uuid4(),
-            event_type="notification.created",
-            event_version=1,
-            payload={"type_code": "content.approved"},
-            headers={},
-            occurred_at=datetime(2026, 1, 1, tzinfo=UTC),
-            available_at=datetime(2026, 1, 1, tzinfo=UTC),
-            attempt_count=0,
-            last_error=None,
-        )
+    record = OutboxDispatchRecord(
+        id=uuid4(),
+        workspace_id=uuid4(),
+        organization_id=None,
+        aggregate_type="notification",
+        aggregate_id=uuid4(),
+        event_type="notification.created",
+        event_version=1,
+        payload={"type_code": "content.approved"},
+        headers={},
+        occurred_at=datetime(2026, 1, 1, tzinfo=UTC),
+        available_at=datetime(2026, 1, 1, tzinfo=UTC),
+        attempt_count=0,
+        last_error=None,
     )
+    envelope = envelope_from_record(record)
 
-    await service.deliver(session, envelope)
+    with pytest.raises(RuntimeError, match="provider timeout"):
+        await service.deliver(session, envelope, record=record)
 
     outbox.schedule_retry.assert_awaited_once()

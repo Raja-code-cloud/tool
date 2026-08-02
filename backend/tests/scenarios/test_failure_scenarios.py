@@ -24,6 +24,8 @@ from cloud_content_hub.infrastructure.events.testing.fakes import (
     FakeCeleryBroker,
     RecordingPlatformDeliverer,
 )
+from cloud_content_hub.infrastructure.identity.exceptions import OAuthValidationError
+from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
 from cloud_content_hub.infrastructure.storage.exceptions import StorageUnavailableError
 from cloud_content_hub.infrastructure.storage.models import StorageLocation, UploadRequest
 from cloud_content_hub.infrastructure.storage.testing.fake import InMemoryStorageProvider
@@ -95,9 +97,6 @@ async def test_ai_transient_failure_retries_on_second_attempt() -> None:
 @pytest.mark.asyncio
 async def test_oauth_failure_rejects_invalid_state() -> None:
     """OAuth failure rejects mismatched authorization state."""
-
-    from cloud_content_hub.infrastructure.identity.exceptions import OAuthValidationError
-from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
 
     factory = identity_factory()
     registry = factory.build_registry()

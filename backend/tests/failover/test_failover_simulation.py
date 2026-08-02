@@ -62,8 +62,8 @@ def test_t2_worker_failover_retries_transient_queue_errors(
 ) -> None:
     decision = worker_retry_policy.classify_failure(
         task_name="cloud_content_hub.tasks.deliver_outbox_event",
-        attempt_count=1,
-        last_error="broker timeout",
+        attempt_count=0,
+        last_error=None,
         error=TransientWorkerError(detail="broker timeout"),
     )
 

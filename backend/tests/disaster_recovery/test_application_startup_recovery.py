@@ -34,7 +34,7 @@ class TestApplicationStartupRecovery:
         await container.startup()
 
         assert container.started_at is not None
-        assert len(container.health_checker.checks) == 5
+        assert len(container.health_checker._checks) == 5
 
         container.storage_provider.close = AsyncMock()  # type: ignore[method-assign]
         container.redis.aclose = AsyncMock()  # type: ignore[method-assign]

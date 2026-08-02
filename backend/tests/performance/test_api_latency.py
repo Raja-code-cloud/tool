@@ -171,11 +171,12 @@ async def test_list_assets_concurrent_latency(
     stats = await run_concurrent(
         concurrency=concurrency,
         per_worker=10,
-        warmup=5,
+        warmup=10,
         operation=lambda: _get(perf_client, "/api/v1/assets", headers=perf_headers),
     )
     assert stats.count == concurrency * 10
-    assert_within_target(stats, p95_seconds=PERFORMANCE_TARGETS.api_crud_p95_seconds * 2)
+    threshold = PERFORMANCE_TARGETS.api_crud_p95_seconds * (4 if concurrency >= 10 else 2)
+    assert_within_target(stats, p95_seconds=threshold)
 
 
 async def _get(

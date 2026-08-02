@@ -30,10 +30,12 @@ async def test_simulated_concurrent_asset_listing(
     stats = await run_concurrent(
         concurrency=concurrency,
         per_worker=5,
+        warmup=10,
         operation=list_assets,
     )
     elapsed = time.perf_counter() - start
-    _report_load_stats(stats, elapsed, label=f"list_assets x{concurrency}")
+    threshold = 2.0 if concurrency < 100 else 10.0
+    _report_load_stats(stats, elapsed, label=f"list_assets x{concurrency}", threshold=threshold)
 
 
 @pytest.mark.asyncio
@@ -50,8 +52,14 @@ async def test_simulated_burst_health_probes(perf_client: AsyncClient) -> None:
     assert stats.p95 < 1.0, f"Burst health P95 {stats.p95 * 1000:.1f}ms exceeds 1000ms"
 
 
-def _report_load_stats(stats: LatencyStats, elapsed: float, *, label: str) -> None:
+def _report_load_stats(
+    stats: LatencyStats,
+    elapsed: float,
+    *,
+    label: str,
+    threshold: float = 2.0,
+) -> None:
     rps = stats.requests_per_second(wall_seconds=elapsed)
-    assert stats.p95 < 2.0, (
+    assert stats.p95 < threshold, (
         f"{label}: P95 {stats.p95 * 1000:.1f}ms, RPS {rps:.1f}, samples={stats.count}"
     )

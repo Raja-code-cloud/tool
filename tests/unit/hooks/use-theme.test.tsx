@@ -6,7 +6,7 @@ import { useTheme as useThemeReexport } from "@/hooks/use-theme";
 import { THEME_STORAGE_KEY } from "@/lib/security/constants";
 
 describe("useTheme", () => {
-  it("persists theme selection in versioned storage", () => {
+  it("persists theme selection in versioned storage", async () => {
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
         <ThemeProvider defaultTheme="dark" storageKey="test-theme">
@@ -15,20 +15,29 @@ describe("useTheme", () => {
       ),
     });
 
-    expect(result.current.resolvedTheme).toBe("dark");
+    await waitFor(() => {
+      expect(result.current.resolvedTheme).toBe("dark");
+    });
     expect(document.documentElement.classList.contains("dark")).toBe(true);
 
     act(() => result.current.setTheme("light"));
-    expect(result.current.theme).toBe("light");
-    expect(result.current.resolvedTheme).toBe("light");
+
+    await waitFor(() => {
+      expect(result.current.theme).toBe("light");
+      expect(result.current.resolvedTheme).toBe("light");
+    });
     expect(document.documentElement.classList.contains("dark")).toBe(false);
 
-    const stored = window.localStorage.getItem("test-theme");
-    expect(stored).toBeTruthy();
-    expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "light" });
+    await waitFor(() => {
+      const stored = window.localStorage.getItem("test-theme");
+      expect(stored).toBeTruthy();
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({ data: "light" });
+    });
   });
 
-  it("reads versioned theme values written by setTheme", async () => {
+  it("migrates legacy plain-string theme values", async () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, "system");
+
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
         <ThemeProvider defaultTheme="dark" storageKey={THEME_STORAGE_KEY}>
@@ -37,7 +46,9 @@ describe("useTheme", () => {
       ),
     });
 
-    act(() => result.current.setTheme("system"));
+    await waitFor(() => {
+      expect(result.current.theme).toBe("system");
+    });
 
     await waitFor(() => {
       const stored = window.localStorage.getItem(THEME_STORAGE_KEY);

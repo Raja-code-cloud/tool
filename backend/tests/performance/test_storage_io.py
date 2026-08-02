@@ -90,26 +90,29 @@ async def test_storage_download_latency(storage_provider: InMemoryStorageProvide
 
 @pytest.mark.asyncio
 async def test_large_file_upload_latency(storage_provider: InMemoryStorageProvider) -> None:
-    location = StorageLocation(
-        container="perf-large",
-        blob_name=build_blob_name(
-            "tenant-perf",
-            "user-perf",
-            BlobType.VIDEO,
-            uuid4(),
-            "large.bin",
-            created_at=datetime.now(tz=UTC),
-        ),
-    )
-    request = UploadRequest(
-        location=location,
-        data=LARGE_PAYLOAD,
-        content_type="application/octet-stream",
-        content_length=len(LARGE_PAYLOAD),
-        filename="large.bin",
-    )
+    counter = {"index": 0}
 
     async def upload_large() -> None:
+        counter["index"] += 1
+        current = counter["index"]
+        location = StorageLocation(
+            container="perf-large",
+            blob_name=build_blob_name(
+                "tenant-perf",
+                "user-perf",
+                BlobType.VIDEO,
+                uuid4(),
+                f"large-{current}.bin",
+                created_at=datetime.now(tz=UTC),
+            ),
+        )
+        request = UploadRequest(
+            location=location,
+            data=LARGE_PAYLOAD,
+            content_type="application/octet-stream",
+            content_length=len(LARGE_PAYLOAD),
+            filename=f"large-{current}.bin",
+        )
         await storage_provider.upload(request)
 
     stats = await collect_latencies(

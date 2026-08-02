@@ -73,6 +73,12 @@ Enable Azure Cache for Redis **premium persistence** only when operational revie
 | ACA revision history | Azure platform | Prior revisions retained for rollback |
 | Feature flags | PostgreSQL `settings` | Included in DB backup |
 
+Key Vault secrets (per environment):
+
+- `CCH-DATABASE-URL`
+- `CCH-MIGRATION-DATABASE-URL`
+- `CCH-REDIS-URL`
+
 Secrets rotation does not require image rebuild. Containers resolve Key Vault secret references at startup and on revision activation.
 
 ## Container images

@@ -16,7 +16,7 @@ from tests.disaster_recovery.helpers.simulation import (
 )
 
 HEALTH_ROUTER_SOURCE = (
-    Path(__file__).resolve().parents[3]
+    Path(__file__).resolve().parents[2]
     / "src"
     / "cloud_content_hub"
     / "api"
