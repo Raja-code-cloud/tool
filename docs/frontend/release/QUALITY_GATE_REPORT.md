@@ -9,14 +9,14 @@
 
 ## Summary
 
-| Gate | Status | CI blocker? |
-| ---- | ------ | ----------- |
-| typecheck | **PASS** | Yes — would pass |
-| lint | **PASS** | Yes — would pass |
-| format | **NOT RUN** | N/A |
-| format:check | **FAIL** | **Yes** |
-| test | **FAIL** | **Yes** |
-| build | **FAIL** | **Yes** |
+| Gate         | Status      | CI blocker?      |
+| ------------ | ----------- | ---------------- |
+| typecheck    | **PASS**    | Yes — would pass |
+| lint         | **PASS**    | Yes — would pass |
+| format       | **NOT RUN** | N/A              |
+| format:check | **FAIL**    | **Yes**          |
+| test         | **FAIL**    | **Yes**          |
+| build        | **FAIL**    | **Yes**          |
 
 **Overall gate status: FAIL (3 of 5 executable gates failed or unverified)**
 
@@ -26,13 +26,13 @@
 
 **Command:** `npm run typecheck` → `tsc --noEmit`
 
-| Field | Value |
-| ----- | ----- |
-| **Result** | **PASS** |
-| **Exit code** | 0 |
-| **Execution time** | 46.55s |
-| **Warnings** | 0 |
-| **Errors** | 0 |
+| Field              | Value    |
+| ------------------ | -------- |
+| **Result**         | **PASS** |
+| **Exit code**      | 0        |
+| **Execution time** | 46.55s   |
+| **Warnings**       | 0        |
+| **Errors**         | 0        |
 
 **Notes:** Strict TypeScript options enabled (`strict`, `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`, unused symbol checks).
 
@@ -42,13 +42,13 @@
 
 **Command:** `npm run lint` → `next lint`
 
-| Field | Value |
-| ----- | ----- |
-| **Result** | **PASS** |
-| **Exit code** | 0 |
-| **Execution time** | 36.15s |
-| **Warnings** | 1 informational |
-| **Errors** | 0 |
+| Field              | Value           |
+| ------------------ | --------------- |
+| **Result**         | **PASS**        |
+| **Exit code**      | 0               |
+| **Execution time** | 36.15s          |
+| **Warnings**       | 1 informational |
+| **Errors**         | 0               |
 
 **Warnings:**
 
@@ -66,9 +66,9 @@ npx @next/codemod@canary next-lint-to-eslint-cli .
 
 **Command:** `npm run format` → `prettier --write .`
 
-| Field | Value |
-| ----- | ----- |
-| **Result** | **NOT EXECUTED** |
+| Field      | Value                                                                  |
+| ---------- | ---------------------------------------------------------------------- |
+| **Result** | **NOT EXECUTED**                                                       |
 | **Reason** | Audit policy prohibits mutating 138 files identified by `format:check` |
 
 **Recommendation:** Run on a dedicated formatting branch before release. Expected to touch frontend source, docs, and ancillary workspace files.
@@ -79,13 +79,13 @@ npx @next/codemod@canary next-lint-to-eslint-cli .
 
 **Command:** `npm run format:check` → `prettier --check .`
 
-| Field | Value |
-| ----- | ----- |
-| **Result** | **FAIL** |
-| **Exit code** | 1 |
-| **Execution time** | 154.88s |
-| **Warnings** | 138 files |
-| **Errors** | 1 summary error |
+| Field              | Value           |
+| ------------------ | --------------- |
+| **Result**         | **FAIL**        |
+| **Exit code**      | 1               |
+| **Execution time** | 154.88s         |
+| **Warnings**       | 138 files       |
+| **Errors**         | 1 summary error |
 
 **Sample affected frontend paths:**
 
@@ -108,13 +108,13 @@ npx @next/codemod@canary next-lint-to-eslint-cli .
 
 **Command:** `npm run test:run` → `vitest run`
 
-| Field | Value |
-| ----- | ----- |
-| **Result** | **FAIL** |
-| **Exit code** | 1 |
+| Field              | Value             |
+| ------------------ | ----------------- |
+| **Result**         | **FAIL**          |
+| **Exit code**      | 1                 |
 | **Execution time** | 367.16s (aborted) |
-| **Warnings** | 0 |
-| **Errors** | 1 fatal |
+| **Warnings**       | 0                 |
+| **Errors**         | 1 fatal           |
 
 **Error output:**
 
@@ -129,15 +129,15 @@ Node.js v22.13.1
 
 **Test inventory (static):**
 
-| Suite | Files |
-| ----- | ----- |
-| Unit — components | 12 |
-| Unit — hooks | 4 |
-| Unit — lib | 14 |
-| Unit — security | 1 |
-| Unit — app | 1 |
-| Integration workflows | 9 |
-| E2E (Playwright, separate command) | 5 |
+| Suite                              | Files |
+| ---------------------------------- | ----- |
+| Unit — components                  | 12    |
+| Unit — hooks                       | 4     |
+| Unit — lib                         | 14    |
+| Unit — security                    | 1     |
+| Unit — app                         | 1     |
+| Integration workflows              | 9     |
+| E2E (Playwright, separate command) | 5     |
 
 **CI expectation:** `npm run test:coverage` on Ubuntu Node 22.22.1 with coverage thresholds (lines 70%, statements 70%, functions 62%, branches 54%).
 
@@ -152,13 +152,13 @@ Node.js v22.13.1
 
 **Command:** `npm run build` → `next build`
 
-| Field | Value |
-| ----- | ----- |
-| **Result** | **FAIL** |
-| **Exit code** | 1 |
-| **Execution time** | 13.14s |
-| **Warnings** | 0 |
-| **Errors** | 1 |
+| Field              | Value    |
+| ------------------ | -------- |
+| **Result**         | **FAIL** |
+| **Exit code**      | 1        |
+| **Execution time** | 13.14s   |
+| **Warnings**       | 0        |
+| **Errors**         | 1        |
 
 **Error:**
 
@@ -190,14 +190,14 @@ Parallel job: `npm run test:e2e` (Playwright) — not executed in this audit.
 
 ## Recommendations
 
-| Priority | Action |
-| -------- | ------ |
-| P0 | Fix Prettier drift; unblock CI step 2 |
-| P0 | Restore clean `npm ci` on Node 22.22.1; verify test + build |
-| P1 | Investigate Vitest worker crash on Windows (`use-theme.test.tsx`) |
-| P1 | Migrate from deprecated `next lint` to ESLint CLI before Next.js 16 |
-| P2 | Split Prettier scope if backend/docs formatting is out of RC scope |
+| Priority | Action                                                              |
+| -------- | ------------------------------------------------------------------- |
+| P0       | Fix Prettier drift; unblock CI step 2                               |
+| P0       | Restore clean `npm ci` on Node 22.22.1; verify test + build         |
+| P1       | Investigate Vitest worker crash on Windows (`use-theme.test.tsx`)   |
+| P1       | Migrate from deprecated `next lint` to ESLint CLI before Next.js 16 |
+| P2       | Split Prettier scope if backend/docs formatting is out of RC scope  |
 
 ---
 
-*Generated by Release Audit Engineer — no source modifications applied.*
+_Generated by Release Audit Engineer — no source modifications applied._

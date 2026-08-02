@@ -11,20 +11,20 @@
 
 ## Section 1 — Repository Information
 
-| Field | Value |
-| ----- | ----- |
-| **Repository name** | `cloud-content-hub-ai` (monorepo workspace; frontend at root) |
-| **Branch** | `main` |
-| **Commit hash** | `172fcc4f87a4bf0853c9e34f0585978a4a28f4a6` |
-| **Commit message** | Auto-sync: update workspace 2026-08-03 00:23 |
-| **Version** | `0.1.0` (`package.json`) |
-| **Release candidate tag (documented)** | `v1.0.0-rc.1` per `docs/release/RELEASE_NOTES_RC1.md` |
-| **Build number** | Not defined in repository; use CI run ID or short SHA `172fcc4f` |
-| **Node version (audit host)** | v22.13.1 |
-| **Node version (required)** | `>=22.22.1` (`.nvmrc`, CI) |
-| **Package manager** | npm 10.9.2 |
-| **Build date** | 2026-08-03 (audit execution date) |
-| **Framework stack** | Next.js 15.5.22 · React 19 · Tailwind CSS v4 · TypeScript 5.9 |
+| Field                                  | Value                                                            |
+| -------------------------------------- | ---------------------------------------------------------------- |
+| **Repository name**                    | `cloud-content-hub-ai` (monorepo workspace; frontend at root)    |
+| **Branch**                             | `main`                                                           |
+| **Commit hash**                        | `172fcc4f87a4bf0853c9e34f0585978a4a28f4a6`                       |
+| **Commit message**                     | Auto-sync: update workspace 2026-08-03 00:23                     |
+| **Version**                            | `0.1.0` (`package.json`)                                         |
+| **Release candidate tag (documented)** | `v1.0.0-rc.1` per `docs/release/RELEASE_NOTES_RC1.md`            |
+| **Build number**                       | Not defined in repository; use CI run ID or short SHA `172fcc4f` |
+| **Node version (audit host)**          | v22.13.1                                                         |
+| **Node version (required)**            | `>=22.22.1` (`.nvmrc`, CI)                                       |
+| **Package manager**                    | npm 10.9.2                                                       |
+| **Build date**                         | 2026-08-03 (audit execution date)                                |
+| **Framework stack**                    | Next.js 15.5.22 · React 19 · Tailwind CSS v4 · TypeScript 5.9    |
 
 ### Audit environment note
 
@@ -34,14 +34,14 @@ The audit host runs Node **below** the declared engine minimum (`22.13.1` vs `>=
 
 ## Section 2 — Quality Gates
 
-| Command | Result | Time | Warnings | Errors |
-| ------- | ------ | ---- | -------- | ------ |
-| `npm run typecheck` | **PASS** | 46.55s | 0 | 0 |
-| `npm run lint` | **PASS** | 36.15s | 1 (`next lint` deprecated in Next.js 16) | 0 |
-| `npm run format` | **NOT EXECUTED** | — | — | Audit policy: would modify 138 files |
-| `npm run format:check` | **FAIL** | 154.88s | 138 files with style drift | Exit code 1 |
-| `npm run test` / `test:run` | **FAIL** | 367.16s (partial) | Vitest worker crash | `Worker exited unexpectedly` at `use-theme.test.tsx` |
-| `npm run build` | **FAIL** | 13.14s | — | `next` binary unavailable (corrupted `node_modules`) |
+| Command                     | Result           | Time              | Warnings                                 | Errors                                               |
+| --------------------------- | ---------------- | ----------------- | ---------------------------------------- | ---------------------------------------------------- |
+| `npm run typecheck`         | **PASS**         | 46.55s            | 0                                        | 0                                                    |
+| `npm run lint`              | **PASS**         | 36.15s            | 1 (`next lint` deprecated in Next.js 16) | 0                                                    |
+| `npm run format`            | **NOT EXECUTED** | —                 | —                                        | Audit policy: would modify 138 files                 |
+| `npm run format:check`      | **FAIL**         | 154.88s           | 138 files with style drift               | Exit code 1                                          |
+| `npm run test` / `test:run` | **FAIL**         | 367.16s (partial) | Vitest worker crash                      | `Worker exited unexpectedly` at `use-theme.test.tsx` |
+| `npm run build`             | **FAIL**         | 13.14s            | —                                        | `next` binary unavailable (corrupted `node_modules`) |
 
 **CI gate alignment:** `.github/workflows/ci.yml` runs `format:check`, `typecheck`, `lint`, `test:coverage`, and `build` sequentially. **`format:check` failure is a release blocker** for any PR or main-branch pipeline.
 
@@ -51,26 +51,26 @@ See [QUALITY_GATE_REPORT.md](./QUALITY_GATE_REPORT.md) for full command output a
 
 ## Section 3 — Testing
 
-| Metric | Value |
-| ------ | ----- |
-| **Vitest test files** | 42 (`tests/unit/**`, `tests/integration/**`) |
-| **Playwright E2E specs** | 5 (`tests/e2e/**`) |
-| **Total test artifacts** | 47 files |
-| **Passed (this audit)** | Not fully measured — run aborted |
-| **Failed** | ≥1 (worker crash before completion) |
-| **Skipped** | Not reported |
-| **Coverage** | Not generated (audit host); thresholds configured in `vitest.config.ts` |
-| **Flaky tests** | `use-theme.test.tsx` implicated in worker crash on Windows |
-| **Known unstable** | Full Vitest suite slow on Windows (~7 min per KI-041) |
+| Metric                   | Value                                                                   |
+| ------------------------ | ----------------------------------------------------------------------- |
+| **Vitest test files**    | 42 (`tests/unit/**`, `tests/integration/**`)                            |
+| **Playwright E2E specs** | 5 (`tests/e2e/**`)                                                      |
+| **Total test artifacts** | 47 files                                                                |
+| **Passed (this audit)**  | Not fully measured — run aborted                                        |
+| **Failed**               | ≥1 (worker crash before completion)                                     |
+| **Skipped**              | Not reported                                                            |
+| **Coverage**             | Not generated (audit host); thresholds configured in `vitest.config.ts` |
+| **Flaky tests**          | `use-theme.test.tsx` implicated in worker crash on Windows              |
+| **Known unstable**       | Full Vitest suite slow on Windows (~7 min per KI-041)                   |
 
 ### Coverage thresholds (configured)
 
-| Metric | Threshold |
-| ------ | --------- |
-| Lines | 70% |
-| Statements | 70% |
-| Functions | 62% |
-| Branches | 54% |
+| Metric     | Threshold |
+| ---------- | --------- |
+| Lines      | 70%       |
+| Statements | 70%       |
+| Functions  | 62%       |
+| Branches   | 54%       |
 
 Scope: `components/**`, `hooks/**`, `lib/utils/**`.
 
@@ -80,11 +80,11 @@ Scope: `components/**`, `hooks/**`, `lib/utils/**`.
 
 Production build **could not be completed** on the audit host. Reference baseline from last verified build (2026-08-02 dependency audit):
 
-| Route | First Load JS |
-| ----- | ------------- |
-| Shared | 103 kB |
-| `/scheduler` (largest) | 271 kB |
-| `/dashboard` (smallest feature) | 221 kB |
+| Route                           | First Load JS |
+| ------------------------------- | ------------- |
+| Shared                          | 103 kB        |
+| `/scheduler` (largest)          | 271 kB        |
+| `/dashboard` (smallest feature) | 221 kB        |
 
 **Generated routes:** 10 App Router pages + root redirect (13 static segments including layouts).
 
@@ -94,13 +94,13 @@ See [BUILD_REPORT.md](./BUILD_REPORT.md) for route inventory, bundle analysis, a
 
 ## Section 5 — Dependencies
 
-| Category | Count |
-| -------- | ----- |
-| Production dependencies | 24 |
-| Development dependencies | 33 |
-| `npm audit` (audit host) | **5 vulnerabilities** (2 moderate, 3 high) |
-| Peer dependency errors | None observed |
-| Unused packages | `@hookform/resolvers`, `react-hook-form` (no app imports) |
+| Category                 | Count                                                     |
+| ------------------------ | --------------------------------------------------------- |
+| Production dependencies  | 24                                                        |
+| Development dependencies | 33                                                        |
+| `npm audit` (audit host) | **5 vulnerabilities** (2 moderate, 3 high)                |
+| Peer dependency errors   | None observed                                             |
+| Unused packages          | `@hookform/resolvers`, `react-hook-form` (no app imports) |
 
 See [DEPENDENCY_REPORT.md](./DEPENDENCY_REPORT.md).
 
@@ -136,15 +136,15 @@ Automated: `vitest-axe` integration tests, `@axe-core/playwright` E2E. Manual ga
 
 ## Section 10 — Browser Compatibility
 
-| Target | Validation |
-| ------ | ---------- |
-| Chrome | Playwright Chromium in CI E2E job |
-| Edge | Chromium-equivalent; no dedicated Edge job |
-| Firefox | Not in CI matrix |
-| Safari | Not in CI matrix |
-| Desktop | Primary target; Playwright desktop viewport |
-| Tablet | `tests/e2e/responsive.spec.ts` |
-| Mobile | Responsive specs + mobile panel patterns in AI Studio, Scheduler, Content Library |
+| Target  | Validation                                                                        |
+| ------- | --------------------------------------------------------------------------------- |
+| Chrome  | Playwright Chromium in CI E2E job                                                 |
+| Edge    | Chromium-equivalent; no dedicated Edge job                                        |
+| Firefox | Not in CI matrix                                                                  |
+| Safari  | Not in CI matrix                                                                  |
+| Desktop | Primary target; Playwright desktop viewport                                       |
+| Tablet  | `tests/e2e/responsive.spec.ts`                                                    |
+| Mobile  | Responsive specs + mobile panel patterns in AI Studio, Scheduler, Content Library |
 
 **Gap:** Cross-browser matrix limited to Chromium in CI.
 
@@ -170,30 +170,30 @@ CSP and security headers implemented. XSS mitigated via React rendering (no `dan
 
 **New findings from this audit:**
 
-| ID | Issue | Severity | Release blocker? |
-| -- | ----- | -------- | ---------------- |
-| KI-003 | Prettier drift — **138 files** fail `format:check` | Medium | **YES** |
-| KI-070 | Vitest worker crash on audit host (Windows) | Medium | **YES** until verified on CI/Linux |
-| KI-071 | `node_modules` corruption on audit host | Low | No (environment) |
-| KI-072 | npm audit: 5 vulnerabilities (postcss XSS, sharp CVEs) | High | **YES** for production until overrides verified |
-| KI-073 | Unused deps `@hookform/resolvers`, `react-hook-form` re-present | Low | No |
+| ID     | Issue                                                           | Severity | Release blocker?                                |
+| ------ | --------------------------------------------------------------- | -------- | ----------------------------------------------- |
+| KI-003 | Prettier drift — **138 files** fail `format:check`              | Medium   | **YES**                                         |
+| KI-070 | Vitest worker crash on audit host (Windows)                     | Medium   | **YES** until verified on CI/Linux              |
+| KI-071 | `node_modules` corruption on audit host                         | Low      | No (environment)                                |
+| KI-072 | npm audit: 5 vulnerabilities (postcss XSS, sharp CVEs)          | High     | **YES** for production until overrides verified |
+| KI-073 | Unused deps `@hookform/resolvers`, `react-hook-form` re-present | Low      | No                                              |
 
 ---
 
 ## Section 14 — Release Readiness
 
-| Category | Score (/100) |
-| -------- | ------------ |
-| Code quality (typecheck/lint) | 90 |
-| Formatting / hygiene | 35 |
-| Testing | 40 |
-| Build / packaging | 45 |
-| Dependencies / security | 55 |
-| Feature completeness | 65 |
-| Accessibility | 72 |
-| Backend integration | 30 |
-| Documentation | 85 |
-| **Overall** | **58** |
+| Category                      | Score (/100) |
+| ----------------------------- | ------------ |
+| Code quality (typecheck/lint) | 90           |
+| Formatting / hygiene          | 35           |
+| Testing                       | 40           |
+| Build / packaging             | 45           |
+| Dependencies / security       | 55           |
+| Feature completeness          | 65           |
+| Accessibility                 | 72           |
+| Backend integration           | 30           |
+| Documentation                 | 85           |
+| **Overall**                   | **58**       |
 
 ### Decision: **No-Go**
 
@@ -219,19 +219,19 @@ CSP and security headers implemented. XSS mitigated via React rendering (no `dan
 
 ## Deliverables Index
 
-| Document | Purpose |
-| -------- | ------- |
-| [RC_RELEASE_AUDIT.md](./RC_RELEASE_AUDIT.md) | This master audit |
-| [QUALITY_GATE_REPORT.md](./QUALITY_GATE_REPORT.md) | Gate command results |
-| [DEPENDENCY_REPORT.md](./DEPENDENCY_REPORT.md) | Dependency health |
-| [BUILD_REPORT.md](./BUILD_REPORT.md) | Production build analysis |
-| [PERFORMANCE_REPORT.md](./PERFORMANCE_REPORT.md) | Performance baseline |
-| [ACCESSIBILITY_REPORT.md](./ACCESSIBILITY_REPORT.md) | A11y verification |
-| [UI_INVENTORY.md](./UI_INVENTORY.md) | Pages, components, features |
-| [BACKEND_INTEGRATION_READINESS.md](./BACKEND_INTEGRATION_READINESS.md) | API readiness |
-| [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | Issue register |
-| [RELEASE_SCORECARD.md](./RELEASE_SCORECARD.md) | Scorecard summary |
+| Document                                                               | Purpose                     |
+| ---------------------------------------------------------------------- | --------------------------- |
+| [RC_RELEASE_AUDIT.md](./RC_RELEASE_AUDIT.md)                           | This master audit           |
+| [QUALITY_GATE_REPORT.md](./QUALITY_GATE_REPORT.md)                     | Gate command results        |
+| [DEPENDENCY_REPORT.md](./DEPENDENCY_REPORT.md)                         | Dependency health           |
+| [BUILD_REPORT.md](./BUILD_REPORT.md)                                   | Production build analysis   |
+| [PERFORMANCE_REPORT.md](./PERFORMANCE_REPORT.md)                       | Performance baseline        |
+| [ACCESSIBILITY_REPORT.md](./ACCESSIBILITY_REPORT.md)                   | A11y verification           |
+| [UI_INVENTORY.md](./UI_INVENTORY.md)                                   | Pages, components, features |
+| [BACKEND_INTEGRATION_READINESS.md](./BACKEND_INTEGRATION_READINESS.md) | API readiness               |
+| [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)                                   | Issue register              |
+| [RELEASE_SCORECARD.md](./RELEASE_SCORECARD.md)                         | Scorecard summary           |
 
 ---
 
-*Audit performed without feature development, UI redesign, or refactoring. No application source files were modified.*
+_Audit performed without feature development, UI redesign, or refactoring. No application source files were modified._

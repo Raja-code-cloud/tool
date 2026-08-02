@@ -16,15 +16,15 @@ The frontend demonstrates **intentional accessibility engineering**: skip naviga
 
 ## Verification Matrix
 
-| Area | Status | Evidence |
-| ---- | ------ | -------- |
-| Keyboard navigation | **Partial** | Radix dialogs/menus work; scheduler drag/reorder lacks keyboard equivalent |
-| ARIA | **Partial** | Form fields, dialogs, pagination; incomplete tablist/tab/tabpanel on some UIs |
-| Focus management | **Partial** | Global focus-visible; upload wizard does not focus error summary on validation fail |
-| Contrast | **Good** | Semantic tokens in light/dark; manual verification still required |
-| Responsive behavior | **Good** | Mobile drawers, panel tabs, reflow patterns |
-| Screen reader support | **Partial** | Live regions, chart figcaptions; empty alt on upload previews |
-| Automated testing | **Present** | vitest-axe + Playwright axe (not all run in this audit) |
+| Area                  | Status      | Evidence                                                                            |
+| --------------------- | ----------- | ----------------------------------------------------------------------------------- |
+| Keyboard navigation   | **Partial** | Radix dialogs/menus work; scheduler drag/reorder lacks keyboard equivalent          |
+| ARIA                  | **Partial** | Form fields, dialogs, pagination; incomplete tablist/tab/tabpanel on some UIs       |
+| Focus management      | **Partial** | Global focus-visible; upload wizard does not focus error summary on validation fail |
+| Contrast              | **Good**    | Semantic tokens in light/dark; manual verification still required                   |
+| Responsive behavior   | **Good**    | Mobile drawers, panel tabs, reflow patterns                                         |
+| Screen reader support | **Partial** | Live regions, chart figcaptions; empty alt on upload previews                       |
+| Automated testing     | **Present** | vitest-axe + Playwright axe (not all run in this audit)                             |
 
 ---
 
@@ -40,12 +40,12 @@ The frontend demonstrates **intentional accessibility engineering**: skip naviga
 
 ### Gaps
 
-| Location | Issue |
-| -------- | ----- |
-| Scheduler queue | Drag/reorder without keyboard alternative (KI-061) |
-| AI Studio / Scheduler tabs | Incomplete roving tabindex / arrow-key tablist behavior |
-| Content grid | Nested interactive elements (invalid button-in-button markup) |
-| Global search | Decorative — no functional keyboard workflow |
+| Location                   | Issue                                                         |
+| -------------------------- | ------------------------------------------------------------- |
+| Scheduler queue            | Drag/reorder without keyboard alternative (KI-061)            |
+| AI Studio / Scheduler tabs | Incomplete roving tabindex / arrow-key tablist behavior       |
+| Content grid               | Nested interactive elements (invalid button-in-button markup) |
+| Global search              | Decorative — no functional keyboard workflow                  |
 
 ---
 
@@ -70,13 +70,13 @@ The frontend demonstrates **intentional accessibility engineering**: skip naviga
 
 ## Focus Management
 
-| Pattern | Status |
-| ------- | ------ |
-| Dialog open → focus first element | Radix default |
-| Dialog close → restore focus | Radix default |
-| Route navigation focus | Not explicitly moved to main heading |
-| Validation errors → first invalid field | **Missing** in upload wizard |
-| Toast announcements | Radix Toast with live region |
+| Pattern                                 | Status                               |
+| --------------------------------------- | ------------------------------------ |
+| Dialog open → focus first element       | Radix default                        |
+| Dialog close → restore focus            | Radix default                        |
+| Route navigation focus                  | Not explicitly moved to main heading |
+| Validation errors → first invalid field | **Missing** in upload wizard         |
+| Toast announcements                     | Radix Toast with live region         |
 
 ---
 
@@ -91,13 +91,13 @@ The frontend demonstrates **intentional accessibility engineering**: skip naviga
 
 ## Responsive Behavior
 
-| Pattern | Implementation |
-| ------- | -------------- |
-| Mobile sidebar | Drawer via `SidebarTrigger` |
-| Content Library filters | Left drawer on small screens |
-| AI Studio / Scheduler | Tab panel switchers below `lg` |
-| Touch targets | Min-height 36px on inputs/buttons |
-| Zoom/reflow | Tailwind responsive breakpoints; not formally tested this audit |
+| Pattern                 | Implementation                                                  |
+| ----------------------- | --------------------------------------------------------------- |
+| Mobile sidebar          | Drawer via `SidebarTrigger`                                     |
+| Content Library filters | Left drawer on small screens                                    |
+| AI Studio / Scheduler   | Tab panel switchers below `lg`                                  |
+| Touch targets           | Min-height 36px on inputs/buttons                               |
+| Zoom/reflow             | Tailwind responsive breakpoints; not formally tested this audit |
 
 **E2E:** `tests/e2e/responsive.spec.ts`, `tests/e2e/accessibility.spec.ts`
 
@@ -124,11 +124,11 @@ The frontend demonstrates **intentional accessibility engineering**: skip naviga
 
 ## Automated Testing
 
-| Layer | Tool | Location | CI |
-| ----- | ---- | -------- | -- |
-| Unit/integration | vitest-axe | `tests/integration/accessibility.test.tsx` | Yes (when tests pass) |
-| E2E | @axe-core/playwright | `tests/e2e/accessibility.spec.ts` | Playwright job |
-| Storybook | addon-a11y | `.storybook/main.ts` | **No** (KI-062) |
+| Layer            | Tool                 | Location                                   | CI                    |
+| ---------------- | -------------------- | ------------------------------------------ | --------------------- |
+| Unit/integration | vitest-axe           | `tests/integration/accessibility.test.tsx` | Yes (when tests pass) |
+| E2E              | @axe-core/playwright | `tests/e2e/accessibility.spec.ts`          | Playwright job        |
+| Storybook        | addon-a11y           | `.storybook/main.ts`                       | **No** (KI-062)       |
 
 **Filter policy:** Critical and serious axe violations fail tests.
 
@@ -138,42 +138,42 @@ The frontend demonstrates **intentional accessibility engineering**: skip naviga
 
 ## Known Issues
 
-| ID | Description | Severity | Blocker? |
-| -- | ----------- | -------- | -------- |
-| KI-060 | Theme flash before hydration | Low | No |
-| KI-061 | Tab semantics, scheduler keyboard, chart alt gaps | Medium | No (accepted RC) |
-| KI-062 | Storybook a11y not CI-gated | Low | No |
-| UX-A11Y-01 | Nested buttons in content grid | Medium | No |
-| UX-A11Y-02 | Upload validation focus not moved to error summary | Medium | No |
-| UX-A11Y-03 | Recharts lack consistent keyboard/data table fallback | Medium | No |
+| ID         | Description                                           | Severity | Blocker?         |
+| ---------- | ----------------------------------------------------- | -------- | ---------------- |
+| KI-060     | Theme flash before hydration                          | Low      | No               |
+| KI-061     | Tab semantics, scheduler keyboard, chart alt gaps     | Medium   | No (accepted RC) |
+| KI-062     | Storybook a11y not CI-gated                           | Low      | No               |
+| UX-A11Y-01 | Nested buttons in content grid                        | Medium   | No               |
+| UX-A11Y-02 | Upload validation focus not moved to error summary    | Medium   | No               |
+| UX-A11Y-03 | Recharts lack consistent keyboard/data table fallback | Medium   | No               |
 
 ---
 
 ## Browser / Assistive Technology Matrix
 
-| Combination | Validation |
-| ----------- | ---------- |
-| Chrome + NVDA/JAWS | Manual review recommended |
-| Edge + Narrator | Not validated |
-| Firefox + VoiceOver | Not validated |
-| Safari + VoiceOver | Not validated |
+| Combination               | Validation                                      |
+| ------------------------- | ----------------------------------------------- |
+| Chrome + NVDA/JAWS        | Manual review recommended                       |
+| Edge + Narrator           | Not validated                                   |
+| Firefox + VoiceOver       | Not validated                                   |
+| Safari + VoiceOver        | Not validated                                   |
 | Mobile VoiceOver/TalkBack | Responsive layouts present; not formally tested |
 
 ---
 
 ## Recommendations
 
-| Priority | Action |
-| -------- | ------ |
-| P0 | Restore passing Vitest accessibility integration tests in CI |
-| P1 | Fix nested button markup in content grid |
-| P1 | Complete tab ARIA on AI Studio and Scheduler mobile panels |
-| P1 | Add keyboard alternative for scheduler queue reorder |
-| P2 | Upload wizard: focus error summary on validation failure |
-| P2 | Add meaningful alt text for upload previews |
-| P2 | Gate Storybook a11y in CI when stable |
-| P2 | SSR theme cookie to reduce flash |
+| Priority | Action                                                       |
+| -------- | ------------------------------------------------------------ |
+| P0       | Restore passing Vitest accessibility integration tests in CI |
+| P1       | Fix nested button markup in content grid                     |
+| P1       | Complete tab ARIA on AI Studio and Scheduler mobile panels   |
+| P1       | Add keyboard alternative for scheduler queue reorder         |
+| P2       | Upload wizard: focus error summary on validation failure     |
+| P2       | Add meaningful alt text for upload previews                  |
+| P2       | Gate Storybook a11y in CI when stable                        |
+| P2       | SSR theme cookie to reduce flash                             |
 
 ---
 
-*Manual WCAG review remains required for GA regardless of automated pass rate.*
+_Manual WCAG review remains required for GA regardless of automated pass rate._

@@ -8,31 +8,31 @@
 
 ## Build Status
 
-| Field | Value |
-| ----- | ----- |
-| **Result (this audit)** | **FAIL** — `node_modules` corruption; `next` CLI unavailable |
-| **Last verified build** | 2026-08-02 (dependency audit) — **PASS** |
+| Field                          | Value                                                                |
+| ------------------------------ | -------------------------------------------------------------------- |
+| **Result (this audit)**        | **FAIL** — `node_modules` corruption; `next` CLI unavailable         |
+| **Last verified build**        | 2026-08-02 (dependency audit) — **PASS**                             |
 | **Build time (last verified)** | ~94s compile (Lighthouse doc notes validation worker exit afterward) |
-| **Output mode** | Standard Next.js (not `output: "standalone"`) |
-| **React strict mode** | Enabled |
-| **`poweredByHeader`** | Disabled |
+| **Output mode**                | Standard Next.js (not `output: "standalone"`)                        |
+| **React strict mode**          | Enabled                                                              |
+| **`poweredByHeader`**          | Disabled                                                             |
 
 ---
 
 ## Generated Routes
 
-| Route | Page file | Status |
-| ----- | --------- | ------ |
-| `/` | `app/page.tsx` | Redirect → `/dashboard` |
-| `/dashboard` | `app/(dashboard)/dashboard/page.tsx` | Static |
-| `/content-library` | `app/(dashboard)/content-library/page.tsx` | Static |
-| `/upload` | `app/(dashboard)/upload/page.tsx` | Static |
-| `/ai-studio` | `app/(dashboard)/ai-studio/page.tsx` | Static |
-| `/scheduler` | `app/(dashboard)/scheduler/page.tsx` | Static |
-| `/calendar` | `app/(dashboard)/calendar/page.tsx` | Static (placeholder content) |
-| `/analytics` | `app/(dashboard)/analytics/page.tsx` | Static |
-| `/social-accounts` | `app/(dashboard)/social-accounts/page.tsx` | Static |
-| `/settings` | `app/(dashboard)/settings/page.tsx` | Static |
+| Route              | Page file                                  | Status                       |
+| ------------------ | ------------------------------------------ | ---------------------------- |
+| `/`                | `app/page.tsx`                             | Redirect → `/dashboard`      |
+| `/dashboard`       | `app/(dashboard)/dashboard/page.tsx`       | Static                       |
+| `/content-library` | `app/(dashboard)/content-library/page.tsx` | Static                       |
+| `/upload`          | `app/(dashboard)/upload/page.tsx`          | Static                       |
+| `/ai-studio`       | `app/(dashboard)/ai-studio/page.tsx`       | Static                       |
+| `/scheduler`       | `app/(dashboard)/scheduler/page.tsx`       | Static                       |
+| `/calendar`        | `app/(dashboard)/calendar/page.tsx`        | Static (placeholder content) |
+| `/analytics`       | `app/(dashboard)/analytics/page.tsx`       | Static                       |
+| `/social-accounts` | `app/(dashboard)/social-accounts/page.tsx` | Static                       |
+| `/settings`        | `app/(dashboard)/settings/page.tsx`        | Static                       |
 
 **Layouts:** Root (`app/layout.tsx`), dashboard group (`app/(dashboard)/layout.tsx`), loading (`loading.tsx`), error boundary (`error.tsx`).
 
@@ -44,40 +44,40 @@
 
 From 2026-08-02 production build analysis:
 
-| Segment | First Load JS |
-| ------- | ------------- |
-| **Shared** | 103 kB |
-| `/scheduler` | **271 kB** (largest) |
-| `/analytics` | ~260 kB (estimated from feature weight) |
-| `/upload` | ~250 kB (estimated; dynamic step imports) |
-| `/dashboard` | **221 kB** (smallest feature route) |
-| `/settings` | ~230 kB (estimated) |
+| Segment      | First Load JS                             |
+| ------------ | ----------------------------------------- |
+| **Shared**   | 103 kB                                    |
+| `/scheduler` | **271 kB** (largest)                      |
+| `/analytics` | ~260 kB (estimated from feature weight)   |
+| `/upload`    | ~250 kB (estimated; dynamic step imports) |
+| `/dashboard` | **221 kB** (smallest feature route)       |
+| `/settings`  | ~230 kB (estimated)                       |
 
-*Exact per-route figures require successful `next build` with bundle analyzer on audit host.*
+_Exact per-route figures require successful `next build` with bundle analyzer on audit host._
 
 ---
 
 ## Largest Chunks (Observed Patterns)
 
-| Chunk source | Drivers |
-| ------------ | ------- |
+| Chunk source  | Drivers                                                                       |
+| ------------- | ----------------------------------------------------------------------------- |
 | Shared layout | `WorkspaceShell`, Radix menus, theme provider, Framer Motion page transitions |
-| `/scheduler` | Calendar views, `react-day-picker`, queue panel, analytics widget |
-| `/analytics` | Recharts (`LineChart`, `PieChart`, `AreaChart`), custom bar charts |
-| `/upload` | Dynamic step imports, `react-dropzone`, file validation |
-| `/ai-studio` | Multi-panel editor, suggestions drawer |
+| `/scheduler`  | Calendar views, `react-day-picker`, queue panel, analytics widget             |
+| `/analytics`  | Recharts (`LineChart`, `PieChart`, `AreaChart`), custom bar charts            |
+| `/upload`     | Dynamic step imports, `react-dropzone`, file validation                       |
+| `/ai-studio`  | Multi-panel editor, suggestions drawer                                        |
 
 ---
 
 ## Largest Dependencies
 
-| Dependency | Approx. impact | Mitigation |
-| ---------- | -------------- | ---------- |
-| `framer-motion` | High — 20+ route components | `optimizePackageImports` |
-| `recharts` | High — analytics route | Package import optimization + route splitting |
-| `lucide-react` | Medium — icons app-wide | Named imports + optimization |
-| `react-day-picker` | Medium — scheduler/calendar | Route-scoped |
-| `@radix-ui/*` | Medium — modular per-primitive | Tree-shaken per import |
+| Dependency         | Approx. impact                 | Mitigation                                    |
+| ------------------ | ------------------------------ | --------------------------------------------- |
+| `framer-motion`    | High — 20+ route components    | `optimizePackageImports`                      |
+| `recharts`         | High — analytics route         | Package import optimization + route splitting |
+| `lucide-react`     | Medium — icons app-wide        | Named imports + optimization                  |
+| `react-day-picker` | Medium — scheduler/calendar    | Route-scoped                                  |
+| `@radix-ui/*`      | Medium — modular per-primitive | Tree-shaken per import                        |
 
 ---
 
@@ -108,13 +108,13 @@ experimental: {
 
 ## Code Splitting Observations
 
-| Pattern | Location |
-| ------- | -------- |
-| App Router route splitting | Automatic per `app/(dashboard)/*/page.tsx` |
-| Dynamic step imports | `upload/_components/upload-wizard-view.tsx` |
-| Dynamic dialogs/panels | Content preview, suggestions drawer, account details |
-| Client boundary | Most feature views are `"use client"` — increases shared client bundle |
-| Missing route loading | Only dashboard-level and settings `loading.tsx`; other routes rely on in-view spinners |
+| Pattern                    | Location                                                                               |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| App Router route splitting | Automatic per `app/(dashboard)/*/page.tsx`                                             |
+| Dynamic step imports       | `upload/_components/upload-wizard-view.tsx`                                            |
+| Dynamic dialogs/panels     | Content preview, suggestions drawer, account details                                   |
+| Client boundary            | Most feature views are `"use client"` — increases shared client bundle                 |
+| Missing route loading      | Only dashboard-level and settings `loading.tsx`; other routes rely on in-view spinners |
 
 **Risk:** Shared `WorkspaceShell` client tree loads on every dashboard route, inflating initial JS for all pages.
 
@@ -122,12 +122,12 @@ experimental: {
 
 ## Build Warnings
 
-| Warning | Source | Severity |
-| ------- | ------ | -------- |
-| `next lint` deprecation | Next.js 16 migration | Low |
-| Node engine mismatch | Audit host 22.13.1 vs required 22.22.1 | Medium |
-| No `.next` artifact on audit host | Environment failure | Blocker for deploy |
-| Source maps in release tarball | KI-051 | Medium (ops) |
+| Warning                           | Source                                 | Severity           |
+| --------------------------------- | -------------------------------------- | ------------------ |
+| `next lint` deprecation           | Next.js 16 migration                   | Low                |
+| Node engine mismatch              | Audit host 22.13.1 vs required 22.22.1 | Medium             |
+| No `.next` artifact on audit host | Environment failure                    | Blocker for deploy |
+| Source maps in release tarball    | KI-051                                 | Medium (ops)       |
 
 ---
 
@@ -154,14 +154,14 @@ From `.github/workflows/build.yml`:
 
 ## Recommendations
 
-| Priority | Action |
-| -------- | ------ |
-| P0 | Complete successful `npm run build` on Node 22.22.1 CI runner |
-| P1 | Run `@next/bundle-analyzer` for fresh per-route sizes |
-| P1 | Add route-level `loading.tsx` for heavy routes (analytics, scheduler) |
-| P2 | Evaluate `output: "standalone"` for deployment adapter (KI-050) |
-| P2 | Restrict release artifact access (source maps — KI-051) |
+| Priority | Action                                                                |
+| -------- | --------------------------------------------------------------------- |
+| P0       | Complete successful `npm run build` on Node 22.22.1 CI runner         |
+| P1       | Run `@next/bundle-analyzer` for fresh per-route sizes                 |
+| P1       | Add route-level `loading.tsx` for heavy routes (analytics, scheduler) |
+| P2       | Evaluate `output: "standalone"` for deployment adapter (KI-050)       |
+| P2       | Restrict release artifact access (source maps — KI-051)               |
 
 ---
 
-*Build metrics marked "last verified" sourced from 2026-08-02 audit; this audit could not regenerate due to environment failure.*
+_Build metrics marked "last verified" sourced from 2026-08-02 audit; this audit could not regenerate due to environment failure._
