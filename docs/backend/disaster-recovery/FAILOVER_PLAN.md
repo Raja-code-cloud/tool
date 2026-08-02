@@ -16,7 +16,7 @@ Failover procedures for Cloud Content Hub backend components and regional disast
 
 ### API (Azure Container Apps)
 
-**Detection:** `/ready` returns 503, ACA liveness failures, elevated 5xx.
+**Detection:** `/health/ready` returns 503, ACA liveness failures, elevated 5xx.
 
 **Failover:**
 
@@ -31,14 +31,14 @@ az containerapp update \
   --min-replicas 2
 ```
 
-**Health probes (implemented routes):**
+**Health probes (canonical routes):**
 
 | Probe | Route | Failure action |
 | ----- | ----- | -------------- |
-| Liveness | `GET /live` | Restart container |
-| Readiness | `GET /ready` | Remove from load balancer |
+| Liveness | `GET /health/live` | Restart container |
+| Readiness | `GET /health/ready` | Remove from load balancer |
 
-Note: Deployment scripts may reference `/health/live` and `/health/ready`. Align probe paths with implemented routes per `docs/backend/release/RC_CHECKLIST.md`.
+Legacy aliases `GET /live` and `GET /ready` remain available with identical responses.
 
 ### Worker (Celery)
 

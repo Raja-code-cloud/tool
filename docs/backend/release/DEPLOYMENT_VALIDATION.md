@@ -82,12 +82,17 @@ Application implements:
 | Endpoint | Purpose |
 | -------- | ------- |
 | `GET /health` | Service summary (version, healthy) |
-| `GET /live` | Liveness — process alive |
-| `GET /ready` | Readiness — PostgreSQL + Redis |
+| `GET /health/live` | Liveness — process alive (canonical) |
+| `GET /health/ready` | Readiness — PostgreSQL + Redis (canonical) |
+
+Legacy aliases `GET /live` and `GET /ready` remain available with identical responses
+(excluded from OpenAPI).
 
 Expected responses use the API success envelope (`success: true`, `data.status`).
 
-**Probe path alignment:** Deployment infrastructure (Bicep, Docker Compose healthcheck, Dockerfile HEALTHCHECK, `verify-health.sh`, CI docker smoke) may reference `/health/live` and `/health/ready`. The application registers `/live` and `/ready`. Align paths before GA or update infrastructure to match implemented routes. See `KNOWN_ISSUES.md`.
+Deployment infrastructure (Bicep, Docker Compose healthcheck, Dockerfile HEALTHCHECK,
+`verify-health.sh`, CI docker smoke) targets the canonical `/health/live` and
+`/health/ready` paths.
 
 ### Azure Container Apps deployment
 

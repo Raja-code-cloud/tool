@@ -26,8 +26,8 @@ Execute in order; do not skip migration before API traffic increase.
 
 ## Production health gates
 
-- [ ] `GET /live` returns 200 on production FQDN
-- [ ] `GET /ready` returns 200 with database and redis checks ok
+- [ ] `GET /health/live` returns 200 on production FQDN
+- [ ] `GET /health/ready` returns 200 with database and redis checks ok
 - [ ] No elevated 5xx rate in first 15 minutes
 - [ ] Celery worker replicas healthy; queue depth stable
 - [ ] Beat single replica running

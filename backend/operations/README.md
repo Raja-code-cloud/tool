@@ -21,12 +21,11 @@ The FastAPI application exposes canonical unversioned probes:
 | Probe | Path | Expected |
 | ----- | ---- | -------- |
 | Informational | `/health` | 200 |
-| Liveness | `/live` | 200 |
-| Readiness | `/ready` | 200 (PostgreSQL + Redis) |
+| Liveness | `/health/live` | 200 |
+| Readiness | `/health/ready` | 200 (PostgreSQL + Redis) |
 
-Deployment infrastructure (Docker, ACA Bicep) may reference `/health/live` and
-`/health/ready`. Align infra probe paths with the implemented routes above, or add
-route aliases in a future operational patch. See `docs/backend/sre/OPERATIONS_GUIDE.md`.
+Legacy aliases `/live` and `/ready` remain available with identical responses (excluded
+from OpenAPI). `validate_health.sh` checks both canonical and legacy paths.
 
 ## Quick validation
 

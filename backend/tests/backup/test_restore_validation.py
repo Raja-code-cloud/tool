@@ -32,8 +32,8 @@ def test_restore_guide_documents_all_procedures() -> None:
 def test_restore_guide_includes_verification_checklist() -> None:
     content = RESTORE_GUIDE.read_text(encoding="utf-8")
 
-    assert "/live" in content
-    assert "/ready" in content
+    assert "/health/live" in content
+    assert "/health/ready" in content
     assert "Alembic" in content
 
 

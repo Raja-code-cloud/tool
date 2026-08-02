@@ -246,8 +246,8 @@ Use after any recovery action:
 
 ### Application
 
-- [ ] `GET /live` → 200
-- [ ] `GET /ready` → 200
+- [ ] `GET /health/live` → 200
+- [ ] `GET /health/ready` → 200
 - [ ] Alembic at expected head revision
 - [ ] Handler registry loads without errors
 

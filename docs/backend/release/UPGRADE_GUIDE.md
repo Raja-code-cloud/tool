@@ -78,7 +78,7 @@ Monitor for 30 minutes: 5xx rate, latency, queue depth, outbox lag.
 Azure Container Apps supports multiple active revisions:
 
 - Deploy new revision with 0% traffic
-- Verify `/live` and `/ready` on the new revision (direct revision FQDN if available)
+- Verify `/health/live` and `/health/ready` on the new revision (direct revision FQDN if available)
 - Shift traffic incrementally (10% → 50% → 100%) or activate revision after smoke pass
 - Deactivate failed revision on success
 
@@ -160,8 +160,8 @@ docker compose -f docker/docker-compose.yml down
 git checkout <new-tag>
 docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up --build -d
 docker compose --profile tools run --rm migrate
-curl -fsS http://localhost:8000/live
-curl -fsS http://localhost:8000/ready
+curl -fsS http://localhost:8000/health/live
+curl -fsS http://localhost:8000/health/ready
 pytest tests/smoke -m "smoke and not external" -q
 ```
 

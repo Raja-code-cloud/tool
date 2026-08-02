@@ -15,9 +15,10 @@ Operational procedures for Cloud Content Hub backend infrastructure.
 
 | Endpoint            | Expected              | Action if failing                      |
 | ------------------- | --------------------- | -------------------------------------- |
-| `GET /health/live`  | 200 `{"status":"ok"}` | Restart container / rollback revision  |
+| `GET /health/live`  | 200                   | Informational only                     |
 | `GET /health/ready` | 200, checks ok        | Inspect PostgreSQL, Redis connectivity |
-| `GET /health`       | 200                   | Informational only                     |
+
+Legacy aliases `GET /live` and `GET /ready` remain available with identical responses.
 
 ## Common operations
 

@@ -221,8 +221,8 @@ Production and DR never load `.env` files (`docs/backend/devops/ENVIRONMENTS.md`
 
 After any restore:
 
-- [ ] `GET /live` returns 200
-- [ ] `GET /ready` returns 200 (database + Redis ok)
+- [ ] `GET /health/live` returns 200
+- [ ] `GET /health/ready` returns 200 (database + Redis ok)
 - [ ] Alembic head matches expected revision
 - [ ] Outbox lag within warning threshold
 - [ ] Worker queue depth decreasing
