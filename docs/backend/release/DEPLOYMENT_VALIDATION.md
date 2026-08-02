@@ -117,8 +117,8 @@ Verify:
 
 | Dependency | Readiness signal | Bootstrap startup |
 | ---------- | ---------------- | ----------------- |
-| PostgreSQL | `/ready` database check | `SELECT 1` on startup |
-| Redis | `/ready` redis check | `PING` on startup |
+| PostgreSQL | `/health/ready` database check | `SELECT 1` on startup |
+| Redis | `/health/ready` redis check | `PING` on startup |
 | Blob storage | Health checker contributor | `storage_provider.health_check()` |
 | Identity | Identity health service | Provider probe on startup |
 | AI | Health checker contributor | Provider probe on startup |

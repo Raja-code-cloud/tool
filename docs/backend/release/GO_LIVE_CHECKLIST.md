@@ -71,7 +71,7 @@ Use a service account or test workspace with non-production data where possible.
 
 Initiate rollback immediately if any of the following persist after deploy:
 
-- Readiness probe failures (`/ready` 503)
+- Readiness probe failures (`/health/ready` 503)
 - Migration job failure on production
 - Sustained 5xx above error budget
 - Data integrity incident correlated with release

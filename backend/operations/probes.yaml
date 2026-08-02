@@ -1,5 +1,6 @@
 # Cloud Content Hub AI — probe definitions for all runtime units.
-# Paths reflect implemented FastAPI routes (see api/routers/v1/health.py).
+# Paths reflect canonical FastAPI routes (see api/routers/v1/health.py).
+# Legacy aliases /live and /ready remain available but are not listed here.
 
 api:
   service: cloud-content-hub-api

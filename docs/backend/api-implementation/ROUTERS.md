@@ -7,8 +7,8 @@ All business routes are mounted under `/api/v1`. Health probes are unversioned.
 | Operation ID   | Method | Path      | Auth   |
 | -------------- | ------ | --------- | ------ |
 | `getHealth`    | GET    | `/health` | public |
-| `getLiveness`  | GET    | `/live`   | public |
-| `getReadiness` | GET    | `/ready`  | public |
+| `getLiveness`  | GET    | `/health/live`   | public |
+| `getReadiness` | GET    | `/health/ready`  | public |
 
 ## Assets (`routers/v1/assets.py`)
 

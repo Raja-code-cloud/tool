@@ -49,7 +49,7 @@ actions (scaling, rollback), also see `docs/backend/devops/RUNBOOK.md`.
 
 ## Database unavailable
 
-**Symptoms:** Readiness 503, `CchDatabaseErrors`, `/ready` database check fails.
+**Symptoms:** Readiness 503, `CchDatabaseErrors`, `/health/ready` database check fails.
 
 ### Diagnosis
 

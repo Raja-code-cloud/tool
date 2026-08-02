@@ -20,7 +20,7 @@ Catalog of automated QA suites delivered for backend regression and API validati
 | API-PAG-001 | `tests/api/test_pagination.py` | Limit, sort, filters, unknown fields |
 | API-AUTH-001 | `tests/api/test_auth.py` | Public routes, permission gates |
 | API-ERR-001 | `tests/api/test_errors.py` | If-Match, UUID, malformed JSON |
-| API-HEALTH-001 | `tests/api/test_health_api.py` | `/health`, `/live`, `/ready` |
+| API-HEALTH-001 | `tests/api/test_health_api.py` | `/health`, `/health/live`, `/health/ready`, legacy aliases |
 | API-ASSET-001 | `tests/api/test_assets_api.py` | Upload, list, get, search |
 | API-CONTENT-001 | `tests/api/test_content_api.py` | List, get, generate |
 | API-PUB-001 | `tests/api/test_publishing_api.py` | Create, dispatch, history |

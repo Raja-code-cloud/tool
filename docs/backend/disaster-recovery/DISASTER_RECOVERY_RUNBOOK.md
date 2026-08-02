@@ -30,7 +30,7 @@ Detect → Triage → Contain → Recover → Verify → Post-incident review
 
 ## Scenario: Database unavailable
 
-**Symptoms:** `/ready` database check `unavailable`, 503 responses, SQLAlchemy pool errors.
+**Symptoms:** `/health/ready` database check `unavailable`, 503 responses, SQLAlchemy pool errors.
 
 **Immediate actions:**
 
@@ -60,7 +60,7 @@ pytest tests/disaster_recovery/test_dependency_unavailability.py -m disaster_rec
 
 ## Scenario: Redis unavailable
 
-**Symptoms:** `/ready` redis check `unavailable`, Celery connection errors, cache misses only.
+**Symptoms:** `/health/ready` redis check `unavailable`, Celery connection errors, cache misses only.
 
 **Immediate actions:**
 
