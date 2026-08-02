@@ -33,6 +33,7 @@ export type ContentListViewProps = {
   onToggleSelect: (id: string, checked: boolean) => void;
   onToggleSelectAll: (checked: boolean) => void;
   onSelect: (item: ContentItem) => void;
+  onDelete: (item: ContentItem) => void;
   sortField: SortField;
   sortDirection: SortDirection;
   onSort: (field: SortField) => void;
@@ -52,6 +53,7 @@ export function ContentListView({
   onToggleSelect,
   onToggleSelectAll,
   onSelect,
+  onDelete,
   sortField,
   sortDirection,
   onSort,
@@ -213,7 +215,9 @@ export function ContentListView({
                   Schedule
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem isDestructive>Delete</DropdownMenuItem>
+              <DropdownMenuItem isDestructive onSelect={() => onDelete(row)}>
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ),
@@ -226,6 +230,7 @@ export function ContentListView({
       selectedIds,
       onToggleSelect,
       onSelect,
+      onDelete,
       sortField,
       sortDirection,
       onSort,

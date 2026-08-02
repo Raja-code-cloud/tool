@@ -3,9 +3,12 @@
 import dynamic from "next/dynamic";
 
 import { Dialog, DrawerContent } from "@/components/dialogs";
-import { Spinner } from "@/components/feedback";
+import { ErrorState, Spinner } from "@/components/feedback";
 import { PageContainer, Stack } from "@/components/layout";
 import { Pagination } from "@/components/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import type { ContentItem } from "@/lib/domain/content";
 import type { ToolbarFilters } from "@/lib/utils/content-library";
 
 import { ContentGrid } from "./content-grid";
@@ -21,7 +24,28 @@ const ContentPreviewPanel = dynamic(() =>
 );
 
 export function ContentLibraryView(): React.JSX.Element {
+  const { toast } = useToast();
   const state = useContentLibraryState();
+
+  const runMutation = async (
+    action: () => Promise<void>,
+    successMessage: string,
+  ): Promise<void> => {
+    try {
+      await action();
+      toast({ title: successMessage });
+    } catch (error) {
+      toast({
+        title: "Action failed",
+        description: getApiErrorMessage(error),
+      });
+    }
+  };
+
+  const deleteItem = (item: ContentItem): void => {
+    void runMutation(() => state.handleDelete(item), `"${item.title}" was deleted.`);
+  };
+
   return (
     <PageContainer>
       <Stack gap="lg">
@@ -59,9 +83,15 @@ export function ContentLibraryView(): React.JSX.Element {
               resultCount={state.filteredItems.length}
               onOpenFilters={() => state.setMobileFiltersOpen(true)}
             />
-            {state.isRefreshing ? (
+            {state.loadError && !state.isLoading ? (
+              <ErrorState
+                title="Unable to load content library"
+                description={state.loadError}
+                onRetry={state.handleRefresh}
+              />
+            ) : state.isLoading || state.isRefreshing ? (
               <div className="grid min-h-48 place-items-center" role="status">
-                <Spinner label="Refreshing content library" />
+                <Spinner label="Loading content library" />
               </div>
             ) : state.filteredItems.length === 0 ? (
               <ContentLibraryEmptyState hasActiveFilters={state.filtersActive} />
@@ -72,6 +102,7 @@ export function ContentLibraryView(): React.JSX.Element {
                 onToggleSelect={state.toggleSelect}
                 onSelect={state.setPreviewItem}
                 onToggleFavorite={state.toggleFavorite}
+                onDelete={deleteItem}
               />
             ) : (
               <ContentListView
@@ -80,6 +111,7 @@ export function ContentLibraryView(): React.JSX.Element {
                 onToggleSelect={state.toggleSelect}
                 onToggleSelectAll={state.toggleSelectAll}
                 onSelect={state.setPreviewItem}
+                onDelete={deleteItem}
                 sortField={state.listSortField}
                 sortDirection={state.listSortDirection}
                 onSort={state.handleListSort}
@@ -97,6 +129,12 @@ export function ContentLibraryView(): React.JSX.Element {
             <BulkActionBar
               selectedCount={state.selectedIds.size}
               onClear={() => state.setSelectedIds(new Set())}
+              onArchive={() =>
+                void runMutation(() => state.handleBulkArchive(), "Selected items were archived.")
+              }
+              onDelete={() =>
+                void runMutation(() => state.handleBulkDelete(), "Selected items were deleted.")
+              }
             />
           </Stack>
         </div>

@@ -25,10 +25,12 @@ const CONFIG: Record<
   draft: { variant: "neutral", icon: FileEdit, label: "Draft" },
   scheduled: { variant: "info", icon: CalendarClock, label: "Scheduled" },
   ready: { variant: "info", icon: CheckCircle2, label: "Ready" },
+  queued: { variant: "warning", icon: Clock, label: "Queued" },
   publishing: { variant: "warning", icon: Loader2, label: "Publishing" },
   published: { variant: "success", icon: CheckCircle2, label: "Published" },
   failed: { variant: "danger", icon: XCircle, label: "Failed" },
   cancelled: { variant: "neutral", icon: Ban, label: "Cancelled" },
+  expired: { variant: "neutral", icon: Clock, label: "Expired" },
 };
 
 export function ScheduleStatusBadge({ status }: { status: ScheduleStatus }): React.JSX.Element {

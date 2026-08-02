@@ -1,18 +1,20 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
-
-import { MetricCard } from "@/components/cards";
-import { DASHBOARD_STATS } from "@/constants/dashboard";
+import { AlertTriangle, CalendarClock, CheckCircle2, FileStack, FileText } from "lucide-react";
+import type { DashboardStatData } from "@/lib/domain/dashboard";
 import { cn } from "@/lib/utils/cn";
 
-export function DashboardStats(): React.JSX.Element {
+type DashboardStatsProps = {
+  readonly stats: readonly DashboardStatData[];
+};
+
+export function DashboardStats({ stats }: DashboardStatsProps): React.JSX.Element {
   return (
     <section aria-labelledby="dashboard-stats-heading">
       <h2 id="dashboard-stats-heading" className="sr-only">
         Key metrics
       </h2>
-      <div className="tablet:grid-cols-2 wide:grid-cols-4 grid gap-4">
-        {DASHBOARD_STATS.map((stat) => {
-          const Icon = stat.icon;
+      <div className="tablet:grid-cols-2 wide:grid-cols-5 grid gap-4">
+        {stats.map((stat) => {
+          const Icon = DASHBOARD_STAT_ICONS[stat.id] ?? FileStack;
           const TrendIcon = stat.trendDirection === "down" ? TrendingDown : TrendingUp;
 
           return (
@@ -33,7 +35,14 @@ export function DashboardStats(): React.JSX.Element {
                     {stat.trend}
                   </span>
                 ) : (
-                  <span className="text-warning font-semibold">{stat.trend}</span>
+                  <span
+                    className={cn(
+                      "font-semibold",
+                      stat.variant === "warning" ? "text-warning" : "text-muted-foreground",
+                    )}
+                  >
+                    {stat.trend}
+                  </span>
                 )
               }
               visualization={

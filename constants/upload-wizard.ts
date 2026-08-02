@@ -128,14 +128,23 @@ export const POSTER_ACCEPT = {
 export const ARTICLE_ACCEPT = {
   "text/markdown": [".md"],
   "text/plain": [".txt"],
+  "application/pdf": [".pdf"],
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
 } as const;
-export const VIDEO_ACCEPT = { "video/mp4": [".mp4"], "video/quicktime": [".mov"] } as const;
-export const THUMBNAIL_ACCEPT = { "image/png": [".png"], "image/jpeg": [".jpg", ".jpeg"] } as const;
+export const VIDEO_ACCEPT = {
+  "video/mp4": [".mp4"],
+  "video/webm": [".webm"],
+  "video/quicktime": [".mov"],
+} as const;
+export const THUMBNAIL_ACCEPT = {
+  "image/png": [".png"],
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/webp": [".webp"],
+} as const;
 
 export const POSTER_MAX_BYTES = 10 * 1024 * 1024;
-export const ARTICLE_MAX_BYTES = 10 * 1024 * 1024;
-export const VIDEO_MAX_BYTES = 500 * 1024 * 1024;
-export const THUMBNAIL_MAX_BYTES = 5 * 1024 * 1024;
+export const ARTICLE_MAX_BYTES = 25 * 1024 * 1024;
+export const VIDEO_MAX_BYTES = 2 * 1024 * 1024 * 1024;
+export const THUMBNAIL_MAX_BYTES = 10 * 1024 * 1024;
 
 export const DRAFT_STORAGE_KEY = "cch:upload-wizard-draft";

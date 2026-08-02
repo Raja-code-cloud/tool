@@ -26,14 +26,30 @@ import {
 } from "@/lib/services/workspace-services";
 
 describe("workspace services", () => {
-  it("returns content library data from the content repository", () => {
-    const repository: ContentRepository = { list: () => CONTENT_LIBRARY_ITEMS.slice(0, 2) };
-    expect(createContentService(repository).list()).toHaveLength(2);
+  it("returns content library data from the content repository", async () => {
+    const repository: ContentRepository = {
+      list: async () => ({ items: CONTENT_LIBRARY_ITEMS.slice(0, 2), nextCursor: null, hasMore: false }),
+      getById: async (id) => CONTENT_LIBRARY_ITEMS.find((item) => item.id === id)!,
+      delete: async () => undefined,
+      archive: async (id, version) => ({
+        ...CONTENT_LIBRARY_ITEMS.find((item) => item.id === id)!,
+        status: "archived",
+        version: version + 1,
+      }),
+      update: async (id, version, input) => ({
+        ...CONTENT_LIBRARY_ITEMS.find((item) => item.id === id)!,
+        title: input.title,
+        version: version + 1,
+        updatedAt: new Date().toISOString(),
+      }),
+    };
+    const result = await createContentService(repository).list();
+    expect(result.items).toHaveLength(2);
   });
 
-  it("returns scheduler posts and notifications", () => {
+  it("returns scheduler posts and notifications", async () => {
     const service = createSchedulerService(mockSchedulerRepository);
-    expect(service.listPosts().length).toBeGreaterThan(0);
+    expect((await service.listPosts()).length).toBeGreaterThan(0);
     expect(service.listNotifications().length).toBeGreaterThan(0);
   });
 
@@ -115,9 +131,11 @@ describe("workspace services", () => {
 });
 
 describe("mock repository wiring", () => {
-  it("exposes stable mock datasets for every domain repository", () => {
-    expect(mockContentRepository.list()).toBe(CONTENT_LIBRARY_ITEMS);
-    expect(mockSchedulerRepository.listPosts()).toBe(SCHEDULED_POSTS);
+  it("exposes stable mock datasets for every domain repository", async () => {
+    const content = await mockContentRepository.list();
+    expect(content.items.length).toBe(CONTENT_LIBRARY_ITEMS.length);
+    const schedulerPosts = await mockSchedulerRepository.listPosts();
+    expect(schedulerPosts.length).toBe(SCHEDULED_POSTS.length);
     expect(mockDashboardRepository.listSuggestions().length).toBeGreaterThan(0);
     expect(mockSettingsRepository.listApiKeys().length).toBeGreaterThan(0);
   });

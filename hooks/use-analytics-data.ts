@@ -23,6 +23,7 @@ import {
   isBackendAnalyticsEnabled,
   mockAnalyticsService,
 } from "@/lib/services";
+import { mockAnalyticsRepository } from "@/lib/adapters/mock-repositories";
 import type { AnalyticsFilters } from "@/lib/services/workspace-services";
 
 export type AnalyticsTableControls = {
@@ -100,12 +101,23 @@ function mapApiError(error: unknown): string {
 
 function loadMockAnalytics(filters: AnalyticsFilters): AnalyticsDataState {
   const summary = mockAnalyticsService.computeSummary(filters);
+  const engagementByPlatform = mockAnalyticsService
+    .getEngagementByPlatform(filters)
+    .map((item) => {
+      const source = mockAnalyticsRepository
+        .getEngagementByPlatform()
+        .find((platform) => platform.label === item.label);
+      return {
+        platform: source?.platform ?? ("linkedin" as PlatformId),
+        label: item.label,
+        engagement: item.value,
+      };
+    });
+
   return {
     summary,
     publishingTrend: mockAnalyticsService.getPublishingTrend(filters),
-    engagementByPlatform: mockAnalyticsService
-      .getEngagementByPlatform(filters)
-      .map((item) => ({ platform: "linkedin" as PlatformId, label: item.label, engagement: item.value })),
+    engagementByPlatform,
     reachByPlatform: mockAnalyticsService.getReachByPlatform(filters),
     aiUsageTrend: mockAnalyticsService.getAiUsageTrend(filters),
     topPosts: mockAnalyticsService.getTopPosts(filters),
@@ -121,7 +133,9 @@ function loadMockAnalytics(filters: AnalyticsFilters): AnalyticsDataState {
       posts: item.posts,
     })),
     insights: mockAnalyticsService.getInsights(filters),
-    tablePosts: [...mockAnalyticsService.filterPosts(filters)].sort((left, right) => right.reach - left.reach),
+    tablePosts: [...mockAnalyticsService.filterPosts(filters)].sort(
+      (left, right) => right.reach - left.reach,
+    ),
     platformFilterOptions: mockAnalyticsService.getPlatformFilterOptions(),
     pagination: { nextCursor: null, hasMore: false, limit: 25 },
     partial: false,
@@ -190,7 +204,7 @@ export function useAnalyticsFiltersState() {
     platform: "all",
   });
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("-reach");
+  const [sort, setSortState] = useState("-reach");
   const [cursor, setCursor] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -208,7 +222,10 @@ export function useAnalyticsFiltersState() {
     cursor,
     refreshKey,
     setSearch,
-    setSort,
+    setSort: (value: string) => {
+      setSortState(value);
+      setCursor(null);
+    },
     setCursor,
     patchFilters,
     refresh,

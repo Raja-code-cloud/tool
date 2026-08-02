@@ -46,3 +46,14 @@ export type DashboardStorage = {
   readonly totalBytes: number;
   readonly label: string;
 };
+
+/** Summary card data without UI-only icon references. */
+export type DashboardStatData = {
+  readonly id: string;
+  readonly label: string;
+  readonly value: string;
+  readonly comparison: string;
+  readonly trend: string;
+  readonly trendDirection: "up" | "down" | "neutral";
+  readonly variant?: "default" | "warning" | "danger";
+};

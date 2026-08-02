@@ -5,7 +5,7 @@ import { Card, CardHeader } from "@/components/cards";
 import { StatusBadge } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants/navigation";
-import { dashboardService } from "@/lib/services";
+import type { AgendaEntry } from "@/lib/domain/dashboard";
 
 const STATUS_CHIP = {
   queued: { variant: "info" as const, label: "Queued" },
@@ -13,8 +13,12 @@ const STATUS_CHIP = {
   failed: { variant: "danger" as const, label: "Failed" },
 };
 
-export function PublishingCalendarPanel(): React.JSX.Element {
-  const items = dashboardService.listAgenda().map((entry) => ({
+type PublishingCalendarPanelProps = {
+  readonly agenda: readonly AgendaEntry[];
+};
+
+export function PublishingCalendarPanel({ agenda }: PublishingCalendarPanelProps): React.JSX.Element {
+  const items = agenda.map((entry) => ({
     id: entry.id,
     time: entry.time,
     title: entry.title,

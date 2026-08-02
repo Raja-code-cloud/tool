@@ -3,7 +3,9 @@ import type { PlatformId } from "@/lib/domain/platform";
 import type {
   AiStudioRepository,
   AnalyticsRepository,
+  ContentListParams,
   ContentRepository,
+  ContentUpdateInput,
   DashboardRepository,
   SchedulerRepository,
   SettingsRepository,
@@ -51,23 +53,41 @@ function scaleTrendData<T extends Record<string, number | string>>(
 
 export function createContentService(repository: ContentRepository) {
   return {
-    list: (params?: import("@/lib/domain/repositories").ContentListParams) =>
-      repository.list(params),
+    list: (params?: ContentListParams) => repository.list(params),
     getById: (id: string) => repository.getById(id),
     delete: (id: string, version: number) => repository.delete(id, version),
     archive: (id: string, version: number) => repository.archive(id, version),
-    update: (
-      id: string,
-      version: number,
-      input: import("@/lib/domain/repositories").ContentUpdateInput,
-    ) => repository.update(id, version, input),
+    update: (id: string, version: number, input: ContentUpdateInput) =>
+      repository.update(id, version, input),
   };
 }
 
 export function createSchedulerService(repository: SchedulerRepository) {
   return {
-    listPosts: () => repository.listPosts(),
+    listPosts: (filters?: import("@/lib/domain/repositories").ListSchedulesFilters) =>
+      repository.listPosts(filters),
     listNotifications: () => repository.listNotifications(),
+    getSchedule: (id: string) => repository.getSchedule(id),
+    createSchedule: (input: import("@/lib/domain/repositories").CreateScheduleInput) =>
+      repository.createSchedule(input),
+    updateSchedule: (
+      id: string,
+      version: number,
+      input: import("@/lib/domain/repositories").UpdateScheduleInput,
+    ) => repository.updateSchedule(id, version, input),
+    cancelSchedule: (id: string, version: number) => repository.cancelSchedule(id, version),
+    dispatchPublication: (
+      publicationId: string,
+      version: number,
+      targetIds?: readonly string[],
+    ) => repository.dispatchPublication(publicationId, version, targetIds),
+    cancelPublication: (publicationId: string, version: number) =>
+      repository.cancelPublication(publicationId, version),
+    retryPublication: (
+      publicationId: string,
+      version: number,
+      targetIds?: readonly string[],
+    ) => repository.retryPublication(publicationId, version, targetIds),
   };
 }
 
@@ -94,6 +114,7 @@ export function createAiStudioService(repository: AiStudioRepository) {
 
 export function createDashboardService(repository: DashboardRepository) {
   return {
+    getStats: () => repository.getStats(),
     listSuggestions: () => repository.listSuggestions(),
     listAgenda: () => repository.listAgenda(),
     listRecentContent: () => repository.listRecentContent(),
@@ -101,6 +122,7 @@ export function createDashboardService(repository: DashboardRepository) {
     listPlatformHealth: () => repository.listPlatformHealth(),
     getStorage: () => repository.getStorage(),
     getHealthSummary: () => repository.getHealthSummary(),
+    loadOverview: () => repository.loadOverview?.(),
   };
 }
 
@@ -239,21 +261,50 @@ export function createAnalyticsService(repository: AnalyticsRepository) {
 
 export function createSettingsService(repository: SettingsRepository) {
   return {
-    getProfileDefaults: () => repository.getProfileDefaults(),
-    listNotificationPreferences: () => repository.listNotificationPreferences(),
-    listAiProviders: () => repository.listAiProviders(),
-    getStorageUsage: () => repository.getStorageUsage(),
-    getPublishingDefaults: () => repository.getPublishingDefaults(),
-    listActiveSessions: () => repository.listActiveSessions(),
-    listApiKeys: () => repository.listApiKeys(),
+    getProfile: () => Promise.resolve(repository.getProfile()),
+    updateProfile: (input: import("@/lib/domain/repositories").ProfileUpdateInput, version: number) => {
+      if (!repository.updateProfile) {
+        return Promise.reject(new Error("Profile updates are not supported in mock mode."));
+      }
+      return Promise.resolve(repository.updateProfile(input, version));
+    },
+    uploadAvatar: (file: File, version: number) => {
+      if (!repository.uploadAvatar) {
+        return Promise.reject(new Error("Avatar upload is not supported in mock mode."));
+      }
+      return Promise.resolve(repository.uploadAvatar(file, version));
+    },
+    listNotificationPreferences: () => Promise.resolve(repository.listNotificationPreferences()),
+    updateNotificationPreferences: (
+      preferences: Readonly<
+        Record<
+          import("@/lib/domain/settings").NotificationChannelId,
+          { email: boolean; inApp: boolean }
+        >
+      >,
+    ) => {
+      if (!repository.updateNotificationPreferences) {
+        return Promise.reject(new Error("Notification preference updates are not supported."));
+      }
+      return Promise.resolve(repository.updateNotificationPreferences(preferences));
+    },
+    listAiProviders: () => Promise.resolve(repository.listAiProviders()),
+    getStorageUsage: () => Promise.resolve(repository.getStorageUsage()),
+    getPublishingDefaults: () => Promise.resolve(repository.getPublishingDefaults()),
+    listActiveSessions: () => Promise.resolve(repository.listActiveSessions()),
+    listApiKeys: () => Promise.resolve(repository.listApiKeys()),
+    getUnreadNotificationCount: () =>
+      repository.getUnreadNotificationCount
+        ? Promise.resolve(repository.getUnreadNotificationCount())
+        : Promise.resolve(0),
   };
 }
 
 export function createWorkspaceService(repository: WorkspaceRepository) {
   return {
-    getWorkspace: () => repository.getWorkspace(),
-    getCurrentUser: () => repository.getCurrentUser(),
-    getUnreadNotificationCount: () => repository.getUnreadNotificationCount(),
+    getWorkspace: () => Promise.resolve(repository.getWorkspace()),
+    getCurrentUser: () => Promise.resolve(repository.getCurrentUser()),
+    getUnreadNotificationCount: () => Promise.resolve(repository.getUnreadNotificationCount()),
   };
 }
 

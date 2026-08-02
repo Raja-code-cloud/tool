@@ -2,7 +2,6 @@ import type {
   AssetDto,
   PagedSuccessEnvelope,
   SingleSuccessEnvelope,
-  UpdateContentRequestDto,
 } from "@/lib/api/asset-types";
 import type { ApiClient } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
@@ -24,17 +23,6 @@ function buildQuery(params: ContentListParams): string {
   if (params.projectId) search.set("projectId", params.projectId);
   const query = search.toString();
   return query ? `?${query}` : "";
-}
-
-function mapUpdateInput(input: ContentUpdateInput): UpdateContentRequestDto {
-  const lifecycle = input.lifecycleStatus ? mapStatusToLifecycle(input.lifecycleStatus) : undefined;
-  return {
-    title: input.title,
-    summary: input.summary,
-    bodyText: input.bodyText,
-    metadata: input.metadata,
-    lifecycleStatus: lifecycle ?? undefined,
-  };
 }
 
 export function createHttpContentRepository(client: ApiClient): ContentRepository {

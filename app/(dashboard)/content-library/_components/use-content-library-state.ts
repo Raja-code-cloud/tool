@@ -2,11 +2,16 @@
 
 import * as React from "react";
 
-import { PAGE_SIZE_GRID, PAGE_SIZE_LIST, SIDEBAR_FILTERS } from "@/lib/config/content-library";
-import type { ContentItem, ContentStatus, ContentType, SidebarFilterId } from "@/lib/domain/content";
-import type { ContentListParams } from "@/lib/domain/repositories";
 import { getApiErrorMessage, isApiError } from "@/lib/api/errors";
+import { PAGE_SIZE_GRID, PAGE_SIZE_LIST, SIDEBAR_FILTERS } from "@/lib/config/content-library";
 import { mapStatusToLifecycle } from "@/lib/content/mappers";
+import type {
+  ContentItem,
+  ContentStatus,
+  ContentType,
+  SidebarFilterId,
+} from "@/lib/domain/content";
+import type { ContentListParams } from "@/lib/domain/repositories";
 import { contentService, isBackendAuthEnabled } from "@/lib/services";
 import {
   countBySidebarFilter,
@@ -187,9 +192,7 @@ export function useContentLibraryState() {
       selected.map((item) => contentService.archive(item.id, item.version)),
     );
     const archivedById = new Map(archived.map((item) => [item.id, item]));
-    setItems((current) =>
-      current.map((item) => archivedById.get(item.id) ?? item),
-    );
+    setItems((current) => current.map((item) => archivedById.get(item.id) ?? item));
     setSelectedIds(new Set());
   };
 

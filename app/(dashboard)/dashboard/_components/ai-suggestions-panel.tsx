@@ -9,7 +9,6 @@ import { Card, CardHeader } from "@/components/cards";
 import { StatusBadge } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import type { DashboardSuggestion } from "@/lib/domain/dashboard";
-import { dashboardService } from "@/lib/services";
 
 const PRIORITY_VARIANT = {
   high: "danger",
@@ -52,10 +51,18 @@ function SuggestionItem({
   );
 }
 
-export function AiSuggestionsPanel(): React.JSX.Element {
-  const [suggestions, setSuggestions] = React.useState<readonly DashboardSuggestion[]>(() =>
-    dashboardService.listSuggestions(),
-  );
+type AiSuggestionsPanelProps = {
+  readonly suggestions: readonly DashboardSuggestion[];
+};
+
+export function AiSuggestionsPanel({
+  suggestions: initialSuggestions,
+}: AiSuggestionsPanelProps): React.JSX.Element {
+  const [suggestions, setSuggestions] = React.useState(initialSuggestions);
+
+  React.useEffect(() => {
+    setSuggestions(initialSuggestions);
+  }, [initialSuggestions]);
 
   function dismiss(id: string): void {
     setSuggestions((current) => current.filter((item) => item.id !== id));

@@ -9,11 +9,13 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from cloud_content_hub.application.administration.interfaces.administration_repository import (
+    UserProfileUpdate,
     UserRecord,
     UserSearchCriteria,
     UserSearchPage,
     UserStatus,
 )
+from cloud_content_hub.core.errors import ResourceNotFoundError, VersionConflictError
 from cloud_content_hub.infrastructure.database.enums import UserStatus as DbUserStatus
 from cloud_content_hub.infrastructure.database.models.user import User
 from cloud_content_hub.infrastructure.database.models.workspace_membership import (
@@ -126,4 +128,35 @@ class SqlAlchemyUserRepository:
         user = await self._users.get_by_id(user_id, include_deleted=False)
         if user is None or user.status != DbUserStatus.ACTIVE:
             return None
+        return _to_user_record(user)
+
+    async def update_profile(self, update: UserProfileUpdate) -> UserRecord:
+        """Update mutable profile fields for an active user."""
+
+        user = await self._users.get_by_id(update.user_id, include_deleted=False)
+        if user is None or user.status != DbUserStatus.ACTIVE:
+            raise ResourceNotFoundError(
+                detail="User profile was not found.",
+                parameters={"userId": str(update.user_id)},
+            )
+        if user.version != update.expected_version:
+            raise VersionConflictError(
+                parameters={
+                    "userId": str(update.user_id),
+                    "expectedVersion": update.expected_version,
+                },
+            )
+
+        if update.display_name is not None:
+            user.display_name = update.display_name
+        if update.locale is not None:
+            user.locale = update.locale
+        if update.time_zone is not None:
+            user.time_zone = update.time_zone
+        if update.avatar_object_key is not None:
+            user.avatar_object_key = update.avatar_object_key
+
+        user.version += 1
+        await self._session.flush()
+        await self._session.refresh(user)
         return _to_user_record(user)

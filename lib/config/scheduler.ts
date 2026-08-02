@@ -17,20 +17,22 @@ export const SCHEDULE_STATUSES: readonly { value: ScheduleStatus | "all"; label:
   { value: "draft", label: "Draft" },
   { value: "scheduled", label: "Scheduled" },
   { value: "ready", label: "Ready" },
+  { value: "queued", label: "Queued" },
   { value: "publishing", label: "Publishing" },
   { value: "published", label: "Published" },
   { value: "failed", label: "Failed" },
   { value: "cancelled", label: "Cancelled" },
+  { value: "expired", label: "Expired" },
 ];
 export const QUEUE_SECTIONS: readonly {
   id: QueueSection;
   label: string;
   statuses: readonly ScheduleStatus[];
 }[] = [
-  { id: "upcoming", label: "Upcoming", statuses: ["scheduled", "ready"] },
+  { id: "upcoming", label: "Upcoming", statuses: ["scheduled", "ready", "queued"] },
   { id: "drafts", label: "Drafts", statuses: ["draft"] },
   { id: "scheduled", label: "Scheduled", statuses: ["scheduled"] },
-  { id: "publishing", label: "Publishing", statuses: ["publishing"] },
+  { id: "publishing", label: "Publishing", statuses: ["queued", "publishing"] },
   { id: "published", label: "Published", statuses: ["published"] },
   { id: "failed", label: "Failed", statuses: ["failed"] },
   { id: "cancelled", label: "Cancelled", statuses: ["cancelled"] },

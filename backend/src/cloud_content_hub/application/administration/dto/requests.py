@@ -46,6 +46,15 @@ class UpdateWorkspaceSettingsRequestDto(ApplicationDto):
     retention_policy_days: int | None = Field(default=None, ge=1)
 
 
+class UpdateUserProfileRequestDto(ApplicationDto):
+    """Request payload for updating the authenticated user's profile."""
+
+    display_name: str | None = Field(default=None, min_length=1, max_length=120)
+    locale: str | None = Field(default=None, min_length=2, max_length=35)
+    time_zone: str | None = Field(default=None, min_length=1, max_length=64)
+    avatar_object_key: str | None = None
+
+
 class RefreshProviderHealthRequestDto(ApplicationDto):
     """Request payload for refreshing provider health checks."""
 

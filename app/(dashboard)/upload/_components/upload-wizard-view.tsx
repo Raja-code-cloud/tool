@@ -64,11 +64,12 @@ export function UploadWizardView(): React.JSX.Element {
     goBack,
     isDirty,
     stepErrors,
-    simulateUpload,
+    uploadFile,
     revokeAsset,
     saveDraft,
     resetWizard,
     clearDraftStorage,
+    createProject,
   } = useWizardState();
 
   const [exitOpen, setExitOpen] = useState(false);
@@ -116,9 +117,9 @@ export function UploadWizardView(): React.JSX.Element {
   const handlePosterUpload = useCallback(
     (file: File) => {
       if (!rejectUpload("poster", file)) return;
-      simulateUpload("poster", file, (asset) => patchForm({ poster: asset }));
+      uploadFile("poster", file, (asset) => patchForm({ poster: asset }));
     },
-    [patchForm, rejectUpload, simulateUpload],
+    [patchForm, rejectUpload, uploadFile],
   );
 
   const handlePosterRemove = useCallback(() => {
@@ -129,7 +130,7 @@ export function UploadWizardView(): React.JSX.Element {
   const handleArticleUpload = useCallback(
     (file: File) => {
       if (!rejectUpload("article", file)) return;
-      simulateUpload("article", file, (asset) => {
+      uploadFile("article", file, (asset) => {
         patchForm({ articleFile: asset });
         if (
           asset.status === "complete" &&
@@ -139,7 +140,7 @@ export function UploadWizardView(): React.JSX.Element {
         }
       });
     },
-    [patchForm, rejectUpload, simulateUpload],
+    [patchForm, rejectUpload, uploadFile],
   );
 
   const handleArticleRemove = useCallback(() => {
@@ -151,9 +152,9 @@ export function UploadWizardView(): React.JSX.Element {
     (file: File) => {
       if (!rejectUpload("video", file)) return;
       readVideoDuration(file).then((duration) => patchForm({ videoDuration: duration }));
-      simulateUpload("video", file, (asset) => patchForm({ video: asset, videoSkipped: false }));
+      uploadFile("video", file, (asset) => patchForm({ video: asset, videoSkipped: false }));
     },
-    [patchForm, rejectUpload, simulateUpload],
+    [patchForm, rejectUpload, uploadFile],
   );
 
   const handleVideoRemove = useCallback(() => {
@@ -164,11 +165,11 @@ export function UploadWizardView(): React.JSX.Element {
   const handleThumbnailUpload = useCallback(
     (file: File) => {
       if (!rejectUpload("thumbnail", file)) return;
-      simulateUpload("thumbnail", file, (asset) =>
+      uploadFile("thumbnail", file, (asset) =>
         patchForm({ thumbnail: asset, thumbnailSkipped: false }),
       );
     },
-    [patchForm, rejectUpload, simulateUpload],
+    [patchForm, rejectUpload, uploadFile],
   );
 
   const handleThumbnailRemove = useCallback(() => {
@@ -211,18 +212,23 @@ export function UploadWizardView(): React.JSX.Element {
         });
         return;
       }
-      setCurrentStep(8);
-      clearDraftStorage();
-      toast({
-        title: "Project created",
-        description: `"${form.projectName}" was created successfully.`,
-      });
+      void (async () => {
+        const created = await createProject();
+        if (!created) return;
+        setCurrentStep(8);
+        clearDraftStorage();
+        toast({
+          title: "Project created",
+          description: `"${form.projectName}" was created successfully.`,
+        });
+      })();
       return;
     }
     goNext();
   }, [
     allStepsValid,
     clearDraftStorage,
+    createProject,
     currentStep,
     form.projectName,
     goNext,

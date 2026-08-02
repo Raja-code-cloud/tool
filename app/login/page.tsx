@@ -33,7 +33,10 @@ function LoginForm(): React.JSX.Element {
   const returnTo = searchParams.get("returnTo") ?? ROUTES.dashboard;
 
   React.useEffect(() => {
-    void authService.listProviders().then(setProviders).catch(() => {});
+    void authService
+      .listProviders()
+      .then(setProviders)
+      .catch(() => {});
   }, []);
 
   const handleMockLogin = React.useCallback(

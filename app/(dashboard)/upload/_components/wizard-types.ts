@@ -8,6 +8,9 @@ export type FileAsset = {
   readonly previewUrl: string;
   readonly progress: number;
   readonly status: "uploading" | "complete" | "failed";
+  readonly assetId?: string;
+  readonly version?: number;
+  readonly errorMessage?: string;
 };
 
 export type WizardFormState = {

@@ -43,6 +43,48 @@ class UpdateContentRequest(ApiModel):
         return self
 
 
+class UpdateUserRequest(ApiModel):
+    display_name: str | None = Field(default=None, min_length=1, max_length=120)
+    locale: str | None = Field(default=None, min_length=2, max_length=35)
+    time_zone: str | None = Field(default=None, min_length=1, max_length=64)
+    avatar_object_key: str | None = None
+
+    @model_validator(mode="after")
+    def validate_nonempty_patch(self) -> UpdateUserRequest:
+        if not any(
+            value is not None
+            for value in (
+                self.display_name,
+                self.locale,
+                self.time_zone,
+                self.avatar_object_key,
+            )
+        ):
+            msg = "At least one field must be provided."
+            raise ValueError(msg)
+        return self
+
+
+class UpdateWorkspaceRequest(ApiModel):
+    name: str | None = Field(default=None, min_length=1, max_length=200)
+    time_zone: str | None = Field(default=None, min_length=1, max_length=64)
+    retention_policy_days: int | None = Field(default=None, ge=1)
+
+    @model_validator(mode="after")
+    def validate_nonempty_patch(self) -> UpdateWorkspaceRequest:
+        if not any(
+            value is not None
+            for value in (
+                self.name,
+                self.time_zone,
+                self.retention_policy_days,
+            )
+        ):
+            msg = "At least one field must be provided."
+            raise ValueError(msg)
+        return self
+
+
 class UpdateScheduleRequest(ApiModel):
     requested_local_at: datetime | None = None
     time_zone: str | None = Field(default=None, min_length=1)

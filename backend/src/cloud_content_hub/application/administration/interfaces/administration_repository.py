@@ -60,6 +60,19 @@ class UserRecord:
 
 
 @dataclass(frozen=True, slots=True)
+class UserProfileUpdate:
+    """User profile mutation input."""
+
+    user_id: UUID
+    expected_version: int
+    display_name: str | None
+    locale: str | None
+    time_zone: str | None
+    avatar_object_key: str | None
+    updated_by: UUID
+
+
+@dataclass(frozen=True, slots=True)
 class WorkspaceRecord:
     """Workspace administration read model."""
 
@@ -292,6 +305,9 @@ class IAdministrationRepository(Protocol):
 
     async def get_user(self, user_id: UUID) -> UserRecord | None:
         """Return one user by identifier."""
+
+    async def update_user_profile(self, update: UserProfileUpdate) -> UserRecord:
+        """Update mutable profile fields for a user."""
 
     async def list_workspaces(self, criteria: WorkspaceSearchCriteria) -> WorkspaceSearchPage:
         """List workspaces visible to the administrative scope."""

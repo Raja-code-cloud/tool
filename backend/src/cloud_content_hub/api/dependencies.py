@@ -116,6 +116,25 @@ def get_admin_actor(
     return build_actor_context(principal, workspace_id)
 
 
+def get_profile_actor(principal: CurrentUser) -> ActorContext:
+    if not principal.authenticated:
+        raise AuthenticationError(detail="Authentication is required.")
+    try:
+        user_id = UUID(principal.subject)
+    except ValueError as exc:
+        raise AuthenticationError(
+            detail="Authenticated subject is not a valid user id.",
+        ) from exc
+    return ActorContext(
+        user_id=user_id,
+        workspace_id=user_id,
+        permissions=principal.permissions,
+    )
+
+
+ProfileActor = Annotated[ActorContext, Depends(get_profile_actor)]
+
+
 Actor = Annotated[ActorContext, Depends(get_actor)]
 AdminActor = Annotated[ActorContext, Depends(get_admin_actor)]
 

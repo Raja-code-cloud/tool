@@ -7,8 +7,8 @@ import { useMemo } from "react";
 import { Alert, LiveRegion, Skeleton } from "@/components/feedback";
 import { PageContainer, PageHeader, Stack } from "@/components/layout";
 import { useAnalyticsData, useAnalyticsFiltersState } from "@/hooks/use-analytics-data";
-import { downloadCsv, exportAnalyticsCsv } from "@/lib/services/analytics-api-service";
 import { MOTION_DURATION, MOTION_EASING } from "@/lib/motion";
+import { downloadCsv, exportAnalyticsCsv } from "@/lib/services/analytics-api-service";
 
 import { AnalyticsFiltersBar } from "./analytics-filters-bar";
 import { AnalyticsSummaryCards } from "./analytics-summary-cards";
@@ -31,7 +31,6 @@ export function AnalyticsView(): React.JSX.Element {
     setSearch,
     setSort,
     setCursor,
-    patchFilters,
     refresh,
     setPlatform,
     setDateRange,
@@ -125,7 +124,9 @@ export function AnalyticsView(): React.JSX.Element {
           dateRangeOptions={dateRangeOptions}
           platformFilterOptions={platformFilterOptions}
           search={search}
+          sort={sort}
           onSearchChange={setSearch}
+          onSortChange={setSort}
           onDateRangeChange={setDateRange}
           onPlatformChange={setPlatform}
           onRefresh={handleRefresh}
@@ -194,8 +195,6 @@ export function AnalyticsView(): React.JSX.Element {
               description="Full performance table for the selected period."
               posts={tablePosts}
               emptyMessage="No posts match your filters."
-              sort={sort}
-              onSortChange={setSort}
               hasMore={pagination.hasMore}
               onLoadMore={() => setCursor(pagination.nextCursor)}
             />

@@ -1,5 +1,6 @@
 "use client";
 
+import { SecondaryButton } from "@/components/buttons";
 import { Card, CardHeader } from "@/components/cards";
 import { PlatformChip } from "@/components/platform";
 import { DataTable, type DataTableColumn } from "@/components/tables";
@@ -63,6 +64,8 @@ export type TopPostsTableProps = {
   description: string;
   posts: readonly AnalyticsPost[];
   emptyMessage?: string;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 };
 
 export function TopPostsTable({
@@ -70,6 +73,8 @@ export function TopPostsTable({
   description,
   posts,
   emptyMessage = "No posts match your filters.",
+  hasMore = false,
+  onLoadMore,
 }: TopPostsTableProps): React.JSX.Element {
   return (
     <Card as="section">
@@ -82,6 +87,13 @@ export function TopPostsTable({
         empty={emptyMessage}
         density="compact"
       />
+      {hasMore && onLoadMore && (
+        <div className="border-t p-4">
+          <SecondaryButton type="button" size="compact" onClick={onLoadMore}>
+            Load more posts
+          </SecondaryButton>
+        </div>
+      )}
     </Card>
   );
 }

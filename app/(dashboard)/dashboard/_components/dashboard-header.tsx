@@ -1,10 +1,10 @@
-import { CalendarPlus, Share2, Sparkles, Upload } from "lucide-react";
+import { CalendarPlus, RefreshCw, Share2, Sparkles, Upload } from "lucide-react";
 import Link from "next/link";
 
-import { PrimaryButton } from "@/components/buttons";
+import { IconButton, PrimaryButton } from "@/components/buttons";
 import { PageHeader } from "@/components/layout";
 import { ROUTES } from "@/constants/navigation";
-import { dashboardService, workspaceService } from "@/lib/services";
+import { workspaceService } from "@/lib/services";
 
 const QUICK_ACTIONS = [
   { id: "upload", label: "Upload", icon: Upload, href: ROUTES.upload },
@@ -19,7 +19,17 @@ function greetingForHour(hour: number): string {
   return "Good evening";
 }
 
-export function DashboardHeader(): React.JSX.Element {
+type DashboardHeaderProps = {
+  readonly healthSummary: string;
+  readonly onRefresh?: () => void;
+  readonly isRefreshing?: boolean;
+};
+
+export function DashboardHeader({
+  healthSummary,
+  onRefresh,
+  isRefreshing = false,
+}: DashboardHeaderProps): React.JSX.Element {
   const currentUser = workspaceService.getCurrentUser();
   const firstName = currentUser.name.split(" ")[0] ?? currentUser.name;
   const greeting = greetingForHour(new Date().getHours());
@@ -27,11 +37,20 @@ export function DashboardHeader(): React.JSX.Element {
   return (
     <PageHeader
       title={`${greeting}, ${firstName}`}
-      description={dashboardService.getHealthSummary()}
+      description={healthSummary}
       actions={
-        <PrimaryButton asChild>
-          <Link href={ROUTES.upload}>Create content</Link>
-        </PrimaryButton>
+        <div className="flex items-center gap-2">
+          {onRefresh ? (
+            <IconButton
+              label="Refresh dashboard"
+              icon={<RefreshCw className={isRefreshing ? "animate-spin" : ""} aria-hidden="true" />}
+              onClick={onRefresh}
+            />
+          ) : null}
+          <PrimaryButton asChild>
+            <Link href={ROUTES.upload}>Create content</Link>
+          </PrimaryButton>
+        </div>
       }
     >
       <div className="flex flex-wrap gap-2 pt-1">

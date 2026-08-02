@@ -12,6 +12,18 @@ def wire_handlers(container: Container) -> HandlerRegistry:
     from cloud_content_hub.application.administration.handlers.get_provider_health_handler import (
         GetProviderHealthHandler,
     )
+    from cloud_content_hub.application.administration.handlers.get_user_profile_handler import (
+        GetUserProfileHandler,
+    )
+    from cloud_content_hub.application.administration.handlers.get_workspace_handler import (
+        GetWorkspaceHandler,
+    )
+    from cloud_content_hub.application.administration.handlers.update_user_profile_handler import (
+        UpdateUserProfileHandler,
+    )
+    from cloud_content_hub.application.administration.handlers.update_workspace_settings_handler import (
+        UpdateWorkspaceSettingsHandler,
+    )
     from cloud_content_hub.application.administration.handlers.get_queue_status_handler import (
         GetQueueStatusHandler,
     )
@@ -68,6 +80,12 @@ def wire_handlers(container: Container) -> HandlerRegistry:
     )
     from cloud_content_hub.application.notifications.handlers import (
         mark_notification_read_handler,
+    )
+    from cloud_content_hub.application.notifications.handlers.get_preferences_handler import (
+        GetPreferencesHandler,
+    )
+    from cloud_content_hub.application.notifications.handlers.update_preferences_handler import (
+        UpdatePreferencesHandler,
     )
     from cloud_content_hub.application.notifications.handlers.delete_notification_handler import (
         DeleteNotificationHandler,
@@ -242,6 +260,32 @@ def wire_handlers(container: Container) -> HandlerRegistry:
             unit_of_work_factory=repositories.unit_of_work_factory,
             notification_repository_factory=repositories.notification_repository_factory,
             event_publisher=events.notifications,
+        ),
+        "get_notification_preferences": GetPreferencesHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            preference_repository_factory=repositories.preference_repository_factory,
+        ),
+        "update_notification_preferences": UpdatePreferencesHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            preference_repository_factory=repositories.preference_repository_factory,
+            notification_repository_factory=repositories.notification_repository_factory,
+            event_publisher=events.notifications,
+        ),
+        "get_user_profile": GetUserProfileHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            administration_repository_factory=repositories.administration_repository_factory,
+        ),
+        "update_user_profile": UpdateUserProfileHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            administration_repository_factory=repositories.administration_repository_factory,
+        ),
+        "get_workspace": GetWorkspaceHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            administration_repository_factory=repositories.administration_repository_factory,
+        ),
+        "update_workspace_settings": UpdateWorkspaceSettingsHandler(
+            unit_of_work_factory=repositories.unit_of_work_factory,
+            administration_repository_factory=repositories.administration_repository_factory,
         ),
         "list_admin_queues": GetQueueStatusHandler(queue_status_port=container.queue_status_port),
         "list_admin_providers": GetProviderHealthHandler(

@@ -5,7 +5,11 @@ import { Download, RefreshCw } from "lucide-react";
 import { SecondaryButton } from "@/components/buttons";
 import { Toolbar } from "@/components/common";
 import { FilterGroup, FilterSearch, FilterSelect } from "@/components/filters";
-import type { AnalyticsDateRange, DateRangeOption, PlatformFilterOption } from "@/lib/domain/analytics";
+import type {
+  AnalyticsDateRange,
+  DateRangeOption,
+  PlatformFilterOption,
+} from "@/lib/domain/analytics";
 import type { PlatformId } from "@/lib/domain/platform";
 import type { AnalyticsFilters } from "@/lib/utils/analytics";
 
@@ -15,7 +19,9 @@ export type AnalyticsFiltersBarProps = {
   dateRangeOptions: readonly DateRangeOption[];
   platformFilterOptions: readonly PlatformFilterOption[];
   search: string;
+  sort: string;
   onSearchChange: (value: string) => void;
+  onSortChange: (value: string) => void;
   onDateRangeChange: (range: AnalyticsDateRange) => void;
   onPlatformChange: (platform: PlatformId | "all") => void;
   onRefresh: () => void;
@@ -24,13 +30,22 @@ export type AnalyticsFiltersBarProps = {
   canExport: boolean;
 };
 
+const SORT_OPTIONS = [
+  { value: "-reach", label: "Reach (high to low)" },
+  { value: "reach", label: "Reach (low to high)" },
+  { value: "-engagementRate", label: "Engagement rate (high to low)" },
+  { value: "-snapshotAt", label: "Most recent snapshot" },
+] as const;
+
 export function AnalyticsFiltersBar({
   filters,
   dateLabel,
   dateRangeOptions,
   platformFilterOptions,
   search,
+  sort,
   onSearchChange,
+  onSortChange,
   onDateRangeChange,
   onPlatformChange,
   onRefresh,
@@ -68,7 +83,7 @@ export function AnalyticsFiltersBar({
       </Toolbar>
       <FilterGroup
         label="Analytics filter values"
-        className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+        className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
       >
         <FilterSelect
           id="analytics-date-range"
@@ -84,12 +99,19 @@ export function AnalyticsFiltersBar({
           options={platformFilterOptions}
           onValueChange={(value) => onPlatformChange(value as PlatformId | "all")}
         />
+        <FilterSelect
+          id="analytics-sort"
+          label="Sort posts"
+          value={sort}
+          options={SORT_OPTIONS}
+          onValueChange={onSortChange}
+        />
         <FilterSearch
           placeholder="Search posts…"
           aria-label="Search analytics"
           className="w-full"
           value={search}
-          onValueChange={onSearchChange}
+          onChange={(event) => onSearchChange(event.target.value)}
         />
       </FilterGroup>
       {filters.dateRange === "custom" && (

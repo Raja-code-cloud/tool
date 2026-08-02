@@ -42,9 +42,35 @@ function createVersion(
   };
 }
 
+function buildGenerationRequest(
+  platform: PlatformId,
+  settings: AiStudioSettings,
+  options: {
+    scope?: GenerationScope;
+    userPrompt?: string;
+    signal: AbortSignal;
+  },
+): import("@/lib/domain/ai-studio-generation").AiStudioGenerationRequest {
+  return {
+    platform,
+    tone: settings.tone,
+    length: settings.length,
+    audience: settings.audience,
+    generateHashtags: settings.generateHashtags,
+    generateCta: settings.generateCta,
+    modelId: settings.modelId,
+    signal: options.signal,
+    ...(options.scope ? { scope: options.scope } : {}),
+    ...(options.userPrompt ? { userPrompt: options.userPrompt } : {}),
+  };
+}
+
 function transformToScope(
   transform: "improve" | "expand" | "shorten" | AiStudioSettings["tone"],
-): { scope: GenerationScope; userPrompt?: string } {
+): {
+  scope: GenerationScope;
+  userPrompt?: string;
+} {
   if (transform === "improve") {
     return { scope: "whole", userPrompt: "Improve clarity, engagement, and readability." };
   }
@@ -71,9 +97,9 @@ export function useAiStudioState() {
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const [typingContent, setTypingContent] = useState("");
   const [project, setProject] = useState<AiStudioProject | null>(null);
-  const [suggestions, setSuggestions] = useState<readonly import("@/lib/domain/ai-studio").AiSuggestion[]>(
-    [],
-  );
+  const [suggestions, setSuggestions] = useState<
+    readonly import("@/lib/domain/ai-studio").AiSuggestion[]
+  >([]);
   const [providers, setProviders] = useState<
     readonly import("@/lib/domain/ai-studio-generation").AiStudioProviderOption[]
   >([]);
@@ -107,7 +133,7 @@ export function useAiStudioState() {
       } catch (error) {
         if (cancelled) return;
         const mapped = mapAiStudioError(error);
-        toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+        toast({ title: mapped.title, description: mapped.description });
       }
     })();
 
@@ -200,18 +226,11 @@ export function useAiStudioState() {
       setLoadingPhase(mode === "generate" ? "generating" : "regenerating");
 
       try {
-        const request = {
-          platform,
-          tone: settings.tone,
-          length: settings.length,
-          audience: settings.audience,
-          generateHashtags: settings.generateHashtags,
-          generateCta: settings.generateCta,
-          modelId: settings.modelId,
-          scope: options?.scope,
-          userPrompt: options?.userPrompt,
+        const request = buildGenerationRequest(platform, settings, {
+          ...(options?.scope ? { scope: options.scope } : {}),
+          ...(options?.userPrompt ? { userPrompt: options.userPrompt } : {}),
           signal: controller.signal,
-        };
+        });
 
         const result =
           mode === "regenerate"
@@ -236,7 +255,7 @@ export function useAiStudioState() {
         setTypingContent("");
         const mapped = mapAiStudioError(error);
         if (mapped.title !== "Generation cancelled") {
-          toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+          toast({ title: mapped.title, description: mapped.description });
         }
       } finally {
         if (generationAbortRef.current === controller) {
@@ -278,18 +297,13 @@ export function useAiStudioState() {
 
       setLoadingPhase("regenerating");
       try {
-        const result = await aiStudioService.regenerate({
-          platform: activePlatform,
-          tone: nextTone,
-          length: settings.length,
-          audience: settings.audience,
-          generateHashtags: settings.generateHashtags,
-          generateCta: settings.generateCta,
-          modelId: settings.modelId,
-          scope: mapped.scope,
-          userPrompt: mapped.userPrompt,
-          signal: controller.signal,
-        });
+        const result = await aiStudioService.regenerate(
+          buildGenerationRequest(activePlatform, { ...settings, tone: nextTone }, {
+            scope: mapped.scope,
+            ...(mapped.userPrompt ? { userPrompt: mapped.userPrompt } : {}),
+            signal: controller.signal,
+          }),
+        );
 
         pushUndo(activePlatform, state.content);
         await simulateTyping(result.content, controller.signal);
@@ -301,7 +315,7 @@ export function useAiStudioState() {
       } catch (error) {
         const mapped = mapAiStudioError(error);
         if (mapped.title !== "Generation cancelled") {
-          toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+          toast({ title: mapped.title, description: mapped.description });
         }
       } finally {
         setLoadingPhase("idle");
@@ -311,15 +325,7 @@ export function useAiStudioState() {
         }
       }
     },
-    [
-      activePlatform,
-      addVersion,
-      platforms,
-      pushUndo,
-      settings,
-      simulateTyping,
-      toast,
-    ],
+    [activePlatform, addVersion, platforms, pushUndo, settings, simulateTyping, toast],
   );
 
   const cancelGeneration = useCallback(() => {
@@ -413,14 +419,25 @@ export function useAiStudioState() {
       });
       setContentVersion(result.contentVersion);
       setLastSavedAt(result.savedAt);
-      toast({ title: "Draft saved", description: "Your AI Studio progress is saved to the backend." });
+      toast({
+        title: "Draft saved",
+        description: "Your AI Studio progress is saved to the backend.",
+      });
     } catch (error) {
       const mapped = mapAiStudioError(error);
-      toast({ title: mapped.title, description: mapped.description, variant: "destructive" });
+      toast({ title: mapped.title, description: mapped.description });
     } finally {
       setLoadingPhase("idle");
     }
-  }, [activePlatform, contentVersion, current.content, current.cta, current.hashtags, project, toast]);
+  }, [
+    activePlatform,
+    contentVersion,
+    current.content,
+    current.cta,
+    current.hashtags,
+    project,
+    toast,
+  ]);
 
   const restoreVersion = useCallback(
     (versionId: string) => {

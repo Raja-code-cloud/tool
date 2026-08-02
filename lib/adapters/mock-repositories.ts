@@ -15,6 +15,7 @@ import {
 } from "@/constants/analytics";
 import { CONTENT_LIBRARY_ITEMS } from "@/constants/content-library";
 import {
+  DASHBOARD_STATS,
   DASHBOARD_STORAGE,
   AI_SUGGESTIONS as DASHBOARD_SUGGESTIONS,
   PLATFORM_HEALTH,
@@ -40,26 +41,27 @@ import {
 } from "@/constants/social-accounts";
 import { CURRENT_USER, UNREAD_NOTIFICATION_COUNT, WORKSPACE } from "@/constants/workspace";
 import { createMockContentRepository } from "@/lib/adapters/http-content-repository";
+import { createMockSchedulerRepository } from "@/lib/adapters/http-scheduler-repository";
 import type {
   AiStudioRepository,
   AnalyticsRepository,
   ContentRepository,
   DashboardRepository,
-  SchedulerRepository,
   SettingsRepository,
   SocialAccountRepository,
   WorkspaceRepository,
 } from "@/lib/domain/repositories";
-import { applyExpand, applyShorten, applyToneTransform } from "@/lib/utils/ai-studio";
 
 export const mockContentRepository: ContentRepository = createMockContentRepository(
   CONTENT_LIBRARY_ITEMS,
 );
 
-export const mockSchedulerRepository: SchedulerRepository = {
-  listPosts: () => SCHEDULED_POSTS,
-  listNotifications: () => INITIAL_NOTIFICATIONS,
-};
+import { applyExpand, applyShorten, applyToneTransform } from "@/lib/utils/ai-studio";
+
+export const mockSchedulerRepository = createMockSchedulerRepository(
+  SCHEDULED_POSTS,
+  INITIAL_NOTIFICATIONS,
+);
 
 export const mockSocialAccountRepository: SocialAccountRepository = {
   listAccounts: () => [...SOCIAL_ACCOUNTS, ...COMING_SOON_ACCOUNTS],
@@ -112,13 +114,44 @@ export const mockAiStudioRepository: AiStudioRepository = {
 };
 
 export const mockDashboardRepository: DashboardRepository = {
-  listSuggestions: () => DASHBOARD_SUGGESTIONS,
-  listAgenda: () => TODAY_AGENDA,
-  listRecentContent: () => RECENT_CONTENT,
-  listRecentActivity: () => RECENT_ACTIVITY,
-  listPlatformHealth: () => PLATFORM_HEALTH,
-  getStorage: () => DASHBOARD_STORAGE,
-  getHealthSummary: () => WORKSPACE_HEALTH_SUMMARY,
+  async getStats() {
+    return DASHBOARD_STATS.map(({ icon: _icon, ...stat }) => stat);
+  },
+  async listSuggestions() {
+    return DASHBOARD_SUGGESTIONS;
+  },
+  async listAgenda() {
+    return TODAY_AGENDA;
+  },
+  async listRecentContent() {
+    return RECENT_CONTENT;
+  },
+  async listRecentActivity() {
+    return RECENT_ACTIVITY;
+  },
+  async listPlatformHealth() {
+    return PLATFORM_HEALTH;
+  },
+  async getStorage() {
+    return DASHBOARD_STORAGE;
+  },
+  async getHealthSummary() {
+    return WORKSPACE_HEALTH_SUMMARY;
+  },
+  async loadOverview() {
+    return {
+      stats: await mockDashboardRepository.getStats(),
+      suggestions: await mockDashboardRepository.listSuggestions(),
+      agenda: await mockDashboardRepository.listAgenda(),
+      recentContent: await mockDashboardRepository.listRecentContent(),
+      recentActivity: await mockDashboardRepository.listRecentActivity(),
+      platformHealth: await mockDashboardRepository.listPlatformHealth(),
+      storage: await mockDashboardRepository.getStorage(),
+      healthSummary: await mockDashboardRepository.getHealthSummary(),
+      partial: false,
+      warnings: [],
+    };
+  },
 };
 
 export const mockAnalyticsRepository: AnalyticsRepository = {
@@ -137,13 +170,19 @@ export const mockAnalyticsRepository: AnalyticsRepository = {
 };
 
 export const mockSettingsRepository: SettingsRepository = {
-  getProfileDefaults: () => PROFILE_DEFAULTS,
+  getProfile: () => ({
+    id: "mock-user",
+    version: 1,
+    ...PROFILE_DEFAULTS,
+    avatarUrl: null,
+  }),
   listNotificationPreferences: () => NOTIFICATION_PREFERENCES,
   listAiProviders: () => AI_PROVIDERS,
   getStorageUsage: () => STORAGE_USAGE,
   getPublishingDefaults: () => PUBLISHING_DEFAULTS,
   listActiveSessions: () => ACTIVE_SESSIONS,
   listApiKeys: () => API_KEYS,
+  getUnreadNotificationCount: () => UNREAD_NOTIFICATION_COUNT,
 };
 
 export const mockWorkspaceRepository: WorkspaceRepository = {

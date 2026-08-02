@@ -27,6 +27,7 @@ from cloud_content_hub.application.administration.interfaces.administration_repo
     RoleRecord,
     RoleRemoval,
     SettingScopeType,
+    UserProfileUpdate,
     UserRecord,
     UserSearchCriteria,
     UserSearchPage,
@@ -214,6 +215,9 @@ class SqlAlchemyAdministrationRepository(IAdministrationRepository):
 
     async def get_user(self, user_id: UUID) -> UserRecord | None:
         return await self._users.get_user(user_id)
+
+    async def update_user_profile(self, update: UserProfileUpdate) -> UserRecord:
+        return await self._users.update_profile(update)
 
     async def list_workspaces(self, criteria: WorkspaceSearchCriteria) -> WorkspaceSearchPage:
         sort_column = normalize_sort_token(

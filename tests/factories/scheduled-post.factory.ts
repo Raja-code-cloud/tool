@@ -4,6 +4,8 @@ import { createFactory } from "./create-factory";
 
 export const scheduledPostFactory = createFactory<ScheduledPost>((sequence) => ({
   id: `sch-${sequence}`,
+  version: 1,
+  publicationTargetId: `target-${sequence}`,
   title: `Scheduled Post ${sequence}`,
   platforms: ["linkedin"],
   scheduledAt: "2026-08-15T14:00:00.000Z",

@@ -11,6 +11,7 @@ export type QuickScheduleForm = {
   time: string;
   timezone: string;
   priority: "low" | "normal" | "high";
+  publicationTargetId?: string;
 };
 
 export const DEFAULT_QUICK_SCHEDULE: QuickScheduleForm = {

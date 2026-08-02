@@ -12,7 +12,7 @@ import type {
 } from "@/lib/api/ai-studio-types";
 import type { ApiClient } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
-import { resolveWorkspaceId } from "@/lib/api/workspace-context";
+import { getWorkspaceId } from "@/lib/auth/workspace-store";
 import { env } from "@/lib/config/env";
 import type { AiStudioProject, AiSuggestion } from "@/lib/domain/ai-studio";
 import type {
@@ -40,8 +40,16 @@ type HttpAiStudioRepositoryOptions = {
 };
 
 function workspaceHeaders(extra?: Readonly<Record<string, string>>): Record<string, string> {
+  const workspaceId = getWorkspaceId();
+  if (!workspaceId) {
+    throw new ApiError(
+      "Workspace ID is required for AI Studio API calls. Sign in or set NEXT_PUBLIC_WORKSPACE_ID.",
+      "validation_error",
+      422,
+    );
+  }
   return {
-    "X-Workspace-ID": resolveWorkspaceId(),
+    "X-Workspace-ID": workspaceId,
     ...extra,
   };
 }
@@ -146,7 +154,10 @@ export function createHttpAiStudioRepository(
 
       const response = await client.get<SuccessEnvelope<ContentDto>>(
         `/api/v1/content/${contentId}`,
-        { headers: workspaceHeaders(), signal },
+        {
+          headers: workspaceHeaders(),
+          ...(signal ? { signal } : {}),
+        },
       );
       const content = response.data.data;
       const platformContent = extractPlatformContent(content, platform);
@@ -183,7 +194,7 @@ export function createHttpAiStudioRepository(
       headers: workspaceHeaders({
         "Idempotency-Key": createIdempotencyKey("ai-studio"),
       }),
-      signal,
+      ...(signal ? { signal } : {}),
     });
 
     if (response.status !== 202) {
@@ -210,7 +221,10 @@ export function createHttpAiStudioRepository(
 
     const contentBefore = await client.get<SuccessEnvelope<ContentDto>>(
       `/api/v1/content/${context.contentId}`,
-      { headers: workspaceHeaders(), signal: request.signal },
+      {
+        headers: workspaceHeaders(),
+        ...(request.signal ? { signal: request.signal } : {}),
+      },
     );
     const baselineUpdatedAt = contentBefore.data.data.updatedAt;
 
@@ -326,7 +340,7 @@ export function createHttpAiStudioRepository(
           headers: workspaceHeaders({
             "If-Match": String(request.contentVersion),
           }),
-          signal: request.signal,
+          ...(request.signal ? { signal: request.signal } : {}),
         },
       );
 

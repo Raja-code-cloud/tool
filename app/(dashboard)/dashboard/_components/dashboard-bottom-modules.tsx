@@ -4,7 +4,7 @@ import { Card, CardHeader } from "@/components/cards";
 import { Progress, StatusBadge } from "@/components/feedback";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants/navigation";
-import { dashboardService } from "@/lib/services";
+import type { ActivityItem, DashboardStorage, PlatformHealth } from "@/lib/domain/dashboard";
 import { formatBytes, formatDate, formatPercent } from "@/lib/utils/formatting";
 
 const PLATFORM_STATUS = {
@@ -13,11 +13,18 @@ const PLATFORM_STATUS = {
   error: "danger",
 } as const;
 
-export function DashboardBottomModules(): React.JSX.Element {
-  const storage = dashboardService.getStorage();
-  const usedRatio = storage.usedBytes / storage.totalBytes;
-  const recentActivity = dashboardService.listRecentActivity();
-  const platformHealth = dashboardService.listPlatformHealth();
+type DashboardBottomModulesProps = {
+  readonly recentActivity: readonly ActivityItem[];
+  readonly platformHealth: readonly PlatformHealth[];
+  readonly storage: DashboardStorage;
+};
+
+export function DashboardBottomModules({
+  recentActivity,
+  platformHealth,
+  storage,
+}: DashboardBottomModulesProps): React.JSX.Element {
+  const usedRatio = storage.totalBytes > 0 ? storage.usedBytes / storage.totalBytes : 0;
 
   return (
     <section aria-labelledby="dashboard-modules-heading" className="wide:grid-cols-3 grid gap-4">
@@ -32,23 +39,27 @@ export function DashboardBottomModules(): React.JSX.Element {
           headingLevel={3}
           headingId="recent-activity-heading"
         />
-        <ul className="divide-y">
-          {recentActivity.map((item) => (
-            <li key={item.id} className="py-3 first:pt-0 last:pb-0">
-              <p className="text-sm">
-                <span className="font-semibold">{item.actor}</span>{" "}
-                <span className="text-muted-foreground">{item.action}</span>{" "}
-                <span className="font-medium">{item.target}</span>
-              </p>
-              <time
-                dateTime={item.occurredAt}
-                className="text-small text-muted-foreground mt-1 block"
-              >
-                {formatDate(item.occurredAt, { dateStyle: "medium", timeStyle: "short" })}
-              </time>
-            </li>
-          ))}
-        </ul>
+        {recentActivity.length === 0 ? (
+          <p className="text-muted-foreground text-sm">No recent activity yet.</p>
+        ) : (
+          <ul className="divide-y">
+            {recentActivity.map((item) => (
+              <li key={item.id} className="py-3 first:pt-0 last:pb-0">
+                <p className="text-sm">
+                  <span className="font-semibold">{item.actor}</span>{" "}
+                  <span className="text-muted-foreground">{item.action}</span>{" "}
+                  <span className="font-medium">{item.target}</span>
+                </p>
+                <time
+                  dateTime={item.occurredAt}
+                  className="text-small text-muted-foreground mt-1 block"
+                >
+                  {formatDate(item.occurredAt, { dateStyle: "medium", timeStyle: "short" })}
+                </time>
+              </li>
+            ))}
+          </ul>
+        )}
       </Card>
 
       <Card as="section" aria-labelledby="platform-health-heading">
@@ -63,26 +74,30 @@ export function DashboardBottomModules(): React.JSX.Element {
             </Button>
           }
         />
-        <ul className="grid gap-2">
-          {platformHealth.map((platform) => (
-            <li
-              key={platform.id}
-              className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5"
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-semibold">{platform.name}</p>
-                <p className="text-small text-muted-foreground">{platform.detail}</p>
-              </div>
-              <StatusBadge variant={PLATFORM_STATUS[platform.status]}>
-                {platform.status === "healthy"
-                  ? "Healthy"
-                  : platform.status === "warning"
-                    ? "Warning"
-                    : "Error"}
-              </StatusBadge>
-            </li>
-          ))}
-        </ul>
+        {platformHealth.length === 0 ? (
+          <p className="text-muted-foreground text-sm">Platform health data is unavailable.</p>
+        ) : (
+          <ul className="grid gap-2">
+            {platformHealth.map((platform) => (
+              <li
+                key={platform.id}
+                className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">{platform.name}</p>
+                  <p className="text-small text-muted-foreground">{platform.detail}</p>
+                </div>
+                <StatusBadge variant={PLATFORM_STATUS[platform.status]}>
+                  {platform.status === "healthy"
+                    ? "Healthy"
+                    : platform.status === "warning"
+                      ? "Warning"
+                      : "Error"}
+                </StatusBadge>
+              </li>
+            ))}
+          </ul>
+        )}
       </Card>
 
       <Card as="section" aria-labelledby="storage-usage-heading">

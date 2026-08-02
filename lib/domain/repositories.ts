@@ -24,6 +24,7 @@ import type { ContentItem, ContentStatus, ContentType } from "@/lib/domain/conte
 import type {
   ActivityItem,
   AgendaEntry,
+  DashboardStatData,
   DashboardStorage,
   DashboardSuggestion,
   PlatformHealth,
@@ -33,6 +34,7 @@ import type { ScheduledPost, SchedulerNotification } from "@/lib/domain/schedule
 import type {
   AiProvider,
   ApiKeyRecord,
+  NotificationChannelId,
   NotificationPreference,
   ProfileDefaults,
   PublishingDefaults,
@@ -151,13 +153,15 @@ export interface SocialAccountRepository {
 }
 
 export interface DashboardRepository {
-  listSuggestions(): readonly DashboardSuggestion[];
-  listAgenda(): readonly AgendaEntry[];
-  listRecentContent(): readonly RecentContentRow[];
-  listRecentActivity(): readonly ActivityItem[];
-  listPlatformHealth(): readonly PlatformHealth[];
-  getStorage(): DashboardStorage;
-  getHealthSummary(): string;
+  getStats(): Promise<readonly DashboardStatData[]>;
+  listSuggestions(): Promise<readonly DashboardSuggestion[]>;
+  listAgenda(): Promise<readonly AgendaEntry[]>;
+  listRecentContent(): Promise<readonly RecentContentRow[]>;
+  listRecentActivity(): Promise<readonly ActivityItem[]>;
+  listPlatformHealth(): Promise<readonly PlatformHealth[]>;
+  getStorage(): Promise<DashboardStorage>;
+  getHealthSummary(): Promise<string>;
+  loadOverview?(): Promise<import("@/lib/dashboard/fetch-overview").DashboardOverview>;
 }
 
 export interface AnalyticsRepository {
@@ -175,14 +179,38 @@ export interface AnalyticsRepository {
   getPlatformFilterOptions(): readonly PlatformFilterOption[];
 }
 
+export type ProfileUpdateInput = {
+  readonly displayName?: string;
+  readonly locale?: string;
+  readonly timeZone?: string;
+  readonly avatarObjectKey?: string | null;
+};
+
+export type ProfileState = ProfileDefaults & {
+  readonly id: string;
+  readonly version: number;
+  readonly avatarUrl: string | null;
+};
+
 export interface SettingsRepository {
-  getProfileDefaults(): ProfileDefaults;
-  listNotificationPreferences(): readonly NotificationPreference[];
-  listAiProviders(): readonly AiProvider[];
-  getStorageUsage(): StorageUsage;
-  getPublishingDefaults(): PublishingDefaults;
-  listActiveSessions(): readonly SessionRecord[];
-  listApiKeys(): readonly ApiKeyRecord[];
+  getProfile(): ProfileState | Promise<ProfileState>;
+  updateProfile?(
+    input: ProfileUpdateInput,
+    version: number,
+  ): ProfileState | Promise<ProfileState>;
+  uploadAvatar?(file: File, version: number): ProfileState | Promise<ProfileState>;
+  listNotificationPreferences():
+    | readonly NotificationPreference[]
+    | Promise<readonly NotificationPreference[]>;
+  updateNotificationPreferences?(
+    preferences: Readonly<Record<NotificationChannelId, { email: boolean; inApp: boolean }>>,
+  ): readonly NotificationPreference[] | Promise<readonly NotificationPreference[]>;
+  listAiProviders(): readonly AiProvider[] | Promise<readonly AiProvider[]>;
+  getStorageUsage(): StorageUsage | Promise<StorageUsage>;
+  getPublishingDefaults(): PublishingDefaults | Promise<PublishingDefaults>;
+  listActiveSessions(): readonly SessionRecord[] | Promise<readonly SessionRecord[]>;
+  listApiKeys(): readonly ApiKeyRecord[] | Promise<readonly ApiKeyRecord[]>;
+  getUnreadNotificationCount?(): number | Promise<number>;
 }
 
 export interface AuthRepository {
@@ -195,7 +223,7 @@ export interface AuthRepository {
 }
 
 export interface WorkspaceRepository {
-  getWorkspace(): WorkspaceInfo;
-  getCurrentUser(): WorkspaceUser;
-  getUnreadNotificationCount(): number;
+  getWorkspace(): WorkspaceInfo | Promise<WorkspaceInfo>;
+  getCurrentUser(): WorkspaceUser | Promise<WorkspaceUser>;
+  getUnreadNotificationCount(): number | Promise<number>;
 }

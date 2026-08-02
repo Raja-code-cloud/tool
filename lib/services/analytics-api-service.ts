@@ -117,23 +117,27 @@ export function createAnalyticsApiService(repository: HttpAnalyticsRepository) {
         filters.platform === "all"
           ? undefined
           : platformIdMap.has(filters.platform)
-            ? [platformIdMap.get(filters.platform)!]
+            ? ([platformIdMap.get(filters.platform)!] as readonly string[])
             : undefined;
 
+      const dashboardQuery = {
+        periodStart: period.periodStart,
+        periodEnd: period.periodEnd,
+        ...(platformIds ? { platformId: platformIds } : {}),
+      };
+
+      const postsQuery = {
+        periodStart: period.periodStart,
+        periodEnd: period.periodEnd,
+        limit: tableState.limit,
+        sort: tableState.sort,
+        ...(platformIds ? { platformId: platformIds } : {}),
+        ...(tableState.cursor ? { cursor: tableState.cursor } : {}),
+      };
+
       const [dashboard, postsPage] = await Promise.all([
-        repository.getDashboard({
-          periodStart: period.periodStart,
-          periodEnd: period.periodEnd,
-          platformId: platformIds,
-        }),
-        repository.listPosts({
-          periodStart: period.periodStart,
-          periodEnd: period.periodEnd,
-          platformId: platformIds,
-          cursor: tableState.cursor ?? undefined,
-          limit: tableState.limit,
-          sort: tableState.sort,
-        }),
+        repository.getDashboard(dashboardQuery),
+        repository.listPosts(postsQuery),
       ]);
 
       const filteredPlatforms =

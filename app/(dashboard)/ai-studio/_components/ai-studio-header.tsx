@@ -31,9 +31,7 @@ export function AiStudioHeader({
       description="Transform your master article into platform-optimized content."
       actions={
         <>
-          <StatusBadge variant="info">
-            {(project?.status ?? "draft").replace("_", " ")}
-          </StatusBadge>
+          <StatusBadge variant="info">{(project?.status ?? "draft").replace("_", " ")}</StatusBadge>
           {lastSavedAt && (
             <span className="text-muted-foreground self-center text-xs">
               Saved {formatDate(lastSavedAt, { timeStyle: "medium" })}

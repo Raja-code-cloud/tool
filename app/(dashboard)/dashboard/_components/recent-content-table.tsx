@@ -6,7 +6,6 @@ import { DataTable, type DataTableColumn } from "@/components/tables";
 import { Button } from "@/components/ui";
 import { ROUTES } from "@/constants/navigation";
 import type { RecentContentRow } from "@/lib/domain/dashboard";
-import { dashboardService } from "@/lib/services";
 import { formatDate } from "@/lib/utils/formatting";
 
 const CONTENT_STATUS = {
@@ -82,7 +81,11 @@ const columns: readonly DataTableColumn<RecentContentRow>[] = [
   },
 ];
 
-export function RecentContentTable(): React.JSX.Element {
+type RecentContentTableProps = {
+  readonly rows: readonly RecentContentRow[];
+};
+
+export function RecentContentTable({ rows }: RecentContentTableProps): React.JSX.Element {
   return (
     <Card as="section" aria-labelledby="recent-content-heading">
       <CardHeader
@@ -99,7 +102,7 @@ export function RecentContentTable(): React.JSX.Element {
       <DataTable
         caption="Recent content in the workspace"
         columns={columns}
-        rows={dashboardService.listRecentContent()}
+        rows={rows}
         getRowId={(row) => row.id}
         empty="No content yet. Upload your first asset to get started."
       />

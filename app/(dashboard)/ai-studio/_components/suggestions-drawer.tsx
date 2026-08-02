@@ -52,11 +52,7 @@ export function SuggestionsDrawer({
             {suggestions.map((suggestion) => (
               <li key={suggestion.id}>
                 <Alert
-                  variant={
-                    CATEGORY_VARIANT[suggestion.category] === "danger"
-                      ? "destructive"
-                      : CATEGORY_VARIANT[suggestion.category]
-                  }
+                  variant={CATEGORY_VARIANT[suggestion.category]}
                   title={suggestion.title}
                   description={suggestion.description}
                   action={

@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { AlertTriangle, BarChart3, CalendarClock, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CalendarClock, CheckCircle2, FileStack, FileText, type LucideIcon } from "lucide-react";
 
 import type {
   ActivityItem,
@@ -34,43 +34,60 @@ export type DashboardStat = {
 
 export const DASHBOARD_STATS: readonly DashboardStat[] = [
   {
-    id: "published",
-    label: "Published this week",
-    value: "42",
-    comparison: "vs 36 last week",
-    trend: "+16.7%",
-    trendDirection: "up",
-    icon: CheckCircle2,
+    id: "total-content",
+    label: "Total content",
+    value: "47",
+    comparison: "Across workspace",
+    trend: "Active library",
+    trendDirection: "neutral",
+    icon: FileStack,
   },
   {
-    id: "scheduled",
-    label: "Scheduled",
+    id: "scheduled-content",
+    label: "Scheduled content",
     value: "18",
     comparison: "6 publishing today",
-    trend: "+3",
+    trend: "18 queued",
     trendDirection: "up",
     icon: CalendarClock,
   },
   {
-    id: "engagement",
-    label: "Engagement rate",
-    value: "4.8%",
-    comparison: "across all channels",
-    trend: "+0.6 pts",
+    id: "published-content",
+    label: "Published content",
+    value: "42",
+    comparison: "Live assets",
+    trend: "In circulation",
     trendDirection: "up",
-    icon: BarChart3,
+    icon: CheckCircle2,
   },
   {
-    id: "attention",
-    label: "Needs attention",
+    id: "failed-content",
+    label: "Failed content",
     value: "3",
-    comparison: "2 failed · 1 disconnected",
+    comparison: "Needs attention",
     trend: "Action required",
     trendDirection: "neutral",
     icon: AlertTriangle,
     variant: "warning",
   },
+  {
+    id: "draft-content",
+    label: "Draft content",
+    value: "12",
+    comparison: "Work in progress",
+    trend: "12 drafts",
+    trendDirection: "neutral",
+    icon: FileText,
+  },
 ];
+
+export const DASHBOARD_STAT_ICONS: Record<string, LucideIcon> = {
+  "total-content": FileStack,
+  "scheduled-content": CalendarClock,
+  "published-content": CheckCircle2,
+  "failed-content": AlertTriangle,
+  "draft-content": FileText,
+};
 
 export const AI_SUGGESTIONS: readonly DashboardSuggestion[] = [
   {

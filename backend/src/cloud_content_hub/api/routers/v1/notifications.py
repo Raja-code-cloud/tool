@@ -20,21 +20,31 @@ from cloud_content_hub.api.responses import etag_for_version, paged_success, suc
 from cloud_content_hub.application.notifications.commands import (
     DeleteNotificationCommand,
     MarkNotificationReadCommand,
+    UpdatePreferencesCommand,
 )
-from cloud_content_hub.application.notifications.dto.requests import MarkNotificationReadRequestDto
+from cloud_content_hub.application.notifications.dto.requests import (
+    MarkNotificationReadRequestDto,
+    UpdatePreferencesRequestDto,
+)
 from cloud_content_hub.application.notifications.handlers.delete_notification_handler import (
     DeleteNotificationHandler,
 )
 from cloud_content_hub.application.notifications.handlers.get_notifications_handler import (
     GetNotificationsHandler,
 )
+from cloud_content_hub.application.notifications.handlers.get_preferences_handler import (
+    GetPreferencesHandler,
+)
 from cloud_content_hub.application.notifications.handlers.mark_notification_read_handler import (
     MarkNotificationReadHandler,
+)
+from cloud_content_hub.application.notifications.handlers.update_preferences_handler import (
+    UpdatePreferencesHandler,
 )
 from cloud_content_hub.application.notifications.interfaces.notification_repository import (
     NotificationSeverity,
 )
-from cloud_content_hub.application.notifications.queries import GetNotificationsQuery
+from cloud_content_hub.application.notifications.queries import GetNotificationsQuery, GetPreferencesQuery
 from cloud_content_hub.infrastructure.identity.principal import Principal
 
 router = APIRouter(tags=["Notifications"])
@@ -47,6 +57,12 @@ MarkNotificationReadHandlerDep = Annotated[
 ]
 DeleteNotificationHandlerDep = Annotated[
     DeleteNotificationHandler, Depends(handler_dependency("delete_notification"))
+]
+GetPreferencesHandlerDep = Annotated[
+    GetPreferencesHandler, Depends(handler_dependency("get_notification_preferences"))
+]
+UpdatePreferencesHandlerDep = Annotated[
+    UpdatePreferencesHandler, Depends(handler_dependency("update_notification_preferences"))
 ]
 
 
@@ -126,3 +142,35 @@ async def delete_notification(
         DeleteNotificationCommand(notification_id=notification_id, expected_version=if_match),
     )
     return Response(status_code=204)
+
+
+@router.get("/preferences", operation_id="getNotificationPreferences")
+async def get_notification_preferences(
+    actor: Actor,
+    _: Annotated[Principal, Depends(require_permission("notifications:read"))],
+    handler: GetPreferencesHandlerDep,
+) -> JSONResponse:
+    preferences = await handler.handle(actor, GetPreferencesQuery())
+    return JSONResponse(
+        success(data=preferences, message="Notification preferences retrieved.").model_dump(
+            by_alias=True, mode="json"
+        )
+    )
+
+
+@router.patch("/preferences", operation_id="updateNotificationPreferences")
+async def update_notification_preferences(
+    actor: Actor,
+    _: Annotated[Principal, Depends(require_permission("notifications:write"))],
+    body: UpdatePreferencesRequestDto,
+    handler: UpdatePreferencesHandlerDep,
+) -> JSONResponse:
+    preferences = await handler.handle(
+        actor,
+        UpdatePreferencesCommand(request=body),
+    )
+    return JSONResponse(
+        success(data=preferences, message="Notification preferences updated.").model_dump(
+            by_alias=True, mode="json"
+        )
+    )

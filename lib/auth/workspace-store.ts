@@ -13,7 +13,7 @@ function isWorkspaceId(value: unknown): value is string {
 
 let memoryWorkspaceId: string | null = null;
 
-export { getActiveWorkspaceId };
+export { getActiveWorkspaceId, setActiveWorkspaceId } from "@/lib/api/workspace-context";
 
 export function getWorkspaceId(): string | null {
   const active = getActiveWorkspaceId();

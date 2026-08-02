@@ -1,23 +1,28 @@
 import { createHttpAiStudioRepository } from "@/lib/adapters/http-ai-studio-repository";
+import { createHttpDashboardRepository } from "@/lib/adapters/http-dashboard-repository";
+import { createHttpSettingsRepository } from "@/lib/adapters/http-settings-repository";
+import { createHttpWorkspaceRepository } from "@/lib/adapters/http-workspace-repository";
 import { createHttpAnalyticsRepository } from "@/lib/adapters/http-analytics-repository";
 import { createHttpAuthRepository } from "@/lib/adapters/http-auth-repository";
 import { createHttpContentRepository } from "@/lib/adapters/http-content-repository";
+import { createHttpSchedulerRepository, createMockSchedulerRepository } from "@/lib/adapters/http-scheduler-repository";
 import { createMockAuthRepository } from "@/lib/adapters/mock-auth-repository";
 import {
   mockAiStudioRepository,
   mockAnalyticsRepository,
   mockContentRepository,
   mockDashboardRepository,
-  mockSchedulerRepository,
   mockSettingsRepository,
   mockSocialAccountRepository,
   mockWorkspaceRepository,
 } from "@/lib/adapters/mock-repositories";
+import { INITIAL_NOTIFICATIONS, SCHEDULED_POSTS } from "@/constants/scheduler";
 import { createApiClient, createDisabledApiClient } from "@/lib/api";
 import { getActiveWorkspaceId } from "@/lib/auth/workspace-store";
 import { getAccessToken } from "@/lib/auth/token-store";
 import { env } from "@/lib/config/env";
 import { createAnalyticsApiService } from "@/lib/services/analytics-api-service";
+import { createDashboardApiService } from "@/lib/services/dashboard-api-service";
 import { createAuthService, type AuthService } from "@/lib/services/auth-service";
 import { createUploadRepository, createUploadService } from "@/lib/services/upload-service";
 import {
@@ -34,6 +39,11 @@ import {
 export const isBackendAuthEnabled = Boolean(env.NEXT_PUBLIC_API_BASE_URL);
 export const isBackendAnalyticsEnabled = isBackendAuthEnabled;
 export const isBackendAiStudioEnabled = isBackendAuthEnabled;
+export const isBackendSchedulerEnabled = isBackendAuthEnabled;
+export const isBackendSettingsEnabled = isBackendAuthEnabled;
+export const isBackendWorkspaceEnabled = isBackendAuthEnabled;
+export const isBackendDashboardEnabled = isBackendAuthEnabled;
+export { DASHBOARD_POLL_INTERVAL_MS } from "@/lib/services/dashboard-api-service";
 
 let authServiceRef: AuthService | null = null;
 
@@ -78,16 +88,30 @@ export const contentService = createContentService(
 export const uploadService = isBackendAuthEnabled
   ? createUploadService(createUploadRepository(apiClient, env.NEXT_PUBLIC_API_BASE_URL!))
   : null;
-export const schedulerService = createSchedulerService(mockSchedulerRepository);
+const schedulerRepository = isBackendSchedulerEnabled
+  ? createHttpSchedulerRepository(apiClient)
+  : createMockSchedulerRepository(SCHEDULED_POSTS, INITIAL_NOTIFICATIONS);
+
+export const schedulerService = createSchedulerService(schedulerRepository);
 export const socialAccountService = createSocialAccountService(mockSocialAccountRepository);
 export const aiStudioService = createAiStudioService(aiStudioRepository);
-export const dashboardService = createDashboardService(mockDashboardRepository);
-export const mockAnalyticsService = createAnalyticsService(mockAnalyticsRepository);
-export const analyticsService = mockAnalyticsService;
-
 const httpAnalyticsRepository = isBackendAnalyticsEnabled
   ? createHttpAnalyticsRepository(apiClient)
   : null;
+
+const dashboardRepository = isBackendDashboardEnabled
+  ? createHttpDashboardRepository({
+      client: apiClient,
+      schedulerRepository,
+      analyticsRepository: httpAnalyticsRepository ?? createHttpAnalyticsRepository(apiClient),
+    })
+  : mockDashboardRepository;
+
+export const dashboardService = createDashboardService(dashboardRepository);
+export const dashboardApiService = createDashboardApiService(dashboardRepository);
+
+export const mockAnalyticsService = createAnalyticsService(mockAnalyticsRepository);
+export const analyticsService = mockAnalyticsService;
 
 export const analyticsApiService = httpAnalyticsRepository
   ? createAnalyticsApiService(httpAnalyticsRepository)
@@ -105,5 +129,19 @@ export const analyticsApiService = httpAnalyticsRepository
         throw new Error("Analytics API is not configured.");
       },
     });
-export const settingsService = createSettingsService(mockSettingsRepository);
-export const workspaceService = createWorkspaceService(mockWorkspaceRepository);
+const settingsRepository = isBackendSettingsEnabled
+  ? createHttpSettingsRepository(apiClient)
+  : mockSettingsRepository;
+
+const workspaceRepository = isBackendWorkspaceEnabled
+  ? createHttpWorkspaceRepository(apiClient, {
+      getProfile: () => settingsRepository.getProfile(),
+      getUnreadCount: () =>
+        settingsRepository.getUnreadNotificationCount
+          ? settingsRepository.getUnreadNotificationCount()
+          : Promise.resolve(0),
+    })
+  : mockWorkspaceRepository;
+
+export const settingsService = createSettingsService(settingsRepository);
+export const workspaceService = createWorkspaceService(workspaceRepository);
