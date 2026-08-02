@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Iterator
 from datetime import UTC, datetime
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock
@@ -13,7 +13,7 @@ import httpx
 import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
-from import_utils import load_module_from_file, try_import_root_router
+from import_utils import load_module_from_file, try_import_root_router  # type: ignore[import-not-found]
 
 from cloud_content_hub.api.dependencies import HandlerRegistry
 from cloud_content_hub.api.errors import install_exception_handlers
@@ -197,7 +197,7 @@ async def external_client() -> AsyncIterator[AsyncClient]:
 
 
 @pytest.fixture
-def bind_admin() -> AsyncIterator[None]:
+def bind_admin() -> Iterator[None]:
     token = bind_principal(_principal(permissions=frozenset({"*"})))
     try:
         yield

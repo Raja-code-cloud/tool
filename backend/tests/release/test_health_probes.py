@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
-from import_utils import load_module_from_file
+from import_utils import load_module_from_file  # type: ignore[import-not-found]
 
 from cloud_content_hub.api.errors import install_exception_handlers
 

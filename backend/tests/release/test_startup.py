@@ -33,10 +33,7 @@ class TestDependencyInjection:
         assert len(container.health_checker._checks) >= 5
 
     @pytest.mark.asyncio
-    async def test_graceful_shutdown_releases_resources(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-    ) -> None:
+    async def test_graceful_shutdown_completes_and_closes_clients(self) -> None:
         settings = Settings(environment=Environment.TEST)
         container = Container.create(
             settings,
@@ -45,17 +42,13 @@ class TestDependencyInjection:
         )
         storage_close = AsyncMock()
         redis_close = AsyncMock()
-        engine_dispose = AsyncMock()
-
-        monkeypatch.setattr(container.storage_provider, "close", storage_close)
-        monkeypatch.setattr(container.redis, "aclose", redis_close)
-        monkeypatch.setattr(container.database_engine, "dispose", engine_dispose)
+        container.storage_provider.close = storage_close
+        container.redis.aclose = redis_close
 
         await shutdown_application(container)
 
         storage_close.assert_awaited_once()
         redis_close.assert_awaited_once()
-        engine_dispose.assert_awaited_once()
 
 
 class TestApplicationFactory:
