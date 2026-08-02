@@ -5,6 +5,7 @@ export type ApiRequestConfig = {
   readonly headers?: Readonly<Record<string, string>>;
   readonly body?: unknown;
   readonly signal?: AbortSignal;
+  readonly credentials?: RequestCredentials;
 };
 
 export type ApiResponse<T> = {

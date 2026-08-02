@@ -115,3 +115,68 @@ class HealthDto(ApiModel):
 
 class ProbeDto(ApiModel):
     status: str
+
+
+class UserStatusDto(StrEnum):
+    ACTIVE = "active"
+    DISABLED = "disabled"
+    ANONYMIZED = "anonymized"
+
+
+class UserDto(ApiModel):
+    id: UUID
+    version: int = Field(ge=1, default=1)
+    created_at: datetime
+    updated_at: datetime
+    email: str | None = None
+    display_name: str
+    avatar_url: str | None = None
+    locale: str = "en"
+    time_zone: str = "UTC"
+    status: UserStatusDto = UserStatusDto.ACTIVE
+
+
+class AuthTokensDto(ApiModel):
+    access_token: str
+    token_type: str = "Bearer"
+    expires_in: int = Field(ge=1)
+
+
+class SessionDto(ApiModel):
+    user: UserDto
+    scopes: list[str] = Field(default_factory=list)
+    workspace_ids: list[UUID] = Field(default_factory=list)
+    access: AuthTokensDto | None = None
+
+
+class AuthProviderDto(ApiModel):
+    code: str
+    name: str
+    authorization_url: str
+    pkce_required: bool
+
+
+class LoginRequest(ApiModel):
+    provider_code: str = Field(min_length=1)
+    authorization_code: str | None = None
+    code_verifier: str | None = None
+    redirect_uri: str | None = None
+    state: str | None = None
+    email: str | None = None
+    password: str | None = None
+
+
+class RefreshRequest(ApiModel):
+    refresh_token: str | None = None
+
+
+class AuthorizeRequest(ApiModel):
+    provider_code: str = Field(min_length=1)
+    redirect_uri: str = Field(min_length=1)
+
+
+class AuthorizeResponseDto(ApiModel):
+    authorization_url: str
+    state: str
+    code_verifier: str
+    provider_code: str

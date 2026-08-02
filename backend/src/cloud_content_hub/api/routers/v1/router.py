@@ -6,6 +6,7 @@ from cloud_content_hub.api.routers.v1 import (
     administration,
     analytics,
     assets,
+    auth,
     content,
     health,
     notifications,
@@ -14,6 +15,7 @@ from cloud_content_hub.api.routers.v1 import (
 )
 
 api_router = APIRouter(prefix="/api/v1")
+api_router.include_router(auth.router, prefix="/auth")
 api_router.include_router(assets.router, prefix="/assets")
 api_router.include_router(content.router, prefix="/content")
 api_router.include_router(publishing.router, prefix="/publish")

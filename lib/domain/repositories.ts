@@ -35,6 +35,13 @@ import type {
 } from "@/lib/domain/settings";
 import type { ActivityEvent, SocialAccount } from "@/lib/domain/social-account";
 import type { WorkspaceInfo, WorkspaceUser } from "@/lib/domain/workspace";
+import type {
+  AuthProvider,
+  AuthSession,
+  AuthTokens,
+  AuthorizationFlow,
+  LoginCredentials,
+} from "@/lib/domain/auth";
 
 export type GeneratedPlatformContent = {
   readonly content: string;
@@ -95,6 +102,15 @@ export interface SettingsRepository {
   getPublishingDefaults(): PublishingDefaults;
   listActiveSessions(): readonly SessionRecord[];
   listApiKeys(): readonly ApiKeyRecord[];
+}
+
+export interface AuthRepository {
+  listProviders(): Promise<readonly AuthProvider[]>;
+  beginAuthorization(providerCode: string, redirectUri: string): Promise<AuthorizationFlow>;
+  login(credentials: LoginCredentials): Promise<AuthSession>;
+  logout(): Promise<void>;
+  refreshAccessToken(): Promise<AuthTokens>;
+  getCurrentSession(): Promise<AuthSession>;
 }
 
 export interface WorkspaceRepository {

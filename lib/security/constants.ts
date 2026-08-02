@@ -14,6 +14,13 @@ export const MAX_FILENAME_LENGTH = 255;
 export const SAFE_FILENAME_PATTERN = /^[\w\s.\-()]+$/;
 
 /** Storage keys managed by security cleanup routines. */
-export const SENSITIVE_STORAGE_KEYS = ["cch:upload-wizard-draft"] as const;
+export const SENSITIVE_STORAGE_KEYS = [
+  "cch:upload-wizard-draft",
+  "cch:access-token",
+  "cch:oauth-state",
+  "cch:oauth-verifier",
+  "cch:oauth-provider",
+  "cch:oauth-return-to",
+] as const;
 
 export const THEME_STORAGE_KEY = "app-theme" as const;

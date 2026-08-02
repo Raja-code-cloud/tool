@@ -59,6 +59,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "If-Match",
             "If-None-Match",
             "X-Correlation-ID",
+            "X-CSRF-Token",
             "X-Workspace-ID",
         ],
         expose_headers=["X-Request-ID", "X-Correlation-ID", "ETag", "Location", "Retry-After"],

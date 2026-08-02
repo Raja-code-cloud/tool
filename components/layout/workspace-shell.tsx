@@ -35,14 +35,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui";
 import { NAV_ROUTES, ROUTES } from "@/constants/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import { useSidebar } from "@/hooks/use-sidebar";
-import { clearSensitiveClientStorage, purgeExpiredClientStorage } from "@/lib/security";
+import { purgeExpiredClientStorage } from "@/lib/security";
 import { workspaceService } from "@/lib/services";
 import { buildBreadcrumbs, isRouteActive } from "@/lib/utils/navigation";
 
 const workspace = workspaceService.getWorkspace();
-const currentUser = workspaceService.getCurrentUser();
-const unreadNotificationCount = workspaceService.getUnreadNotificationCount();
 
 const QUICK_ACTIONS = [
   { label: "Upload content", href: ROUTES.upload },
@@ -123,15 +122,18 @@ export type WorkspaceShellProps = { children: React.ReactNode };
 export function WorkspaceShell({ children }: WorkspaceShellProps): React.JSX.Element {
   const pathname = usePathname();
   const { isCollapsed } = useSidebar();
+  const { user, signOut } = useAuth();
+  const unreadNotificationCount = workspaceService.getUnreadNotificationCount();
+
+  const currentUser = user ?? workspaceService.getCurrentUser();
 
   React.useEffect(() => {
     purgeExpiredClientStorage();
   }, []);
 
   const handleSignOut = React.useCallback(() => {
-    clearSensitiveClientStorage();
-    // Server-side session termination is handled by the authentication engineer.
-  }, []);
+    void signOut();
+  }, [signOut]);
 
   const items = React.useMemo(
     () =>

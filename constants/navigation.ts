@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 
 export const ROUTES = {
+  login: "/login",
+  callback: "/callback",
   dashboard: "/dashboard",
   contentLibrary: "/content-library",
   upload: "/upload",

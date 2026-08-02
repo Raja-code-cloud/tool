@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import { SkipLink } from "@/components/layout";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { AuthProvider } from "@/hooks/use-auth";
 import { AppToastProvider } from "@/hooks/use-toast";
 import { workspaceService } from "@/lib/services";
 
@@ -26,8 +27,10 @@ export default function RootLayout({
       <body className={inter.variable}>
         <ThemeProvider defaultTheme="dark">
           <AppToastProvider>
-            <SkipLink />
-            {children}
+            <AuthProvider>
+              <SkipLink />
+              {children}
+            </AuthProvider>
           </AppToastProvider>
         </ThemeProvider>
       </body>

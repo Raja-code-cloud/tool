@@ -1,5 +1,6 @@
 import { ApiError } from "@/lib/api/errors";
 import type { ApiRequestConfig, ApiResponse } from "@/lib/api/types";
+import { getAccessToken, getCsrfToken } from "@/lib/auth/token-store";
 
 export interface ApiClient {
   request<T>(path: string, config?: ApiRequestConfig): Promise<ApiResponse<T>>;
@@ -29,6 +30,8 @@ export type ApiClientOptions = {
   readonly baseUrl: string;
   readonly defaultHeaders?: Readonly<Record<string, string>>;
   readonly fetchFn?: typeof fetch;
+  readonly getAccessToken?: () => string | null;
+  readonly onUnauthorized?: () => Promise<boolean>;
 };
 
 function buildUrl(baseUrl: string, path: string): string {
@@ -46,19 +49,45 @@ function mapStatusToError(status: number, body: unknown): ApiError {
   return new ApiError("Request failed", "unknown", status, body);
 }
 
-/** HTTP-backed API client for future backend integration. Not wired to features yet. */
+function buildAuthHeaders(
+  options: ApiClientOptions,
+  configHeaders: Readonly<Record<string, string>>,
+  credentials?: RequestCredentials,
+): Record<string, string> {
+  const headers: Record<string, string> = { ...configHeaders };
+  const tokenAccessor = options.getAccessToken ?? getAccessToken;
+  const token = tokenAccessor();
+  if (token && !headers.Authorization) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  if (credentials === "include") {
+    const csrf = getCsrfToken();
+    if (csrf && !headers["X-CSRF-Token"]) {
+      headers["X-CSRF-Token"] = csrf;
+    }
+  }
+  return headers;
+}
+
+/** HTTP-backed API client with bearer token and cookie credential support. */
 export function createApiClient(options: ApiClientOptions): ApiClient {
   const fetchFn = options.fetchFn ?? fetch;
 
-  async function request<T>(path: string, config: ApiRequestConfig = {}): Promise<ApiResponse<T>> {
-    const { method = "GET", headers = {}, body, signal } = config;
+  async function request<T>(
+    path: string,
+    config: ApiRequestConfig = {},
+    isRetry = false,
+  ): Promise<ApiResponse<T>> {
+    const { method = "GET", headers = {}, body, signal, credentials } = config;
+    const authHeaders = buildAuthHeaders(options, headers, credentials);
     const init: RequestInit = {
       method,
+      credentials: credentials ?? "same-origin",
       headers: {
         Accept: "application/json",
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
         ...options.defaultHeaders,
-        ...headers,
+        ...authHeaders,
       },
       ...(signal !== undefined ? { signal } : {}),
     };
@@ -79,11 +108,27 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     }
 
     const contentType = response.headers.get("content-type") ?? "";
-    const data = contentType.includes("application/json")
-      ? await response.json()
-      : await response.text();
+    const isJson = contentType.includes("application/json");
+    const data =
+      response.status === 204
+        ? (undefined as T)
+        : isJson
+          ? await response.json()
+          : await response.text();
 
     if (!response.ok) {
+      if (
+        response.status === 401 &&
+        !isRetry &&
+        options.onUnauthorized &&
+        !path.includes("/auth/login") &&
+        !path.includes("/auth/refresh")
+      ) {
+        const refreshed = await options.onUnauthorized();
+        if (refreshed) {
+          return request<T>(path, config, true);
+        }
+      }
       throw mapStatusToError(response.status, data);
     }
 
