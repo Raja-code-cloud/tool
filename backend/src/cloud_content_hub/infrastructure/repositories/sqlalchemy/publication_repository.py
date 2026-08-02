@@ -264,34 +264,34 @@ class SqlAlchemyPublicationRepository:
                 PublicationTarget.social_account_id == criteria.social_account_id
             )
 
-        sort_column, sort_direction = normalize_sort_token(
+        sort_column = normalize_sort_token(
             criteria.sort,
-            allowed=_HISTORY_SORT_COLUMNS,
+            allowed_columns=_HISTORY_SORT_COLUMNS,
             default="-occurred_at",
         )
         statement = apply_keyset_pagination(
             statement,
-            model=PublicationStatusHistory,
+            PublicationStatusHistory,
             sort_column=sort_column,
-            sort_direction=sort_direction,
             cursor=criteria.cursor,
             limit=criteria.limit,
         )
         rows = (await self._session.execute(statement)).all()
-        page = build_keyset_page(
-            rows,
-            sort_column=sort_column,
-            sort_direction=sort_direction,
+        items, next_cursor, has_more = build_keyset_page(
+            list(rows),
             limit=criteria.limit,
+            sort_column=sort_column,
+            sort_value_getter=lambda row: getattr(row[0], sort_column.name),
+            id_getter=lambda row: row[0].id,
         )
-        items = tuple(
+        records = tuple(
             self._to_history_record(history, publication_id)
-            for history, publication_id in page.items
+            for history, publication_id in items
         )
         return PublicationHistoryPage(
-            items=items,
-            next_cursor=page.next_cursor,
-            has_more=page.has_more,
+            items=records,
+            next_cursor=next_cursor,
+            has_more=has_more,
         )
 
     async def _resolve_approved_request_id(

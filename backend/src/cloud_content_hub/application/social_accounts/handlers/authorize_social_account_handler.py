@@ -13,7 +13,6 @@ from cloud_content_hub.application.shared.interfaces.unit_of_work import IUnitOf
 from cloud_content_hub.application.social_accounts.dto.requests import AuthorizeSocialAccountRequestDto
 from cloud_content_hub.application.social_accounts.dto.responses import AuthorizeSocialAccountResponseDto
 from cloud_content_hub.application.social_accounts.exceptions.social_account_errors import (
-    SocialOAuthValidationError,
     SocialPlatformNotFoundError,
     SocialPlatformUnavailableError,
 )

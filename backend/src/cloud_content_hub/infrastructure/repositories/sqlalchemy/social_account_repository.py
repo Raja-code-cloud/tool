@@ -31,7 +31,6 @@ from cloud_content_hub.infrastructure.database.enums import (
     PublicationStatusHistoryType,
 )
 from cloud_content_hub.infrastructure.database.models.oauth_token_vault import OAuthTokenVault
-from cloud_content_hub.infrastructure.database.models.publication import Publication
 from cloud_content_hub.infrastructure.database.models.publication_status_history import (
     PublicationStatusHistory,
 )
@@ -54,7 +53,6 @@ from cloud_content_hub.infrastructure.repositories.sqlalchemy.exceptions import 
 from cloud_content_hub.infrastructure.repositories.sqlalchemy.utils import active_row_expression, utc_now
 
 _ACCOUNT_SORT_COLUMNS = frozenset({"updated_at", "connected_at"})
-_ACTIVITY_SORT_COLUMNS = frozenset({"timestamp"})
 _DEFAULT_PERMISSIONS = ("publish", "read_profile", "read_analytics")
 
 
@@ -71,6 +69,11 @@ class SqlAlchemySocialAccountRepository:
         )
 
     async def list_accounts(self, criteria: SocialAccountListCriteria) -> SocialAccountListPage:
+        sort_column = normalize_sort_token(
+            criteria.sort,
+            allowed_columns=_ACCOUNT_SORT_COLUMNS,
+            default="-updated_at",
+        )
         statement = (
             select(SocialAccount)
             .options(
@@ -84,30 +87,25 @@ class SqlAlchemySocialAccountRepository:
                 active_row_expression(SocialAccount),
             )
         )
-        sort_column, sort_direction = normalize_sort_token(
-            criteria.sort,
-            allowed=_ACCOUNT_SORT_COLUMNS,
-            default="-updated_at",
-        )
         statement = apply_keyset_pagination(
             statement,
-            model=SocialAccount,
+            SocialAccount,
             sort_column=sort_column,
-            sort_direction=sort_direction,
             cursor=criteria.cursor,
             limit=criteria.limit,
         )
         rows = (await self._session.scalars(statement)).all()
-        page = build_keyset_page(
-            rows,
-            sort_column=sort_column,
-            sort_direction=sort_direction,
+        items, next_cursor, has_more = build_keyset_page(
+            list(rows),
             limit=criteria.limit,
+            sort_column=sort_column,
+            sort_value_getter=lambda row: getattr(row, sort_column.name),
+            id_getter=lambda row: row.id,
         )
         return SocialAccountListPage(
-            items=tuple(self._to_record(row) for row in page.items),
-            next_cursor=page.next_cursor,
-            has_more=page.has_more,
+            items=tuple(self._to_record(row) for row in items),
+            next_cursor=next_cursor,
+            has_more=has_more,
         )
 
     async def get_by_id(
