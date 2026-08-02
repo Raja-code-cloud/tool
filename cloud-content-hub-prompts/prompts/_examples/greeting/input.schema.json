@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cloud-content-hub.dev/prompts/_examples/greeting/input.schema.json",
+  "title": "Greeting Prompt Inputs",
+  "description": "Input variables for the example greeting prompt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["recipient_name", "tone"],
+  "properties": {
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of the person being greeted",
+      "minLength": 1,
+      "maxLength": 100,
+      "examples": ["Alex", "Jordan"]
+    },
+    "tone": {
+      "type": "string",
+      "description": "Desired tone of the greeting",
+      "enum": ["formal", "casual", "friendly"],
+      "examples": ["formal", "casual"]
+    }
+  }
+}

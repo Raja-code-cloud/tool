@@ -1,0 +1,32 @@
+id: greeting
+name: Greeting
+version: "1.0.0"
+purpose: Generate a concise greeting instruction for a named recipient
+domain: _examples
+status: draft
+
+template:
+  file: template.md
+  format: markdown
+  engine: python-format
+
+input_schema:
+  file: input.schema.json
+
+tags:
+  - example
+  - reference
+
+authors:
+  - name: Cloud Content Hub Team
+
+created_at: "2026-08-03"
+updated_at: "2026-08-03"
+
+constraints:
+  max_prompt_characters: 2000
+
+changelog:
+  - version: "1.0.0"
+    date: "2026-08-03"
+    summary: Initial example prompt for repository foundation

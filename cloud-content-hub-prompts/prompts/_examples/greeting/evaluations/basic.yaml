@@ -1,0 +1,44 @@
+prompt_id: greeting
+prompt_version: "1.0.0"
+description: Basic evaluation cases for the example greeting prompt
+pass_threshold: 1.0
+cases:
+  - id: formal-greeting
+    name: Formal tone greeting
+    description: Validates template rendering with formal tone
+    inputs:
+      recipient_name: Alex
+      tone: formal
+    expected_rendered: |
+      Compose a greeting for Alex.
+
+      Use a formal tone. Address the recipient by name.
+      Keep the greeting concise (one to two sentences).
+    acceptance:
+      fixture_output: "Dear Alex, it is a pleasure to welcome you."
+      criteria:
+        - type: rendered_contains
+          value: "Alex"
+          description: Rendered prompt includes recipient name
+        - type: rendered_contains
+          value: "formal"
+          description: Rendered prompt specifies formal tone
+        - type: output_contains
+          value: "Alex"
+          description: Fixture output addresses recipient
+
+  - id: casual-greeting
+    name: Casual tone greeting
+    description: Validates template rendering with casual tone
+    inputs:
+      recipient_name: Sam
+      tone: casual
+    acceptance:
+      fixture_output: "Hey Sam, great to see you!"
+      criteria:
+        - type: rendered_contains
+          value: "Sam"
+        - type: rendered_contains
+          value: "casual"
+        - type: output_contains
+          value: "Sam"
