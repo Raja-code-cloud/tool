@@ -1,0 +1,140 @@
+name: RC3 Release Verification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "22.22.1"
+
+jobs:
+  verify:
+    name: RC3 clean verification (Ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Record environment
+        run: |
+          mkdir -p rc3-verification
+          {
+            echo "platform=ubuntu-latest"
+            echo "node=$(node --version)"
+            echo "npm=$(npm --version)"
+            echo "commit=$(git rev-parse HEAD)"
+            echo "branch=$(git branch --show-current)"
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > rc3-verification/environment.txt
+          cat rc3-verification/environment.txt
+
+      - name: npm ci
+        id: npm_ci
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm ci 2>&1 | tee rc3-verification/npm-ci.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: npm run verify
+        id: verify
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run verify 2>&1 | tee rc3-verification/verify.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: npm run format:check
+        id: format_check
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run format:check 2>&1 | tee rc3-verification/format-check.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: npm run test
+        id: test
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run test:run 2>&1 | tee rc3-verification/test.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: npm run test:coverage
+        id: test_coverage
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run test:coverage 2>&1 | tee rc3-verification/test-coverage.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: npm run build
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee rc3-verification/build.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: npm audit
+        id: audit
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm audit --json > rc3-verification/npm-audit.json 2> rc3-verification/npm-audit.log || true
+          npm audit 2>&1 | tee -a rc3-verification/npm-audit.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract bundle sizes
+        if: always()
+        continue-on-error: true
+        run: |
+          if [ -f rc3-verification/build.log ]; then
+            grep -E "Route|First Load|Size|kB|shared" rc3-verification/build.log > rc3-verification/bundle-sizes.txt || true
+          fi
+          if [ -f coverage/coverage-summary.json ]; then
+            cp coverage/coverage-summary.json rc3-verification/coverage-summary.json
+          fi
+
+      - name: Summarize gate results
+        if: always()
+        run: |
+          {
+            echo "# RC3 Gate Summary"
+            echo ""
+            echo "| Step | Exit Code | Status |"
+            echo "|------|-----------|--------|"
+            for step in npm_ci verify format_check test test_coverage build audit; do
+              code="${{ steps[format_check].outputs.exit_code }}"
+              case "$step" in
+                npm_ci) code="${{ steps.npm_ci.outputs.exit_code }}" ;;
+                verify) code="${{ steps.verify.outputs.exit_code }}" ;;
+                format_check) code="${{ steps.format_check.outputs.exit_code }}" ;;
+                test) code="${{ steps.test.outputs.exit_code }}" ;;
+                test_coverage) code="${{ steps.test_coverage.outputs.exit_code }}" ;;
+                build) code="${{ steps.build.outputs.exit_code }}" ;;
+                audit) code="${{ steps.audit.outputs.exit_code }}" ;;
+              esac
+              if [ "$code" = "0" ]; then status="PASS"; else status="FAIL"; fi
+              echo "| $step | $code | $status |"
+            done
+          } > rc3-verification/gate-summary.md
+          cat rc3-verification/gate-summary.md
+
+      - name: Upload RC3 verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc3-verification-${{ github.sha }}
+          path: rc3-verification/
+          if-no-files-found: warn
+          retention-days: 30
