@@ -8,14 +8,25 @@ from uuid import uuid4
 
 import pytest
 
-from cloud_content_hub.infrastructure.ai.testing.fakes import FailingMockProvider, RateLimitedMockProvider
+from cloud_content_hub.infrastructure.ai.config import ProviderConfig, ProviderKind
+from cloud_content_hub.infrastructure.ai.exceptions import AIUnavailableError
+from cloud_content_hub.infrastructure.ai.testing.fakes import (
+    FailingMockProvider,
+    RateLimitedMockProvider,
+)
 from cloud_content_hub.infrastructure.events.config import EventPublishingConfig
-from cloud_content_hub.infrastructure.events.dispatcher import OutboxDeliveryService, envelope_from_record
+from cloud_content_hub.infrastructure.events.dispatcher import (
+    OutboxDeliveryService,
+    envelope_from_record,
+)
 from cloud_content_hub.infrastructure.events.registry import create_default_registry
-from cloud_content_hub.infrastructure.events.testing.fakes import FakeCeleryBroker, RecordingPlatformDeliverer
+from cloud_content_hub.infrastructure.events.testing.fakes import (
+    FakeCeleryBroker,
+    RecordingPlatformDeliverer,
+)
 from cloud_content_hub.infrastructure.storage.exceptions import StorageUnavailableError
-from cloud_content_hub.infrastructure.storage.testing.fake import InMemoryStorageProvider
 from cloud_content_hub.infrastructure.storage.models import StorageLocation, UploadRequest
+from cloud_content_hub.infrastructure.storage.testing.fake import InMemoryStorageProvider
 from cloud_content_hub.workers.config import WorkerRetryConfig
 from cloud_content_hub.workers.exceptions import TransientWorkerError
 from cloud_content_hub.workers.retry import WorkerRetryPolicy
@@ -49,7 +60,8 @@ async def test_blob_upload_failure_surfaces_storage_error() -> None:
 async def test_ai_timeout_from_failing_mock_provider() -> None:
     """AI provider timeout/unavailability is classified as dependency failure."""
 
-    provider = FailingMockProvider()
+    config = ProviderConfig(kind=ProviderKind.MOCK, model="mock-gpt")
+    provider = FailingMockProvider(config)
     from cloud_content_hub.infrastructure.ai.models import GenerationRequest, Message, Role
 
     request = GenerationRequest(
@@ -57,7 +69,7 @@ async def test_ai_timeout_from_failing_mock_provider() -> None:
         messages=(Message(role=Role.USER, content="hello"),),
     )
 
-    with pytest.raises(Exception):
+    with pytest.raises(AIUnavailableError):
         await provider.generate(request)
 
 
@@ -65,7 +77,8 @@ async def test_ai_timeout_from_failing_mock_provider() -> None:
 async def test_ai_transient_failure_retries_on_second_attempt() -> None:
     """AI provider transient failures succeed after retry."""
 
-    provider = RateLimitedMockProvider()
+    config = ProviderConfig(kind=ProviderKind.MOCK, model="mock-gpt")
+    provider = RateLimitedMockProvider(config)
     from cloud_content_hub.infrastructure.ai.models import GenerationRequest, Message, Role
 
     request = GenerationRequest(
@@ -73,7 +86,7 @@ async def test_ai_transient_failure_retries_on_second_attempt() -> None:
         messages=(Message(role=Role.USER, content="hello"),),
     )
 
-    with pytest.raises(Exception):
+    with pytest.raises(AIUnavailableError):
         await provider.generate(request)
     response = await provider.generate(request)
     assert response.content
@@ -83,7 +96,8 @@ async def test_ai_transient_failure_retries_on_second_attempt() -> None:
 async def test_oauth_failure_rejects_invalid_state() -> None:
     """OAuth failure rejects mismatched authorization state."""
 
-    from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
+    from cloud_content_hub.infrastructure.identity.exceptions import OAuthValidationError
+from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
 
     factory = identity_factory()
     registry = factory.build_registry()
@@ -91,7 +105,7 @@ async def test_oauth_failure_rejects_invalid_state() -> None:
     auth = await provider.authenticate("http://localhost:3000/callback")
     code = provider.issue_mock_code("oauth-user")  # type: ignore[attr-defined]
 
-    with pytest.raises(Exception):
+    with pytest.raises(OAuthValidationError):
         await provider.exchange_code(
             code,
             "http://localhost:3000/callback",

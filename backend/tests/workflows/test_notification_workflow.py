@@ -4,11 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from cloud_content_hub.application.notifications.commands import CreateNotificationCommand
 from cloud_content_hub.application.notifications.dto.requests import NotificationRequestDto
-from cloud_content_hub.bootstrap.handlers import wire_handlers
 from cloud_content_hub.workers.factory import create_worker_bundle
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 from tests.fixtures.outbox import drain_outbox, query_outbox_events

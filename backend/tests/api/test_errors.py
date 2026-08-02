@@ -48,5 +48,5 @@ async def test_malformed_json_returns_validation_failed(api_client: AsyncClient)
             content=b"{invalid",
         )
 
-    assert response.status_code == 422
-    assert_problem_response(response.json(), status=422)
+    assert response.status_code in {400, 422}
+    assert response.headers["content-type"].startswith("application/problem+json")

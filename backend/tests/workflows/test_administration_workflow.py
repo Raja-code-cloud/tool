@@ -12,7 +12,9 @@ from cloud_content_hub.application.administration.dto.requests import (
     AssignRoleRequestDto,
     EnableMaintenanceModeRequestDto,
 )
-from cloud_content_hub.application.administration.handlers.assign_role_handler import AssignRoleHandler
+from cloud_content_hub.application.administration.handlers.assign_role_handler import (
+    AssignRoleHandler,
+)
 from cloud_content_hub.application.administration.handlers.enable_maintenance_mode_handler import (
     EnableMaintenanceModeHandler,
 )
@@ -20,7 +22,6 @@ from cloud_content_hub.application.administration.handlers.get_feature_flags_han
     GetFeatureFlagsHandler,
 )
 from cloud_content_hub.application.administration.queries import GetFeatureFlagsQuery
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import admin_actor
 

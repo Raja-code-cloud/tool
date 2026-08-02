@@ -11,7 +11,6 @@ from cloud_content_hub.application.content.dto.requests import GenerationRequest
 from cloud_content_hub.application.content.queries import GetContentQuery
 from cloud_content_hub.application.shared.dto.base import OperationStatus
 from cloud_content_hub.bootstrap.handlers import wire_handlers
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 from tests.fixtures.constants import SAMPLE_TEXT_BYTES

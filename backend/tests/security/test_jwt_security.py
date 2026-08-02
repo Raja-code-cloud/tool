@@ -79,7 +79,17 @@ def test_production_rejects_hs256_algorithm() -> None:
 
 def test_production_rejects_none_algorithm() -> None:
     with pytest.raises(ValueError, match="asymmetric"):
-        IdentitySettings(environment="production", allowed_algorithms=("none",))
+        IdentitySettings(
+            environment="production",
+            allowed_algorithms=("none",),
+            mock_enabled=False,
+            default_provider="entra",
+            entra_enabled=True,
+            entra_client_id="client",
+            entra_tenant_id="tenant",
+            entra_redirect_uris=("https://app.example.test/callback",),
+            issuer="https://auth.example.test",
+        )
 
 
 def test_production_rejects_mock_provider() -> None:

@@ -7,7 +7,6 @@ from uuid import UUID
 from cloud_content_hub.application.shared.actor import ActorContext
 from cloud_content_hub.infrastructure.identity.factory import IdentityFactory
 from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
-
 from tests.fixtures.constants import ADMIN_PERMISSIONS, WORKFLOW_PERMISSIONS
 
 

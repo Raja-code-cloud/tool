@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import yaml
+from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -14,17 +15,17 @@ def _read_yaml(path: Path) -> object:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def test_health_liveness_returns_200(client) -> None:
+def test_health_liveness_returns_200(client: TestClient) -> None:
     response = client.get("/live")
     assert response.status_code == 200
 
 
-def test_health_readiness_returns_200_or_503(client) -> None:
+def test_health_readiness_returns_200_or_503(client: TestClient) -> None:
     response = client.get("/ready")
     assert response.status_code in {200, 503}
 
 
-def test_health_informational_returns_200(client) -> None:
+def test_health_informational_returns_200(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
 

@@ -35,7 +35,13 @@ class TestDockerArtifacts:
 class TestDeploymentScripts:
     def test_required_scripts_exist(self) -> None:
         scripts = REPO_ROOT / "deployment" / "scripts"
-        for name in ("build-images.sh", "deploy.sh", "migrate.sh", "rollback.sh", "verify-health.sh"):
+        for name in (
+            "build-images.sh",
+            "deploy.sh",
+            "migrate.sh",
+            "rollback.sh",
+            "verify-health.sh",
+        ):
             assert (scripts / name).is_file(), f"Missing deployment script: {name}"
 
 

@@ -7,6 +7,8 @@ from typing import Any
 import pytest
 from httpx import AsyncClient
 
+from tests.performance.helpers.http import ANALYTICS_QUERY, CURSOR_SECRET
+
 pytestmark = pytest.mark.benchmark
 
 
@@ -94,7 +96,7 @@ async def test_benchmark_analytics_dashboard(
 
     async def run() -> None:
         response = await benchmark_client.get(
-            "/api/v1/analytics/dashboard",
+            f"/api/v1/analytics/dashboard?{ANALYTICS_QUERY}",
             headers=perf_headers,
         )
         assert response.status_code == 200
@@ -105,8 +107,13 @@ async def test_benchmark_analytics_dashboard(
 def test_benchmark_pagination_encode(benchmark: Any) -> None:
     from cloud_content_hub.api.pagination import encode_cursor
 
+    payload = {
+        "updated_at": "2026-08-02T10:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+    }
+
     def run() -> None:
-        encode_cursor({"updated_at": "2026-08-02T10:00:00Z", "id": "01900000-0000-7000-8000-000000000001"})
+        encode_cursor(payload, CURSOR_SECRET)
 
     benchmark(run)
 
@@ -114,10 +121,14 @@ def test_benchmark_pagination_encode(benchmark: Any) -> None:
 def test_benchmark_pagination_decode(benchmark: Any) -> None:
     from cloud_content_hub.api.pagination import decode_cursor, encode_cursor
 
-    token = encode_cursor({"updated_at": "2026-08-02T10:00:00Z", "id": "01900000-0000-7000-8000-000000000001"})
+    payload = {
+        "updated_at": "2026-08-02T10:00:00Z",
+        "id": "01900000-0000-7000-8000-000000000001",
+    }
+    token = encode_cursor(payload, CURSOR_SECRET)
 
     def run() -> None:
-        decoded = decode_cursor(token)
+        decoded = decode_cursor(token, CURSOR_SECRET)
         assert "id" in decoded
 
     benchmark(run)

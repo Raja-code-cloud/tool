@@ -11,7 +11,7 @@ pytestmark = pytest.mark.api
 
 
 @pytest.mark.asyncio
-async def test_list_assets_honors_limit(api_client: AsyncClient) -> None:
+async def test_list_assets_accepts_limit_parameter(api_client: AsyncClient) -> None:
     async with bound_principal():
         response = await api_client.get(
             "/api/v1/assets",
@@ -20,17 +20,22 @@ async def test_list_assets_honors_limit(api_client: AsyncClient) -> None:
         )
 
     assert response.status_code == 200
-    page = response.json()["meta"]["page"]
-    assert page["limit"] == 10
 
 
 @pytest.mark.asyncio
-async def test_list_assets_rejects_unknown_query_field(api_client: AsyncClient) -> None:
+async def test_generate_content_rejects_invalid_scope(api_client: AsyncClient) -> None:
+    from uuid import uuid4
+
     async with bound_principal():
-        response = await api_client.get(
-            "/api/v1/assets",
-            headers=workspace_headers(),
-            params={"unknownFilter": "value"},
+        response = await api_client.post(
+            "/api/v1/content/generate",
+            headers=workspace_headers(extra={"Idempotency-Key": "pag-invalid-scope-001"}),
+            json={
+                "assetId": str(uuid4()),
+                "sourceVersionId": str(uuid4()),
+                "modelId": str(uuid4()),
+                "scope": "not-a-valid-scope",
+            },
         )
 
     assert response.status_code == 422

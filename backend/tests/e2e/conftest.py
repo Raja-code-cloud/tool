@@ -23,7 +23,6 @@ from cloud_content_hub.core.config import Environment, Settings
 from cloud_content_hub.infrastructure.events.factory import create_event_infrastructure
 from cloud_content_hub.infrastructure.events.testing.fakes import FakeCeleryBroker
 from cloud_content_hub.workers.factory import create_worker_bundle
-
 from tests.fixtures.auth import auth_headers, issue_access_token
 from tests.fixtures.seed import E2ESeedBundle, seed_e2e_environment
 

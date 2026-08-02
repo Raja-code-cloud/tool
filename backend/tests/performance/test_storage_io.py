@@ -29,7 +29,25 @@ async def test_storage_upload_latency(storage_provider: InMemoryStorageProvider)
 
     async def upload_once() -> None:
         counter["index"] += 1
-        request = sample_upload_request()
+        current = counter["index"]
+        location = StorageLocation(
+            container="perf-upload",
+            blob_name=build_blob_name(
+                "tenant-perf",
+                "user-perf",
+                BlobType.ARTICLE,
+                uuid4(),
+                f"sample-{current}.txt",
+                created_at=datetime.now(tz=UTC),
+            ),
+        )
+        request = UploadRequest(
+            location=location,
+            data=SAMPLE_BYTES,
+            content_type="text/plain",
+            content_length=len(SAMPLE_BYTES),
+            filename=f"sample-{current}.txt",
+        )
         await storage_provider.upload(request)
 
     stats = await collect_latencies(
@@ -77,7 +95,7 @@ async def test_large_file_upload_latency(storage_provider: InMemoryStorageProvid
         blob_name=build_blob_name(
             "tenant-perf",
             "user-perf",
-            BlobType.MEDIA,
+            BlobType.VIDEO,
             uuid4(),
             "large.bin",
             created_at=datetime.now(tz=UTC),

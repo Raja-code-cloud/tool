@@ -9,11 +9,15 @@ from uuid import uuid4
 import pytest
 
 from cloud_content_hub.infrastructure.events.config import EventPublishingConfig
-from cloud_content_hub.infrastructure.events.dispatcher import OutboxDeliveryService, envelope_from_record
+from cloud_content_hub.infrastructure.events.dispatcher import (
+    OutboxDeliveryService,
+    envelope_from_record,
+)
+from cloud_content_hub.infrastructure.events.models import OutboxDispatchRecord
 from cloud_content_hub.infrastructure.events.registry import create_default_registry
 from cloud_content_hub.infrastructure.events.testing.fakes import RecordingPlatformDeliverer
-from cloud_content_hub.infrastructure.events.models import OutboxDispatchRecord
 from cloud_content_hub.workers.config import WorkerRetryConfig
+from cloud_content_hub.workers.exceptions import TransientWorkerError
 from cloud_content_hub.workers.retry import WorkerRetryPolicy
 
 pytestmark = pytest.mark.e2e
@@ -64,13 +68,13 @@ def test_worker_retry_backoff_increases_between_attempts() -> None:
         task_name="cloud_content_hub.tasks.generate_content",
         attempt_count=0,
         last_error=None,
-        error=Exception("timeout"),
+        error=TransientWorkerError(detail="timeout"),
     )
     second = policy.classify_failure(
         task_name="cloud_content_hub.tasks.generate_content",
         attempt_count=1,
         last_error="timeout",
-        error=Exception("timeout"),
+        error=TransientWorkerError(detail="timeout"),
     )
 
     assert first.retry is True

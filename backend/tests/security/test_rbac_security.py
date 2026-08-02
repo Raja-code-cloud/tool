@@ -45,7 +45,8 @@ def test_global_wildcard_grants_all_permissions() -> None:
     assert principal.has_permission("publishing:delete") is True
 
 
-def test_require_permission_dependency_raises_for_anonymous() -> None:
+@pytest.mark.asyncio
+async def test_require_permission_dependency_raises_for_anonymous() -> None:
     from cloud_content_hub.infrastructure.identity.dependencies import require_permission
     from cloud_content_hub.infrastructure.identity.exceptions import AuthenticationException
     from cloud_content_hub.infrastructure.identity.middleware import bind_principal, clear_principal
@@ -54,7 +55,7 @@ def test_require_permission_dependency_raises_for_anonymous() -> None:
     token = bind_principal(Principal.anonymous())
     try:
         with pytest.raises(AuthenticationException):
-            _ = dependency()
+            await dependency()
     finally:
         clear_principal(token)
 

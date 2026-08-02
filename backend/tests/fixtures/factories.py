@@ -5,14 +5,15 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
+from cloud_content_hub.api.schemas.transport import JobDto, JobStateDto, PublicationHistoryItemDto
 from cloud_content_hub.application.administration.dto.responses import (
+    AdminQueueNameDto,
     DependencyHealthStatusDto,
     DependencyStatusDto,
+    ProviderHealthResponse,
     ProviderOperationalStatusDto,
     ProviderTypeDto,
-    ProviderHealthResponse,
     QueueStatusResponse,
-    AdminQueueNameDto,
     SystemHealthStatusDto,
     SystemStatusResponse,
 )
@@ -52,10 +53,9 @@ from cloud_content_hub.application.shared.dto.base import (
     OperationDto,
     OperationStatus,
     OperationType,
-    PageInfoDto,
     PagedResultDto,
+    PageInfoDto,
 )
-from cloud_content_hub.api.schemas.transport import JobDto, JobStateDto, PublicationHistoryItemDto
 
 FIXED_NOW = datetime(2026, 8, 2, 12, 0, tzinfo=UTC)
 DEFAULT_WORKSPACE_ID = UUID("01900000-0000-7000-8000-000000000001")
@@ -121,7 +121,9 @@ def operation_dto(
     )
 
 
-def publication_dto(*, asset_id: UUID | None = None, content_version_id: UUID | None = None) -> PublicationDto:
+def publication_dto(
+    *, asset_id: UUID | None = None, content_version_id: UUID | None = None
+) -> PublicationDto:
     target_id, platform_id, account_id = _resource_ids()
     return PublicationDto(
         id=uuid4(),
@@ -182,9 +184,7 @@ def dashboard_dto() -> DashboardResponse:
         time_zone="UTC",
         fresh_through=FIXED_NOW,
         methodology_version=1,
-        metrics=(
-            MetricValueDto(code="reach", value="1000", unit="count", is_estimated=False),
-        ),
+        metrics=(MetricValueDto(code="reach", value="1000", unit="count", is_estimated=False),),
     )
 
 
@@ -193,7 +193,9 @@ def platform_analytics_dto() -> PlatformAnalyticsResponse:
         platform_id=uuid4(),
         platform_code="linkedin",
         account_count=1,
-        metrics=(MetricValueDto(code="impressions", value="500", unit="count", is_estimated=False),),
+        metrics=(
+            MetricValueDto(code="impressions", value="500", unit="count", is_estimated=False),
+        ),
         fresh_through=FIXED_NOW,
     )
 
@@ -204,7 +206,9 @@ def post_analytics_dto(*, content_id: UUID | None = None) -> PostAnalyticsRespon
         snapshot_at=FIXED_NOW,
         reach=100,
         engagements=10,
-        metrics=(MetricValueDto(code="engagement_rate", value="0.10", unit="ratio", is_estimated=False),),
+        metrics=(
+            MetricValueDto(code="engagement_rate", value="0.10", unit="ratio", is_estimated=False),
+        ),
     )
 
 

@@ -34,7 +34,7 @@ async def test_large_media_upload_stress() -> None:
             blob_name=build_blob_name(
                 "tenant-stress",
                 "user-stress",
-                BlobType.MEDIA,
+                BlobType.VIDEO,
                 uuid4(),
                 f"media-{current}.bin",
                 created_at=datetime.now(tz=UTC),
@@ -64,7 +64,7 @@ async def test_concurrent_large_upload_memory_stability() -> None:
             blob_name=build_blob_name(
                 "tenant-stress",
                 "user-stress",
-                BlobType.MEDIA,
+                BlobType.VIDEO,
                 uuid4(),
                 "stable.bin",
                 created_at=datetime.now(tz=UTC),

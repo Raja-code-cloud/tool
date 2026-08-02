@@ -9,10 +9,12 @@ import pytest
 from cloud_content_hub.application.shared.actor import ActorContext
 from cloud_content_hub.bootstrap.handlers import wire_handlers
 from cloud_content_hub.core.errors import AuthorizationError
+from cloud_content_hub.infrastructure.identity.exceptions import InvalidToken, OAuthValidationError
 from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
 from cloud_content_hub.infrastructure.repositories.sqlalchemy.exceptions import ConcurrencyConflict
-from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import SqlAlchemyUnitOfWork
-
+from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import (
+    SqlAlchemyUnitOfWork,
+)
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 from tests.fixtures.seed import seed_e2e_environment
@@ -90,7 +92,7 @@ async def test_jwt_validation_rejects_expired_or_invalid_signature() -> None:
         permissions=frozenset({"profile:read"}),
     )
 
-    with pytest.raises(Exception):
+    with pytest.raises(InvalidToken):
         await factory.jwt_service.decode_and_verify(f"{token}invalid")
 
 
@@ -105,7 +107,7 @@ async def test_oauth_validation_requires_matching_state() -> None:
     auth = await provider.authenticate("http://localhost:3000/callback")
     code = provider.issue_mock_code("security-user")  # type: ignore[attr-defined]
 
-    with pytest.raises(Exception):
+    with pytest.raises(OAuthValidationError):
         await provider.exchange_code(
             code,
             "http://localhost:3000/callback",
@@ -120,11 +122,14 @@ async def test_oauth_validation_requires_matching_state() -> None:
 async def test_soft_delete_hides_removed_rows(session_factory, workflow_context: WorkflowContext) -> None:
     """Soft-deleted rows are not visible to workspace-scoped queries."""
 
+    from sqlalchemy import select
+
     from cloud_content_hub.infrastructure.database.enums import AssetType, ContentLifecycle
     from cloud_content_hub.infrastructure.database.models.content_asset import ContentAsset
     from cloud_content_hub.infrastructure.repositories.sqlalchemy.base import SqlAlchemyRepository
-    from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import SqlAlchemyUnitOfWork
-    from sqlalchemy import select
+    from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import (
+        SqlAlchemyUnitOfWork,
+    )
 
     asset_id = uuid4()
     async with SqlAlchemyUnitOfWork(session_factory) as unit_of_work:
@@ -182,14 +187,21 @@ async def test_soft_delete_hides_removed_rows(session_factory, workflow_context:
 async def test_optimistic_locking_detects_version_conflict(session_factory) -> None:
     """Optimistic locking rejects stale version updates."""
 
-    from tests.integration.conftest import TenantContext
+    from cloud_content_hub.infrastructure.database.enums import (
+        AssetType,
+        ContentLifecycle,
+        MembershipStatus,
+        OrganizationStatus,
+        UserStatus,
+        WorkspaceStatus,
+    )
+    from cloud_content_hub.infrastructure.database.models.content_asset import ContentAsset
     from cloud_content_hub.infrastructure.database.models.organization import Organization
-    from cloud_content_hub.infrastructure.database.enums import OrganizationStatus, UserStatus, WorkspaceStatus, MembershipStatus
     from cloud_content_hub.infrastructure.database.models.user import User
     from cloud_content_hub.infrastructure.database.models.workspace import Workspace
-    from cloud_content_hub.infrastructure.database.models.workspace_membership import WorkspaceMembership
-    from cloud_content_hub.infrastructure.database.models.content_asset import ContentAsset
-    from cloud_content_hub.infrastructure.database.enums import AssetType, ContentLifecycle
+    from cloud_content_hub.infrastructure.database.models.workspace_membership import (
+        WorkspaceMembership,
+    )
     from cloud_content_hub.infrastructure.repositories.sqlalchemy.base import SqlAlchemyRepository
 
     org_id = uuid4()

@@ -12,7 +12,6 @@ from tests.performance.conftest import (  # noqa: F401
     asset_dto,
     celery_broker,
     event_config,
-    mock_handlers,
     operation_dto,
     perf_headers,
     principal_token,

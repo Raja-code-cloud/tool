@@ -53,6 +53,7 @@ def build_mock_handlers(*, asset_count: int = 1) -> dict[str, Any]:
 
     assets = tuple(asset_dto(title=f"Asset {index}") for index in range(asset_count))
 
+    post_page = single_page(post_analytics_dto(content_id=content.id))
     return {
         "upload_asset": _mock_handler(upload_operation),
         "replace_asset": _mock_handler(upload_operation),
@@ -78,7 +79,7 @@ def build_mock_handlers(*, asset_count: int = 1) -> dict[str, Any]:
         "update_schedule": _mock_handler(schedule),
         "cancel_schedule": _mock_handler(schedule),
         "get_analytics_dashboard": _mock_handler(dashboard_dto()),
-        "list_analytics_posts": _mock_handler(single_page(post_analytics_dto(content_id=content.id))),
+        "list_analytics_posts": _mock_handler(post_page),
         "list_analytics_platforms": _mock_handler(single_page(platform_analytics_dto())),
         "get_analytics_post": _mock_handler(post_analytics_dto(content_id=content.id)),
         "list_notifications": _mock_handler(single_page(notification)),

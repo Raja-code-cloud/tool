@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 import pytest
 from httpx import AsyncClient
-
-from uuid import UUID
 
 pytestmark = pytest.mark.smoke
 

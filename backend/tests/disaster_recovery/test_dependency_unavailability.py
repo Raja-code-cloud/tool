@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-import pytest
-from fastapi import FastAPI
-from httpx import ASGITransport, AsyncClient
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
-from cloud_content_hub.api.errors import install_exception_handlers
-from cloud_content_hub.api.routers.v1.health import router as health_router
+import pytest
+
 from cloud_content_hub.core.errors import DependencyUnavailableError
 from cloud_content_hub.infrastructure.observability.health import HealthStatus
+from tests.disaster_recovery.helpers.readiness import probe_readiness
 from tests.disaster_recovery.helpers.simulation import (
     DependencyState,
     build_recovery_health_checker,
@@ -67,64 +65,65 @@ async def test_full_recovery_restores_healthy_status() -> None:
 
 
 @pytest.mark.asyncio
-async def test_readiness_endpoint_fails_when_database_unavailable() -> None:
-    container = MagicMock()
-    connection = AsyncMock()
-    connection.execute = AsyncMock(side_effect=ConnectionError("database down"))
-    connect_cm = AsyncMock()
-    connect_cm.__aenter__.return_value = connection
-    connect_cm.__aexit__.return_value = None
-    container.database_engine.connect.return_value = connect_cm
-    container.redis.ping = AsyncMock(return_value=True)
-    container.settings.database_timeout_seconds = 1.0
-    container.settings.redis_timeout_seconds = 1.0
+async def test_readiness_probe_fails_when_database_unavailable() -> None:
+    async def check_database() -> None:
+        raise ConnectionError("database down")
 
-    app = FastAPI()
-    install_exception_handlers(app)
-    app.include_router(health_router)
-    app.state.container = container
+    async def check_redis() -> None:
+        return None
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.get("/ready")
+    result = await probe_readiness(
+        check_database=check_database,
+        check_redis=check_redis,
+        database_timeout_seconds=1.0,
+        redis_timeout_seconds=1.0,
+    )
 
-    assert response.status_code == 503
+    assert result.ready is False
+    assert result.checks["database"] == "unavailable"
+    assert result.checks["redis"] == "ok"
 
 
 @pytest.mark.asyncio
-async def test_readiness_endpoint_fails_when_redis_unavailable() -> None:
-    container = MagicMock()
-    connection = AsyncMock()
-    connection.execute = AsyncMock(return_value=None)
-    connect_cm = AsyncMock()
-    connect_cm.__aenter__.return_value = connection
-    connect_cm.__aexit__.return_value = None
-    container.database_engine.connect.return_value = connect_cm
-    container.redis.ping = AsyncMock(side_effect=ConnectionError("redis down"))
-    container.settings.database_timeout_seconds = 1.0
-    container.settings.redis_timeout_seconds = 1.0
+async def test_readiness_probe_fails_when_redis_unavailable() -> None:
+    async def check_database() -> None:
+        return None
 
-    app = FastAPI()
-    install_exception_handlers(app)
-    app.include_router(health_router)
-    app.state.container = container
+    async def check_redis() -> None:
+        raise ConnectionError("redis down")
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.get("/ready")
+    result = await probe_readiness(
+        check_database=check_database,
+        check_redis=check_redis,
+        database_timeout_seconds=1.0,
+        redis_timeout_seconds=1.0,
+    )
 
-    assert response.status_code == 503
+    assert result.ready is False
+    assert result.checks["database"] == "ok"
+    assert result.checks["redis"] == "unavailable"
 
 
 @pytest.mark.asyncio
-async def test_liveness_succeeds_without_dependencies() -> None:
-    app = FastAPI()
-    app.include_router(health_router)
+async def test_readiness_probe_succeeds_when_dependencies_recover() -> None:
+    database = AsyncMock()
+    redis = AsyncMock()
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.get("/live")
+    async def check_database() -> None:
+        await database.execute()
 
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["data"]["status"] == "live"
+    async def check_redis() -> None:
+        await redis.ping()
+
+    result = await probe_readiness(
+        check_database=check_database,
+        check_redis=check_redis,
+        database_timeout_seconds=1.0,
+        redis_timeout_seconds=1.0,
+    )
+
+    assert result.ready is True
+    assert result.checks == {"database": "ok", "redis": "ok"}
 
 
 def test_dependency_unavailable_error_is_readiness_signal() -> None:

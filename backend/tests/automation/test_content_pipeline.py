@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from uuid import uuid4
-
 import pytest
 from httpx import AsyncClient
 
@@ -11,7 +9,6 @@ from cloud_content_hub.application.assets.commands import UploadAssetCommand
 from cloud_content_hub.application.assets.dto.requests import UploadAssetRequestDto
 from cloud_content_hub.application.shared.dto.base import OperationStatus
 from cloud_content_hub.bootstrap.handlers import wire_handlers
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 from tests.fixtures.constants import SAMPLE_WEBP_BYTES
@@ -96,7 +93,9 @@ async def test_outbox_to_worker_workflow(workflow_context: WorkflowContext) -> N
 
 
 @pytest.mark.asyncio
-async def test_generate_content_http_workflow(auth_client: AsyncClient, workflow_context: WorkflowContext) -> None:
+async def test_generate_content_http_workflow(
+    auth_client: AsyncClient, workflow_context: WorkflowContext
+) -> None:
     response = await auth_client.post(
         "/api/v1/content/generate",
         headers={"Idempotency-Key": "automation-generate-001"},

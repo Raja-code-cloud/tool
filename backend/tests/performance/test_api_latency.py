@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 from httpx import AsyncClient
 
+from tests.performance.helpers.http import ANALYTICS_QUERY
 from tests.performance.helpers.metrics import collect_latencies, run_concurrent
 from tests.performance.helpers.targets import PERFORMANCE_TARGETS, assert_within_target
 
@@ -132,7 +133,7 @@ async def test_analytics_dashboard_latency(
         iterations=50,
         operation=lambda: _get(
             perf_client,
-            "/api/v1/analytics/dashboard",
+            f"/api/v1/analytics/dashboard?{ANALYTICS_QUERY}",
             headers=perf_headers,
         ),
     )
@@ -170,6 +171,7 @@ async def test_list_assets_concurrent_latency(
     stats = await run_concurrent(
         concurrency=concurrency,
         per_worker=10,
+        warmup=5,
         operation=lambda: _get(perf_client, "/api/v1/assets", headers=perf_headers),
     )
     assert stats.count == concurrency * 10

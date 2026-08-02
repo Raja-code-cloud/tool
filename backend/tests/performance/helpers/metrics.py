@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 
 def percentile(sorted_values: Sequence[float], p: float) -> float:
-    """Return the p-th percentile (0–100) from a pre-sorted sequence."""
+    """Return the p-th percentile (0-100) from a pre-sorted sequence."""
 
     if not sorted_values:
         msg = "Cannot compute percentile of an empty sample."
@@ -84,8 +84,12 @@ async def collect_latencies(
     label: str,
     iterations: int,
     operation: Callable[[], Awaitable[None]],
+    warmup: int = 0,
 ) -> LatencyStats:
     """Run an async operation repeatedly and collect wall-clock latencies."""
+
+    for _ in range(warmup):
+        await operation()
 
     samples: list[float] = []
     for _ in range(iterations):
@@ -116,8 +120,12 @@ async def run_concurrent(
     concurrency: int,
     per_worker: int,
     operation: Callable[[], Awaitable[None]],
+    warmup: int = 0,
 ) -> LatencyStats:
     """Execute an async operation across concurrent workers."""
+
+    for _ in range(warmup):
+        await operation()
 
     samples: list[float] = []
 

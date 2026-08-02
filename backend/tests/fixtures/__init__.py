@@ -26,7 +26,6 @@ from tests.fixtures.seed import E2ESeedBundle, seed_e2e_environment
 __all__ = [
     "DEFAULT_USER_ID",
     "DEFAULT_WORKSPACE_ID",
-    "E2ESeedBundle",
     "FIXED_NOW",
     "PLATFORM_CODES",
     "SAMPLE_PNG_BYTES",
@@ -34,6 +33,7 @@ __all__ = [
     "SAMPLE_WEBP_BYTES",
     "USER_ID",
     "WORKSPACE_ID",
+    "E2ESeedBundle",
     "admin_actor",
     "all_permissions",
     "assert_problem_response",

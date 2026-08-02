@@ -16,12 +16,12 @@ from cloud_content_hub.api.errors import install_exception_handlers
 from cloud_content_hub.api.routers.v1.router import root_router
 from cloud_content_hub.bootstrap.api import create_app
 from cloud_content_hub.core.config import Environment, Settings
-from cloud_content_hub.infrastructure.identity.middleware import bind_principal, clear_principal
 from cloud_content_hub.infrastructure.identity.principal import Principal
-
 
 DEFAULT_WORKSPACE_ID = UUID("01900000-0000-7000-8000-000000000001")
 DEFAULT_USER_ID = UUID("01900000-0000-7000-8000-000000000010")
+CURSOR_SECRET = b"performance-test-cursor-secret"
+ANALYTICS_QUERY = "periodStart=2026-08-01T00:00:00Z&periodEnd=2026-08-02T23:59:59Z"
 
 
 def build_principal(*, permissions: frozenset[str]) -> Principal:

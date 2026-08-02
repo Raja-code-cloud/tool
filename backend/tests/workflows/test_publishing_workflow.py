@@ -19,7 +19,6 @@ from cloud_content_hub.application.scheduler.commands import SchedulePublication
 from cloud_content_hub.application.scheduler.dto.requests import ScheduleRequestDto
 from cloud_content_hub.application.shared.dto.base import OperationStatus
 from cloud_content_hub.bootstrap.handlers import wire_handlers
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 from tests.fixtures.constants import PLATFORM_CODES

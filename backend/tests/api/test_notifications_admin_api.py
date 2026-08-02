@@ -29,6 +29,7 @@ async def test_mark_notification_read(api_client: AsyncClient) -> None:
         response = await api_client.patch(
             f"/api/v1/notifications/{uuid4()}/read",
             headers=workspace_headers(extra={"If-Match": "1"}),
+            json={"read": True},
         )
 
     assert response.status_code == 200

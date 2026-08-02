@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 from httpx import AsyncClient
 
+from tests.fixtures.app import analytics_period_params
 from tests.fixtures.outbox import query_outbox_events
 
 pytestmark = [pytest.mark.automation, pytest.mark.integration]
@@ -12,7 +13,10 @@ pytestmark = [pytest.mark.automation, pytest.mark.integration]
 
 @pytest.mark.asyncio
 async def test_analytics_refresh_workflow(auth_client: AsyncClient) -> None:
-    dashboard = await auth_client.get("/api/v1/analytics/dashboard")
+    dashboard = await auth_client.get(
+        "/api/v1/analytics/dashboard",
+        params=analytics_period_params(),
+    )
     assert dashboard.status_code == 200
     assert "freshThrough" in dashboard.json()["data"]
 

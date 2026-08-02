@@ -54,7 +54,7 @@ class HealthUser(HttpUser):
 
 
 class ApiCrudUser(HttpUser):
-    """Authenticated CRUD and search load for 10–100 concurrent users."""
+    """Authenticated CRUD and search load for 10-100 concurrent users."""
 
     wait_time = between(0.2, 1.0)
 

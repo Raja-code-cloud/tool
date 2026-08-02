@@ -7,10 +7,15 @@ from datetime import UTC, datetime, timedelta
 import pytest
 
 from cloud_content_hub.application.analytics.commands import ImportAnalyticsCommand
-from cloud_content_hub.application.analytics.dto.requests import ImportAnalyticsRequestDto, MetricImportDto
-from cloud_content_hub.application.analytics.queries import GetDashboardQuery, GetPlatformAnalyticsQuery
+from cloud_content_hub.application.analytics.dto.requests import (
+    ImportAnalyticsRequestDto,
+    MetricImportDto,
+)
+from cloud_content_hub.application.analytics.queries import (
+    GetDashboardQuery,
+    GetPlatformAnalyticsQuery,
+)
 from cloud_content_hub.bootstrap.handlers import wire_handlers
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 

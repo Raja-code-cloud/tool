@@ -5,15 +5,15 @@ from __future__ import annotations
 import pytest
 from httpx import AsyncClient
 
-from cloud_content_hub.core.errors import AuthorizationError
-from cloud_content_hub.infrastructure.identity.principal import Principal
 from cloud_content_hub.api.dependencies import build_actor_context
 from cloud_content_hub.application.shared.actor import ActorContext
 from cloud_content_hub.application.shared.authorization import require_permission
+from cloud_content_hub.core.errors import AuthorizationError
 from cloud_content_hub.infrastructure.identity.claims import to_unified_identity
+from cloud_content_hub.infrastructure.identity.principal import Principal
+from cloud_content_hub.infrastructure.identity.exceptions import InvalidToken, OAuthValidationError
 from cloud_content_hub.infrastructure.identity.testing.fixtures import identity_factory
-
-from tests.fixtures.auth import auth_headers, issue_access_token, workflow_actor
+from tests.fixtures.auth import issue_access_token, workflow_actor
 from tests.fixtures.seed import E2ESeedBundle
 
 pytestmark = pytest.mark.e2e
@@ -64,7 +64,7 @@ async def test_jwt_validation_rejects_tampered_token(e2e_seed: E2ESeedBundle) ->
     tampered = f"{token[:-4]}dead"
     factory = identity_factory()
 
-    with pytest.raises(Exception):
+    with pytest.raises(InvalidToken):
         await factory.jwt_service.decode_and_verify(tampered)
 
 

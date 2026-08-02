@@ -78,11 +78,11 @@ def test_authenticated_request_with_permission_succeeds(monkeypatch: pytest.Monk
     )()
     app.state.handlers = HandlerRegistry(handlers={"get_asset": handler})
 
-    with TestClient(app) as client:
-        response = client.get(
-            f"/api/v1/assets/{ASSET_ID}",
-            headers={"X-Workspace-ID": str(WORKSPACE_ID)},
-        )
+    client = TestClient(app, raise_server_exceptions=False)
+    response = client.get(
+        f"/api/v1/assets/{ASSET_ID}",
+        headers={"X-Workspace-ID": str(WORKSPACE_ID)},
+    )
 
     assert response.status_code == 200
     assert response.json()["success"] is True

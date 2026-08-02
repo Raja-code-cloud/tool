@@ -9,7 +9,6 @@ from cloud_content_hub.application.assets.dto.requests import UploadAssetRequest
 from cloud_content_hub.application.assets.queries import GetAssetQuery
 from cloud_content_hub.application.shared.dto.base import OperationStatus
 from cloud_content_hub.bootstrap.handlers import wire_handlers
-
 from tests.e2e.conftest import WorkflowContext
 from tests.fixtures.auth import workflow_actor
 from tests.fixtures.constants import SAMPLE_MP4_BYTES

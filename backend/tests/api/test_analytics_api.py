@@ -7,7 +7,7 @@ from uuid import uuid4
 import pytest
 from httpx import AsyncClient
 
-from tests.fixtures.app import bound_principal, workspace_headers
+from tests.fixtures.app import analytics_period_params, bound_principal, workspace_headers
 
 pytestmark = pytest.mark.api
 
@@ -18,6 +18,7 @@ async def test_analytics_dashboard(api_client: AsyncClient) -> None:
         response = await api_client.get(
             "/api/v1/analytics/dashboard",
             headers=workspace_headers(),
+            params=analytics_period_params(),
         )
 
     assert response.status_code == 200

@@ -17,7 +17,6 @@ from cloud_content_hub.api.errors import install_exception_handlers
 from cloud_content_hub.api.routers.v1.router import root_router
 from cloud_content_hub.infrastructure.identity.middleware import bind_principal, clear_principal
 from cloud_content_hub.infrastructure.identity.principal import Principal
-
 from tests.fixtures.constants import WORKFLOW_PERMISSIONS
 from tests.fixtures.factories import DEFAULT_USER_ID, DEFAULT_WORKSPACE_ID
 from tests.fixtures.handlers import build_mock_handlers
@@ -39,9 +38,27 @@ def build_principal(*, permissions: frozenset[str] = DEFAULT_PERMISSIONS) -> Pri
 def create_api_test_app(handlers: Mapping[str, Any] | None = None) -> FastAPI:
     """Create a minimal FastAPI app wired with mocked handlers."""
 
+    from unittest.mock import AsyncMock
+
     app = FastAPI(title="api-test")
     container = MagicMock()
     container.settings.service_version = "1.0.0-regression"
+    container.settings.database_timeout_seconds = 1.0
+    container.settings.redis_timeout_seconds = 1.0
+
+    connection = AsyncMock()
+    connection.execute = AsyncMock(return_value=None)
+    database_engine = MagicMock()
+    database_engine.connect = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=connection),
+            __aexit__=AsyncMock(return_value=None),
+        )
+    )
+    container.database_engine = database_engine
+    container.redis = AsyncMock()
+    container.redis.ping = AsyncMock(return_value=True)
+
     app.state.container = container
     app.state.handlers = HandlerRegistry(handlers=dict(handlers or build_mock_handlers()))
     install_exception_handlers(app)
@@ -66,8 +83,20 @@ def workspace_headers(
     return headers
 
 
+def analytics_period_params() -> dict[str, str]:
+    """Required analytics period query parameters."""
+
+    return {
+        "periodStart": "2026-08-01T00:00:00Z",
+        "periodEnd": "2026-08-02T23:59:59Z",
+        "timeZone": "UTC",
+    }
+
+
 @asynccontextmanager
-async def bound_principal(*, permissions: frozenset[str] = DEFAULT_PERMISSIONS) -> AsyncIterator[None]:
+async def bound_principal(
+    *, permissions: frozenset[str] = DEFAULT_PERMISSIONS
+) -> AsyncIterator[None]:
     """Bind a principal for the duration of an HTTP request."""
 
     token = bind_principal(build_principal(permissions=permissions))

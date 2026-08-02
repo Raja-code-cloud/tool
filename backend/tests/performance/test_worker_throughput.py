@@ -8,7 +8,11 @@ from uuid import uuid4
 import pytest
 
 from cloud_content_hub.application.shared.actor import ActorContext
-from cloud_content_hub.workers.base import TaskExecutionContext, WorkerTaskPayload, build_worker_actor
+from cloud_content_hub.workers.base import (
+    TaskExecutionContext,
+    WorkerTaskPayload,
+    build_worker_actor,
+)
 from cloud_content_hub.workers.dispatcher import TaskDispatcher, WorkerHandlerRegistry
 from cloud_content_hub.workers.routing import resolve_task_route
 from tests.performance.helpers.metrics import collect_latencies, collect_latencies_sync
@@ -64,10 +68,13 @@ async def test_task_dispatcher_throughput(worker_context: TaskExecutionContext) 
 
 @pytest.mark.asyncio
 async def test_worker_actor_construction_latency(worker_payload: WorkerTaskPayload) -> None:
-    stats = await collect_latencies(
+    def build_once() -> None:
+        _build_actor(worker_payload)
+
+    stats = collect_latencies_sync(
         label="build_worker_actor",
         iterations=500,
-        operation=lambda: _build_actor(worker_payload),
+        operation=build_once,
     )
     assert_within_target(stats, p95_seconds=0.001, label="worker actor build")
 
@@ -84,7 +91,7 @@ def test_retry_policy_classification_throughput() -> None:
             task_name="cloud_content_hub.tasks.upload_asset",
             attempt_count=1,
             last_error="timeout",
-            error=DependencyUnavailableError("redis unavailable"),
+            error=DependencyUnavailableError(detail="redis unavailable"),
         )
 
     stats = collect_latencies_sync(

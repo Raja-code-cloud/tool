@@ -29,6 +29,7 @@ from cloud_content_hub.infrastructure.database.enums import (
     UserStatus,
     WorkspaceStatus,
 )
+from cloud_content_hub.infrastructure.database.enums import ApprovalState as DbApprovalState
 from cloud_content_hub.infrastructure.database.models.ai_model import AIModel
 from cloud_content_hub.infrastructure.database.models.ai_provider import AIProvider
 from cloud_content_hub.infrastructure.database.models.approval_request import ApprovalRequest
@@ -49,10 +50,12 @@ from cloud_content_hub.infrastructure.database.models.social_platform import Soc
 from cloud_content_hub.infrastructure.database.models.user import User
 from cloud_content_hub.infrastructure.database.models.video import Video
 from cloud_content_hub.infrastructure.database.models.workspace import Workspace
-from cloud_content_hub.infrastructure.database.models.workspace_membership import WorkspaceMembership
-from cloud_content_hub.infrastructure.database.enums import ApprovalState as DbApprovalState
-from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import SqlAlchemyUnitOfWork
-
+from cloud_content_hub.infrastructure.database.models.workspace_membership import (
+    WorkspaceMembership,
+)
+from cloud_content_hub.infrastructure.repositories.sqlalchemy.unit_of_work import (
+    SqlAlchemyUnitOfWork,
+)
 from tests.fixtures.constants import PLATFORM_CODES
 
 

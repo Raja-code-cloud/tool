@@ -7,7 +7,7 @@ from uuid import uuid4
 import pytest
 from httpx import AsyncClient
 
-from tests.fixtures.app import bound_principal, workspace_headers
+from tests.fixtures.app import analytics_period_params, bound_principal, workspace_headers
 from tests.fixtures.constants import SAMPLE_WEBP_BYTES
 
 pytestmark = [pytest.mark.regression, pytest.mark.critical_path]
@@ -82,5 +82,6 @@ async def test_schedule_and_analytics_critical_path(api_client: AsyncClient) -> 
         dashboard = await api_client.get(
             "/api/v1/analytics/dashboard",
             headers=workspace_headers(),
+            params=analytics_period_params(),
         )
         assert dashboard.status_code == 200

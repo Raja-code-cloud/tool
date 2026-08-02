@@ -6,7 +6,11 @@ from collections.abc import Callable
 
 import pytest
 
-from cloud_content_hub.infrastructure.storage.exceptions import StorageValidationError
+from cloud_content_hub.infrastructure.storage.exceptions import (
+    FileTooLargeError,
+    InvalidMimeTypeError,
+    StorageValidationError,
+)
 from cloud_content_hub.infrastructure.storage.utils import sanitize_metadata
 from cloud_content_hub.infrastructure.storage.validators.extension import validate_extension
 from cloud_content_hub.infrastructure.storage.validators.filename import validate_blob_name, validate_filename
@@ -50,8 +54,8 @@ def test_extension_allowlist_rejects_executables() -> None:
 
 
 def test_mime_allowlist_rejects_unknown_types() -> None:
-    with pytest.raises(StorageValidationError):
-        validate_mime_type("application/x-msdownload")
+    with pytest.raises(InvalidMimeTypeError):
+        validate_mime_type("chemical/x-example")
 
 
 def test_empty_upload_is_rejected() -> None:
@@ -60,8 +64,8 @@ def test_empty_upload_is_rejected() -> None:
 
 
 def test_oversized_upload_is_rejected() -> None:
-    with pytest.raises(StorageValidationError):
-        validate_size(101 * 1024 * 1024, max_bytes=100 * 1024 * 1024)
+    with pytest.raises(FileTooLargeError):
+        validate_size(101 * 1024 * 1024, 100 * 1024 * 1024)
 
 
 @pytest.mark.parametrize(
@@ -72,5 +76,5 @@ def test_oversized_upload_is_rejected() -> None:
     ],
 )
 def test_metadata_and_mime_injection_vectors_are_rejected(operation: Callable[[], object]) -> None:
-    with pytest.raises(StorageValidationError):
+    with pytest.raises((StorageValidationError, InvalidMimeTypeError)):
         operation()
