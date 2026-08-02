@@ -197,7 +197,7 @@ export function createMockSocialAccountRepository(
     },
 
     async connectAccount(input) {
-      const created: import("@/lib/domain/social-account").SocialAccount = {
+      const created: StoredAccount = {
         id: `acc-${input.platformCode}-${Date.now()}`,
         version: 1,
         platformId: input.platformCode as import("@/lib/domain/platform").PlatformId,
@@ -234,13 +234,13 @@ export function createMockSocialAccountRepository(
     async disconnectAccount(accountId) {
       const index = store.findIndex((account) => account.id === accountId);
       if (index < 0) throw new Error("Account not found");
-      const updated = {
+      const updated: StoredAccount = {
         ...store[index]!,
-        connectionStatus: "disconnected" as const,
-        healthStatus: "warning" as const,
-        tokenStatus: "expired" as const,
+        connectionStatus: "disconnected",
+        healthStatus: "warning",
+        tokenStatus: "expired",
         publishingEnabled: false,
-        version: (store[index]!.version ?? 1) + 1,
+        version: store[index]!.version + 1,
       };
       store = [...store.slice(0, index), updated, ...store.slice(index + 1)];
       return updated;
@@ -249,13 +249,13 @@ export function createMockSocialAccountRepository(
     async refreshAccount(accountId) {
       const index = store.findIndex((account) => account.id === accountId);
       if (index < 0) throw new Error("Account not found");
-      const updated = {
+      const updated: StoredAccount = {
         ...store[index]!,
-        connectionStatus: "connected" as const,
-        healthStatus: "healthy" as const,
-        tokenStatus: "active" as const,
+        connectionStatus: "connected",
+        healthStatus: "healthy",
+        tokenStatus: "active",
         lastSync: new Date().toISOString(),
-        version: (store[index]!.version ?? 1) + 1,
+        version: store[index]!.version + 1,
       };
       store = [...store.slice(0, index), updated, ...store.slice(index + 1)];
       return updated;
@@ -265,7 +265,7 @@ export function createMockSocialAccountRepository(
       const index = store.findIndex((account) => account.id === accountId);
       if (index < 0) throw new Error("Account not found");
       const current = store[index]!;
-      const updated = {
+      const updated: StoredAccount = {
         ...current,
         publishingEnabled: input.publishingEnabled ?? current.publishingEnabled,
         defaultSettings: input.defaultSettings

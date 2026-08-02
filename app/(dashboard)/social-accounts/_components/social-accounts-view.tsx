@@ -60,14 +60,17 @@ export function SocialAccountsView(): React.JSX.Element {
 
         {state.loadError ? (
           <div
-            className="bg-destructive/10 text-destructive rounded-xl border border-destructive/20 p-4 text-sm"
+            className="bg-destructive/10 text-destructive border-destructive/20 rounded-xl border p-4 text-sm"
             role="alert"
           >
             {state.loadError}
           </div>
         ) : null}
 
-        {!state.isLoading && state.overview.connected === 0 && state.filter === "all" && !state.search.trim() ? (
+        {!state.isLoading &&
+        state.overview.connected === 0 &&
+        state.filter === "all" &&
+        !state.search.trim() ? (
           <SocialAccountsEmptyState onConnect={() => state.setConnectOpen(true)} />
         ) : state.showEmpty ? (
           <div

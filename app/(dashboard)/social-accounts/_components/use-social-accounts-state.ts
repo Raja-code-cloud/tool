@@ -5,6 +5,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ROUTES } from "@/constants/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { isApiError } from "@/lib/api/errors";
+import { isPlatformId } from "@/lib/config/platforms";
+import { SUPPORTED_PLATFORMS } from "@/lib/config/social-accounts";
 import type { SocialAccount, SocialAccountFilter } from "@/lib/domain/social-account";
 import { socialAccountService } from "@/lib/services";
 import { resolveSocialAccountErrorMessage } from "@/lib/social-accounts/error-messages";
@@ -15,8 +17,6 @@ import {
   SOCIAL_OAUTH_VERIFIER_KEY,
 } from "@/lib/social-accounts/oauth-storage";
 import { computeOverview, filterAccounts } from "@/lib/utils/social-accounts";
-import { SUPPORTED_PLATFORMS } from "@/lib/config/social-accounts";
-import { isPlatformId } from "@/lib/config/platforms";
 
 function resolveMockAuthorizationUrl(authorizationUrl: string): string {
   if (!authorizationUrl.startsWith("mock://")) {

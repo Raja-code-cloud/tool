@@ -140,12 +140,7 @@ export function ProfileSection(): React.JSX.Element {
             label="Email address"
             description="Contact an admin to change your sign-in address."
           >
-            <Input
-              type="email"
-              value={profile?.email ?? ""}
-              readOnly
-              autoComplete="email"
-            />
+            <Input type="email" value={profile?.email ?? ""} readOnly autoComplete="email" />
           </FormField>
 
           <FormField id="profile-title" label="Job title">

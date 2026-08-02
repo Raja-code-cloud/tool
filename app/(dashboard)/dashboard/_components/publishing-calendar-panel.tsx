@@ -17,7 +17,9 @@ type PublishingCalendarPanelProps = {
   readonly agenda: readonly AgendaEntry[];
 };
 
-export function PublishingCalendarPanel({ agenda }: PublishingCalendarPanelProps): React.JSX.Element {
+export function PublishingCalendarPanel({
+  agenda,
+}: PublishingCalendarPanelProps): React.JSX.Element {
   const items = agenda.map((entry) => ({
     id: entry.id,
     time: entry.time,

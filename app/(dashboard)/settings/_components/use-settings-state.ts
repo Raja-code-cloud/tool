@@ -2,10 +2,10 @@
 
 import * as React from "react";
 
-import type { NotificationChannelId } from "@/lib/domain/settings";
-import type { ProfileState } from "@/lib/settings/mappers";
 import { getApiErrorMessage, isApiError } from "@/lib/api/errors";
+import type { NotificationChannelId } from "@/lib/domain/settings";
 import { isBackendSettingsEnabled, settingsService } from "@/lib/services";
+import type { ProfileState } from "@/lib/settings/mappers";
 
 type ChannelState = Record<NotificationChannelId, { email: boolean; inApp: boolean }>;
 
@@ -45,11 +45,7 @@ export function useSettingsState() {
   }, [load]);
 
   const saveProfile = React.useCallback(
-    async (input: {
-      fullName: string;
-      timezone: string;
-      language: string;
-    }) => {
+    async (input: { fullName: string; timezone: string; language: string }) => {
       if (!profile) return false;
       setIsSaving(true);
       setError(null);

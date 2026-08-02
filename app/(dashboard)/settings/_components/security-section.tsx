@@ -15,7 +15,9 @@ export function SecuritySection(): React.JSX.Element {
   const { toast } = useToast();
   const [twoFactor, setTwoFactor] = React.useState(true);
   const [ssoOnly, setSsoOnly] = React.useState(false);
-  const [sessions, setSessions] = React.useState<readonly import("@/lib/domain/settings").SessionRecord[]>([]);
+  const [sessions, setSessions] = React.useState<
+    readonly import("@/lib/domain/settings").SessionRecord[]
+  >([]);
 
   React.useEffect(() => {
     void settingsService.listActiveSessions().then(setSessions);
