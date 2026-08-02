@@ -45,9 +45,12 @@ export function PublishingSection(): React.JSX.Element {
           onClick={() =>
             toast({
               title: "Publishing defaults saved",
-              description: defaults
-                ? "Defaults are applied locally until a publishing settings API is available."
-                : undefined,
+              ...(defaults
+                ? {
+                    description:
+                      "Defaults are applied locally until a publishing settings API is available.",
+                  }
+                : {}),
             })
           }
         >

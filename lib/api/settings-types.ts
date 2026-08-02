@@ -1,4 +1,5 @@
-import type { SingleSuccessEnvelope, SuccessEnvelope } from "@/lib/api/auth-types";
+import type { SingleSuccessEnvelope } from "@/lib/api/asset-types";
+import type { SuccessEnvelope } from "@/lib/api/auth-types";
 
 export type UserProfileDto = {
   readonly id: string;

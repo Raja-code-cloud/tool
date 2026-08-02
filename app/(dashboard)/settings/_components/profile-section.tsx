@@ -43,7 +43,7 @@ export function ProfileSection(): React.JSX.Element {
     if (saved) {
       toast({ title: "Profile saved", description: "Your workspace profile has been updated." });
     } else if (error) {
-      toast({ title: "Could not save profile", description: error, variant: "destructive" });
+      toast({ title: "Could not save profile", description: error });
     }
   }
 
@@ -54,7 +54,7 @@ export function ProfileSection(): React.JSX.Element {
     if (uploaded) {
       toast({ title: "Avatar updated", description: "Your profile photo has been uploaded." });
     } else if (error) {
-      toast({ title: "Upload failed", description: error, variant: "destructive" });
+      toast({ title: "Upload failed", description: error });
     }
     event.target.value = "";
   }

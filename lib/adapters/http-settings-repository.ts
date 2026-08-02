@@ -10,12 +10,11 @@ import type { PagedSuccessEnvelope } from "@/lib/api/asset-types";
 import type {
   AiProvider,
   ApiKeyRecord,
-  NotificationPreference,
   PublishingDefaults,
   SessionRecord,
   StorageUsage,
 } from "@/lib/domain/settings";
-import type { SettingsRepository } from "@/lib/domain/repositories";
+import type { ProfileUpdateInput, SettingsRepository } from "@/lib/domain/repositories";
 import {
   mapNotificationPreferences,
   mapProviderStatusToAiProvider,
@@ -39,8 +38,8 @@ export function createHttpSettingsRepository(client: ApiClient): SettingsReposit
       return cachedProfile;
     },
 
-    async updateProfile(input: UpdateUserProfileRequestDto, version: number) {
-      const body: UpdateUserProfileRequestDto = {};
+    async updateProfile(input: ProfileUpdateInput, version: number) {
+      const body: Record<string, string | null> = {};
       if (input.displayName !== undefined) body.displayName = input.displayName;
       if (input.locale !== undefined) body.locale = input.locale;
       if (input.timeZone !== undefined) body.timeZone = input.timeZone;

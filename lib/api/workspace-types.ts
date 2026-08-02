@@ -1,4 +1,4 @@
-import type { SingleSuccessEnvelope } from "@/lib/api/auth-types";
+import type { SingleSuccessEnvelope } from "@/lib/api/asset-types";
 
 export type WorkspaceDto = {
   readonly id: string;

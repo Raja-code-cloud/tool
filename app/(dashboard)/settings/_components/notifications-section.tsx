@@ -5,7 +5,6 @@ import * as React from "react";
 import { Button, Checkbox, Label } from "@/components/ui";
 import { NOTIFICATION_PREFERENCES } from "@/constants/settings";
 import { useToast } from "@/hooks/use-toast";
-import type { NotificationChannelId } from "@/lib/domain/settings";
 
 import { SettingsSection } from "./settings-section";
 import { useSettingsState } from "./use-settings-state";
@@ -26,11 +25,7 @@ export function NotificationsSection(): React.JSX.Element {
     if (saved) {
       toast({ title: "Notification preferences saved" });
     } else if (error) {
-      toast({
-        title: "Could not save preferences",
-        description: error,
-        variant: "destructive",
-      });
+      toast({ title: "Could not save preferences", description: error });
     }
   }
 
