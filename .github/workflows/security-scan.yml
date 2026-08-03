@@ -110,7 +110,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.7.0
+        uses: sigstore/cosign-installer@v4.1.2
 
       - name: Sign images (hook)
         env:
